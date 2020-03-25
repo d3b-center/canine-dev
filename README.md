@@ -15,7 +15,7 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 ### Variant Annotation
 
-[Variant Effect Predictor](https://useast.ensembl.org/info/docs/tools/vep/index.html) release 93, wrapped by [vcf2maf](https://github.com/mskcc/vcf2maf) v1.6.17 is used to annotate somatic variant and SV calls.
+[Variant Effect Predictor](https://useast.ensembl.org/info/docs/tools/vep/index.html) release 86, wrapped by [vcf2maf](https://github.com/mskcc/vcf2maf) v1.6.17 is used to annotate somatic variant and SV calls.
 Both the annotated vcf and maf file are made available.
 
 ### Tips To Run:

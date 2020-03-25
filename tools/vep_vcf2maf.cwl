@@ -28,6 +28,7 @@ arguments:
       --ref-fasta $(inputs.reference.path)
       --tumor-id $(inputs.tumor_id)
       --normal-id $(inputs.normal_id)
+      --species $(inputs.species)
       && mv input_file.vep.vcf $(inputs.output_basename).$(inputs.tool_name).PASS.vep.vcf
       && /ensembl-vep/htslib/bgzip $(inputs.output_basename).$(inputs.tool_name).PASS.vep.vcf
       && /ensembl-vep/htslib/tabix $(inputs.output_basename).$(inputs.tool_name).PASS.vep.vcf.gz
@@ -41,6 +42,7 @@ inputs:
   tumor_id: string
   normal_id: string
   tool_name: string
+  species: string
   cache: { type: File, label: tar gzipped cache from ensembl/local converted cache }
   cache_version: {type: ['null', int], doc: "Version being used, should match build version", default: 93}
   ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
