@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: Workflow
-id: kfdrc_strelka2_wf
+id: kfdrc_mutect2_wf
 requirements:
   - class: ScatterFeatureRequirement
   - class: MultipleInputFeatureRequirement
@@ -40,26 +40,45 @@ inputs:
   input_normal_name: string
   exome_flag: {type: string?, default: "N", doc: "Whether to run in exome mode for callers. Should be N or leave blank as default is N. Only make Y if you are certain"}
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
+  wgs_calling_interval_list: {type: File, doc: "GATK intervals list-style, or bed file.  Recommend canocical chromosomes with N regions removed"}
   vep_cache: {type: File, doc: "tar gzipped cache from ensembl/local converted cache"}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
+  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "CanFam3.1"}
   vep_species: {type: ['null', string], doc: "Species of source sample.", default: "canis_familiaris"}
-  strelka2_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
+  mutect2_af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
+  mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
   output_basename: string
 
 outputs:
-  strelka2_vep_vcf: {type: File, outputSource: run_strelka2/strelka2_vep_vcf}
-  strelka2_vep_tbi: {type: File, outputSource: run_strelka2/strelka2_vep_tbi}
-  strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
-  strelka2_vep_maf: {type: File, outputSource: run_strelka2/strelka2_vep_maf}
+  mutect2_vep_vcf: {type: File, outputSource: run_mutect2/mutect2_vep_vcf}
+  mutect2_vep_tbi: {type: File, outputSource: run_mutect2/mutect2_vep_tbi}
+  mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
+  mutect2_vep_maf: {type: File, outputSource: run_mutect2/mutect2_vep_maf}
+
 
 steps:
+  gatk_intervallisttools:
+    run: ../tools/gatk_intervallisttool.cwl
+    in:
+      interval_list: wgs_calling_interval_list
+      reference_dict: reference_dict
+      exome_flag: exome_flag
+      scatter_ct:
+        valueFrom: ${return 50}
+      bands:
+        valueFrom: ${return 80000000}
+    out: [output]
 
-  run_strelka2:
-    run: ../sub_workflows/kfdrc_strelka2_sub_wf.cwl
+  run_mutect2:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: c5.9xlarge
+    run: ../sub_workflows/kfdrc_mutect2_sub_wf.cwl
     in:
       indexed_reference_fasta: indexed_reference_fasta
       reference_dict: reference_dict
-      strelka2_bed: strelka2_bed
+      bed_invtl_split: gatk_intervallisttools/output
+      af_only_gnomad_vcf: mutect2_af_only_gnomad_vcf
+      exac_common_vcf: mutect2_exac_common_vcf
       input_tumor_aligned: input_tumor_aligned
       input_tumor_name: input_tumor_name
       input_normal_aligned: input_normal_aligned
@@ -71,7 +90,9 @@ steps:
       output_basename: output_basename
       select_vars_mode: select_vars_mode
     out:
-      [strelka2_vep_vcf, strelka2_vep_tbi, strelka2_prepass_vcf, strelka2_vep_maf]
+      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_vep_vcf, mutect2_vep_tbi, mutect2_vep_maf]
+
+
 
 $namespaces:
   sbg: https://sevenbridges.com

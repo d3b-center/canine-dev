@@ -40,7 +40,8 @@ inputs:
   input_normal_name: string
   exome_flag: {type: ['null', string], doc: "set to 'Y' for exome mode"}
   vep_cache: {type: File, label: tar gzipped cache from ensembl/local converted cache}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
+  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "CanFam3.1" }
+  vep_species: {type: ['null', string], doc: "Species of source sample.", default: "canis_familiaris"}
   output_basename: string
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
 
@@ -103,4 +104,5 @@ steps:
       reference: indexed_reference_fasta
       cache: vep_cache
       ref_build: vep_ref_build
+      species: vep_species
     out: [output_vcf, output_tbi, output_maf, warn_txt]
