@@ -43,18 +43,13 @@ inputs:
 
   input_normal_name: string
   exome_flag: {type: ['null', string], doc: "set to 'Y' for exome mode"}
-  vep_cache: {type: File, label: tar gzipped cache from ensembl/local converted cache}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "CanFam3.1" }
-  vep_species: {type: ['null', string], doc: "Species of source sample.", default: "canis_familiaris"}
   output_basename: string
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
 
 outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
-  mutect2_vep_vcf: {type: File, outputSource: vep_annot_mutect2/output_vcf}
-  mutect2_vep_tbi: {type: File, outputSource: vep_annot_mutect2/output_tbi}
-  mutect2_vep_maf: {type: File, outputSource: vep_annot_mutect2/output_maf}
+  
   
 steps:
   mutect2:
