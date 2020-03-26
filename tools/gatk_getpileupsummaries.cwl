@@ -19,12 +19,10 @@ arguments:
       -I $(inputs.aligned_reads.path)
       -V $(inputs.exac_common_vcf.path)
       -L $(inputs.interval_list.path)
-      -R $(inputs.reference.path)
       -O $(inputs.aligned_reads.nameroot).pileupsummary.table
 
 inputs:
-  aligned_reads: {type: File, secondaryFiles: ['.crai']}
-  reference: File
+  aligned_reads: {type: File, secondaryFiles: [^.bai]}
   interval_list: File
   exac_common_vcf: {type: File, secondaryFiles: [.tbi]}
 

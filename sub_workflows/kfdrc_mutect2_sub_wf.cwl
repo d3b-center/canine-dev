@@ -126,20 +126,7 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  vep_annot_mutect2:
-    run: ../tools/vep_vcf2maf.cwl
-    in:
-      input_vcf: gatk_selectvariants/pass_vcf
-      output_basename: output_basename
-      tumor_id: input_tumor_name
-      normal_id: input_normal_name
-      tool_name:
-        valueFrom: ${return "mutect2_somatic"}
-      reference: indexed_reference_fasta
-      cache: vep_cache
-      ref_build: vep_ref_build
-      species: vep_species
-    out: [output_vcf, output_tbi, output_maf, warn_txt]
+  
 
 $namespaces:
   sbg: https://sevenbridges.com
