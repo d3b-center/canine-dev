@@ -41,18 +41,12 @@ inputs:
   exome_flag: {type: string?, default: "N", doc: "Whether to run in exome mode for callers. Should be N or leave blank as default is N. Only make Y if you are certain"}
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
   wgs_calling_interval_list: {type: File, doc: "GATK intervals list-style, or bed file.  Recommend canocical chromosomes with N regions removed"}
-  vep_cache: {type: File, doc: "tar gzipped cache from ensembl/local converted cache"}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "CanFam3.1"}
-  vep_species: {type: ['null', string], doc: "Species of source sample.", default: "canis_familiaris"}
   mutect2_af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
   mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
   output_basename: string
 
 outputs:
-  mutect2_vep_vcf: {type: File, outputSource: run_mutect2/mutect2_vep_vcf}
-  mutect2_vep_tbi: {type: File, outputSource: run_mutect2/mutect2_vep_tbi}
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
-  mutect2_vep_maf: {type: File, outputSource: run_mutect2/mutect2_vep_maf}
 
 
 steps:
@@ -84,13 +78,10 @@ steps:
       input_normal_aligned: input_normal_aligned
       input_normal_name: input_normal_name
       exome_flag: exome_flag
-      vep_cache: vep_cache
-      vep_ref_build: vep_ref_build
-      vep_species: vep_species
       output_basename: output_basename
       select_vars_mode: select_vars_mode
     out:
-      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_vep_vcf, mutect2_vep_tbi, mutect2_vep_maf]
+      [mutect2_filtered_stats, mutect2_filtered_vcf]
 
 
 
