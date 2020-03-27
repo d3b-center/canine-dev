@@ -15,7 +15,7 @@ arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
-      --java-options "-Xmx4000m"
+      --java-options "-Xmx5000m"
       -I $(inputs.tumor_pileup.path)
       --matched-normal $(inputs.normal_pileup.path)
       -O $(inputs.output_basename).contamination.table
