@@ -40,17 +40,11 @@ inputs:
   input_normal_name: string
   exome_flag: {type: string?, default: "N", doc: "Whether to run in exome mode for callers. Should be N or leave blank as default is N. Only make Y if you are certain"}
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
-  vep_cache: {type: File, doc: "tar gzipped cache from ensembl/local converted cache"}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
-  vep_species: {type: ['null', string], doc: "Species of source sample.", default: "canis_familiaris"}
   strelka2_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
   output_basename: string
 
 outputs:
-  strelka2_vep_vcf: {type: File, outputSource: run_strelka2/strelka2_vep_vcf}
-  strelka2_vep_tbi: {type: File, outputSource: run_strelka2/strelka2_vep_tbi}
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
-  strelka2_vep_maf: {type: File, outputSource: run_strelka2/strelka2_vep_maf}
 
 steps:
 
@@ -65,13 +59,10 @@ steps:
       input_normal_aligned: input_normal_aligned
       input_normal_name: input_normal_name
       exome_flag: exome_flag
-      vep_cache: vep_cache
-      vep_ref_build: vep_ref_build
-      vep_species: vep_species
       output_basename: output_basename
       select_vars_mode: select_vars_mode
     out:
-      [strelka2_vep_vcf, strelka2_vep_tbi, strelka2_prepass_vcf, strelka2_vep_maf]
+      [strelka2_prepass_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
