@@ -22,7 +22,6 @@ inputs:
       }
     doc: "tumor BAM or CRAM"
 
-  input_tumor_name: string
   input_normal_aligned:
     type: File
     secondaryFiles: |
@@ -37,7 +36,6 @@ inputs:
       }
     doc: "normal BAM or CRAM"
 
-  input_normal_name: string
   strelka2_vcf: File
   mutect2_vcf: File
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
@@ -45,14 +43,9 @@ inputs:
   lancet_ram: {type: ['null', int], default: 12, doc: "Adjust in rare circumstances in which 12 GB is not enough"}
   lancet_window: {type: ['null', int], doc: "window size for lancet.  default is 600, recommend 500 for WGS, 600 for exome+", default: 600}
   lancet_padding: {type: ['null', int], doc: "Recommend 0 if interval file padded already, half window size if not", default: 300}
-  vep_cache: {type: File, doc: "tar gzipped cache from ensembl/local converted cache"}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
   output_basename: string
 
 outputs:
-  lancet_vep_vcf: {type: File, outputSource: run_lancet/lancet_vep_vcf}
-  lancet_vep_tbi: {type: File, outputSource: run_lancet/lancet_vep_tbi}
-  lancet_vep_maf: {type: File, outputSource: run_lancet/lancet_vep_maf}
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
 
 steps:
