@@ -96,8 +96,6 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
-      vep_cache: vep_cache
-      vep_ref_build: vep_ref_build
     out:
       [lancet_vep_vcf, lancet_vep_tbi, lancet_vep_maf, lancet_prepass_vcf]
 
