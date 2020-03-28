@@ -9,9 +9,7 @@ requirements:
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
   input_tumor_aligned: {type: File, secondaryFiles: [^.bai]}
-  input_tumor_name: string
   input_normal_aligned: {type: File, secondaryFiles: [^.bai]}
-  input_normal_name: string
   output_basename: string
   reference_dict: File
   bed_invtl_split: {type: 'File[]', doc: "Bed file intervals passed on from and outside pre-processing step"}

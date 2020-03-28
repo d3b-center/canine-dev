@@ -86,9 +86,7 @@ steps:
     in:
       indexed_reference_fasta: indexed_reference_fasta
       input_tumor_aligned: input_tumor_aligned
-      input_tumor_name: input_tumor_name
       input_normal_aligned: input_normal_aligned
-      input_normal_name: input_normal_name
       output_basename: output_basename
       select_vars_mode: select_vars_mode
       reference_dict: reference_dict
