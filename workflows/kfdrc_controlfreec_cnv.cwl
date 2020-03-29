@@ -47,7 +47,7 @@ steps:
   controlfreec_tumor_mini_pileup:
     run: ../tools/control_freec_mini_pileup.cwl
     in:
-      input_reads: samtools_tumor_cram2bam/bam_file
+      input_reads: input_tumor
       threads:
         valueFrom: ${return 16}
       reference: indexed_reference_fasta
@@ -58,7 +58,7 @@ steps:
   controlfreec_normal_mini_pileup:
     run: ../tools/control_freec_mini_pileup.cwl
     in:
-      input_reads: samtools_normal_cram2bam/bam_file
+      input_reads: input_normal
       threads:
         valueFrom: ${return 16}
       reference: indexed_reference_fasta
@@ -70,10 +70,10 @@ steps:
   control_free_c: 
     run: ../tools/control-freec-11-6-sbg.cwl
     in: 
-      mate_file_sample: samtools_tumor_cram2bam/bam_file
+      mate_file_sample: input_tumor
       mate_orientation_sample: mate_orientation_sample
       mini_pileup_sample: controlfreec_tumor_mini_pileup/pileup
-      mate_file_control: samtools_normal_cram2bam/bam_file
+      mate_file_control: input_normal
       mate_orientation_control: mate_orientation_control
       mini_pileup_control: controlfreec_normal_mini_pileup/pileup
       chr_len: chr_len
