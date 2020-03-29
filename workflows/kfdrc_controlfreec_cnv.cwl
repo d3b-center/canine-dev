@@ -65,26 +65,7 @@ steps:
       snp_vcf: b_allele
     out:
       [pileup]
-
-  samtools_tumor_cram2bam:
-    run: ../tools/samtools_cram2bam.cwl
-    in:
-      input_reads: input_tumor
-      threads:
-        valueFrom: ${return 16}
-      reference: indexed_reference_fasta
-    out:
-      [bam_file]
-
-  samtools_normal_cram2bam:
-    run: ../tools/samtools_cram2bam.cwl
-    in:
-      input_reads: input_normal
-      threads:
-        valueFrom: ${return 16}
-      reference: indexed_reference_fasta
-    out:
-      [bam_file]
+      
 
   control_free_c: 
     run: ../tools/control-freec-11-6-sbg.cwl
