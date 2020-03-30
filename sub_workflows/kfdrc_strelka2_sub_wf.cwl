@@ -44,6 +44,7 @@ inputs:
 
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: rename_strelka_samples/reheadered_vcf}
+  strelka2_pass_vcf: {type: File, outputSource: gatk_selectvariants_strelka2/pass_vcf}
 
 steps:
   strelka2:

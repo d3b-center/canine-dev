@@ -45,6 +45,7 @@ inputs:
 
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
+  strelka2_pass_vcf: {type: File, outputSource: run_strelka2/strelka2_pass_vcf}
 
 steps:
 
@@ -62,7 +63,7 @@ steps:
       output_basename: output_basename
       select_vars_mode: select_vars_mode
     out:
-      [strelka2_prepass_vcf]
+      [strelka2_prepass_vcf, strelka2_pass_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
