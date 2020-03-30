@@ -20,6 +20,7 @@ inputs:
 
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: sort_merge_lancet_vcf/merged_vcf}
+  lancet_pass_vcf: {ype: File, outputSource: gatk_selectvariants_lancet/pass_vcf}
 
 steps:
   lancet:
