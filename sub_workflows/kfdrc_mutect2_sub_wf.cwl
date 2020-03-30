@@ -49,6 +49,7 @@ inputs:
 outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
+  mutect2_pass_vcf: {type: File, outputSource: gatk_selectvariants/pass_vcf}
   
   
 steps:

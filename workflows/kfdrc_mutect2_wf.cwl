@@ -47,7 +47,7 @@ inputs:
 
 outputs:
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
-
+  mutect2_pass_vcf: {type: File, outputSource: run_mutect2/mutect2_pass_vcf}
 
 steps:
   gatk_intervallisttools:
