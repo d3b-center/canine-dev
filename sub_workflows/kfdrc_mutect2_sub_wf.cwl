@@ -43,17 +43,14 @@ inputs:
 
   input_normal_name: string
   exome_flag: {type: ['null', string], doc: "set to 'Y' for exome mode"}
-  vep_cache: {type: File, label: tar gzipped cache from ensembl/local converted cache}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
   output_basename: string
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
 
 outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
-  mutect2_vep_vcf: {type: File, outputSource: vep_annot_mutect2/output_vcf}
-  mutect2_vep_tbi: {type: File, outputSource: vep_annot_mutect2/output_tbi}
-  mutect2_vep_maf: {type: File, outputSource: vep_annot_mutect2/output_maf}
+  mutect2_pass_vcf: {type: File, outputSource: gatk_selectvariants/pass_vcf}
+  
   
 steps:
   mutect2:
@@ -125,19 +122,7 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  vep_annot_mutect2:
-    run: ../tools/vep_vcf2maf.cwl
-    in:
-      input_vcf: gatk_selectvariants/pass_vcf
-      output_basename: output_basename
-      tumor_id: input_tumor_name
-      normal_id: input_normal_name
-      tool_name:
-        valueFrom: ${return "mutect2_somatic"}
-      reference: indexed_reference_fasta
-      cache: vep_cache
-      ref_build: vep_ref_build
-    out: [output_vcf, output_tbi, output_maf, warn_txt]
+  
 
 $namespaces:
   sbg: https://sevenbridges.com

@@ -63,7 +63,6 @@ steps:
     run: ../tools/gatk_getpileupsummaries.cwl
     in:
       aligned_reads: input_tumor_aligned
-      reference: indexed_reference_fasta
       interval_list: wgs_calling_interval_list
       exac_common_vcf: exac_common_vcf
     scatter: [interval_list]
@@ -75,7 +74,6 @@ steps:
     run: ../tools/gatk_getpileupsummaries.cwl
     in:
       aligned_reads: input_normal_aligned
-      reference: indexed_reference_fasta
       interval_list: wgs_calling_interval_list
       exac_common_vcf: exac_common_vcf
     scatter: [interval_list]

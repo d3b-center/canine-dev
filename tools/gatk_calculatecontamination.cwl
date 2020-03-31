@@ -8,14 +8,14 @@ requirements:
   - class: DockerRequirement
     dockerPull: 'kfdrc/gatk:4.1.1.0'
   - class: ResourceRequirement
-    ramMin: 4000
+    ramMin: 8000
     coresMin: 2
 baseCommand: [/gatk, CalculateContamination]
 arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
-      --java-options "-Xmx4000m"
+      --java-options "-Xmx8000m"
       -I $(inputs.tumor_pileup.path)
       --matched-normal $(inputs.normal_pileup.path)
       -O $(inputs.output_basename).contamination.table
