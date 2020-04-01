@@ -19,9 +19,7 @@ inputs:
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
   cpus: {type: ['null', int], default: 9}
   ram: {type: ['null', int], default: 18, doc: "In GB"}
-  vep_cache: {type: File, label: tar gzipped cache from ensembl/local converted cache}
-  vep_ref_build: {type: ['null', string], doc: "Genome ref build used, should line up with cache.", default: "GRCh38" }
-
+  
 outputs:
   vardict_pass_vcf: {type: File, outputSource: gatk_selectvariants_vardict/pass_vcf}
   vardict_prepass_vcf: {type: File, outputSource: sort_merge_vardict_vcf/merged_vcf}
