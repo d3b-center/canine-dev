@@ -8,8 +8,8 @@ requirements:
   - class: SubworkflowFeatureRequirement
 
 inputs:
-  input_sample: { type: File, secondaryFiles: [.crai] }
-  input_control: { type: ['null', File], secondaryFiles: [.crai] }
+  input_sample: { type: File, secondaryFiles: [.bai] }
+  input_control: { type: ['null', File], secondaryFiles: [.bai] }
   reference: {type: File, secondaryFiles: [.fai]}
   b_allele_vcf: {type: ['null', File], doc: "b allele germline vcf, if available"}
   capture_regions: {type: ['null', File], doc: "target regions for WES"}
@@ -41,25 +41,12 @@ steps:
     out:
       [filtered_vcf, filtered_pass_vcf]
 
-  samtools_sample_cram2bam:
-    run: ../tools/samtools_cram2bam.cwl
-    in:
-      input_reads: input_sample
-      reference: reference
-    out: [bam_file]
-
-  samtools_control_cram2bam:
-    run: ../tools/samtools_cram2bam.cwl
-    in:
-      input_reads: input_control
-      reference: reference
-    out: [bam_file]
 
   cnvkit: 
     run: ../tools/cnvkit_batch.cwl
     in:
-      input_sample: samtools_sample_cram2bam/bam_file
-      input_control: samtools_control_cram2bam/bam_file
+      input_sample: input_sample
+      input_control: input_control
       reference: reference
       annotation_file: annotation_file
       output_basename: output_basename
