@@ -5,7 +5,7 @@ Canine WF development
 
 This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow for canine data, which includes somatic variant calling. 
 This workflow takes aligned bam input and performs somatic variant calling using Strelka2, and Mutect2.
-Somatic variant call results are annotated using Variant Effect Predictor, with the Memorial Sloane Kettering Cancer Center (MSKCC) vcf2maf wrapper.
+
 
 ### Somatic Variant Calling:
 
@@ -15,8 +15,7 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 ### Variant Annotation
 
-[Variant Effect Predictor](https://useast.ensembl.org/info/docs/tools/vep/index.html) release 86?, wrapped by [vcf2maf](https://github.com/mskcc/vcf2maf) v1.6.17 is used to annotate somatic variant and SV calls.
-Both the annotated vcf and maf file are made available.
+WIP
 
 ### Tips To Run:
 
@@ -28,30 +27,24 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 3) Suggested reference inputs are:
 
-    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need to have access to D3B  s3 bucket
-    - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dic](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.dict?region=us-east-1&tab=overview) - need to have  access to D3B  s3 bucket
+    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.fa?region=us-east-1) - need to have access to D3B  s3 bucket
+    - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dict](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.dict?region=us-east-1) - need to have  access to D3B  s3 bucket
     - `wgs_calling_interval_list`: [Canis_familiaris.CanFam3.1.dna.chromosome.interval_list
 ](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e797425e4b09d9acf762d32/) - this was created using `picard  BedToIntervalList` from BED file and reference fasta file
-    - `92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://console.cloud.google.com/storage/browser/-gatk-best-practices/somatic-hg38) - need a valid google account, this is a link to the best practices google bucket from Broad GATK.
-    - `exac_common_vcf`: [small_exac_common_3.hg38.vcf.gz](https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-hg38) - need a valid google account, this is a link to the best practices google bucket from Broad GATK.
-    - `strelka2_bed`: [hg38_strelka.bed.gz'](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#extended-use-cases) - this link here has the bed-formatted text needed to copy to create this file. You will need to bgzip this file.
-     - `vep_cache`: `homo_sapiens_vep_93_GRCh38.tar.gz` from ftp://ftp.ensembl.org/pub/release-93/variation/indexed_vep_cache/ - variant effect predictor cache.
-     Current production workflow uses this version, and is compatible with the release used in the vcf2maf tool.
+    - `92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
+    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e7b9982e4b09d9acf7805d7/) - this link here has the bed-formatted text needed to copy to create this file. You will need to bgzip this file.
      - `threads`: 16
 
 4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
 
     - Simple variant callers
         - Strelka2:
-            - `strelka2_vep_vcf`: Variant effect predictor annotated vcf, filtered on `PASS`, somatic snv and indel call results from strelka2
-            - `strelka2_vep_tbi`: Index file of above bgzipped vcf
             - `strelka2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for strelka2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
-            - `strelka2_vep_maf`: Mutation annotation file (maf) format of `strelka2_vep_vcf`
+            - `strelka2_pass_vcf`: All somatic and indel calls from strelk2 filtered with `PASS`
         - Mutect2:
-            - `mutect2_vep_vcf`: Variant effect predictor annotated vcf, filtered on `PASS`, somatic snv and indel call results from mutect2
-            - `mutect2_vep_tbi`: Index file of above bgzipped vcf
             - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
-            - `mutect2_vep_maf`: maf of format of `mutect2_vep_vcf`
+            - `mutect2_pass_vcf`: All somatic and indel calls from mutect2 filtered with `PASS`
+
 
 
 5) Docker images - the workflow tools will automatically pull them, but as a convenience are listed below:
