@@ -146,8 +146,8 @@ steps:
   bedops_gen_lancet_intervals:
     run: ../tools/preprocess_lancet_intervals.cwl
     in:
-      strelka2_vcf: run_strelka2/strelka2_vep_vcf
-      mutect2_vcf: run_mutect2/mutect2_vep_vcf
+      strelka2_vcf: run_strelka2/strelka2_pass_vcf
+      mutect2_vcf: run_mutect2/mutect2_pass_vcf
       ref_bed: lancet_calling_interval_bed
       output_basename: output_basename
     out: [run_bed]
