@@ -51,7 +51,7 @@ inputs:
   vardict_padding: {type: ['null', int], doc: "Padding to add to input intervals, recommened 0 if intervals already padded, 150 if not", default: 150}
   mutect2_af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
   mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
-  hg38_strelka_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
+  strelka2_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
   output_basename: string
 
 outputs:
@@ -134,7 +134,7 @@ steps:
     in:
       indexed_reference_fasta: indexed_reference_fasta
       reference_dict: reference_dict
-      hg38_strelka_bed: hg38_strelka_bed
+      strelka2_bed: strelka2_bed
       input_tumor_aligned: input_tumor_aligned
       input_tumor_name: input_tumor_name
       input_normal_aligned: input_normal_aligned
@@ -174,9 +174,9 @@ steps:
     run: ../sub_workflows/kfdrc_lancet_sub_wf.cwl
     in:
       indexed_reference_fasta: indexed_reference_fasta
-      input_tumor_aligned: samtools_cram2bam_plus_calmd_tumor/bam_file
+      input_tumor_aligned: input_tumor_aligned
       input_tumor_name: input_tumor_name
-      input_normal_aligned: samtools_cram2bam_plus_calmd_normal/bam_file
+      input_normal_aligned: input_normal_aligned
       input_normal_name: input_normal_name
       output_basename: output_basename
       select_vars_mode: select_vars_mode
@@ -195,7 +195,7 @@ steps:
     in:
       indexed_reference_fasta: indexed_reference_fasta
       reference_dict: reference_dict
-      hg38_strelka_bed: hg38_strelka_bed
+      strelka2_bed: strelka2_bed
       input_tumor_aligned: input_tumor_aligned
       input_tumor_name: input_tumor_name
       input_normal_aligned: input_normal_aligned

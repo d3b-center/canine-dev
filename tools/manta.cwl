@@ -18,7 +18,7 @@ arguments:
     shellQuote: false
     valueFrom: >-
       ${
-        var std = " --ref " + inputs.reference.path + " --callRegions " + inputs.hg38_strelka_bed.path + " --runDir=./ && ./runWorkflow.py -m local -j " + inputs.cores + " --quiet ";
+        var std = " --ref " + inputs.reference.path + " --callRegions " + inputs._strelka2_bed.path + " --runDir=./ && ./runWorkflow.py -m local -j " + inputs.cores + " --quiet ";
         var mv = " && mv results/variants/";
         if (typeof inputs.input_tumor_bam === 'undefined' || inputs.input_tumor_bam === null){
           var mv_cmd = mv + "diploidSV.vcf.gz " +  inputs.output_basename + ".manta.diploidSV.vcf.gz" + mv + "diploidSV.vcf.gz.tbi " + inputs.output_basename + ".manta.diploidSV.vcf.gz.tbi";
@@ -36,7 +36,7 @@ arguments:
 
 inputs:
     reference: {type: File, secondaryFiles: [^.dict, .fai]}
-    hg38_strelka_bed: {type: File, secondaryFiles: [.tbi]}
+    strelka2_bed: {type: File, secondaryFiles: [.tbi]}
     input_tumor_bam: {type: ["null", File], secondaryFiles: [.bai]}
     input_normal_bam: {type: ["null", File], secondaryFiles: [.bai]}
     cores: {type: ['null', int], default: 18}
