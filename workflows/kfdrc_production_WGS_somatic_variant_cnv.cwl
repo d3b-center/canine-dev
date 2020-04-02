@@ -57,8 +57,6 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
   strelka2_pass_vcf: {type: File, outputSource: run_strelka2/strelka2_pass_vcf}
-  manta_pass_vcf: {type: File, outputSource: run_manta/manta_pass_vcf}
-  manta_prepass_vcf: {type: File, outputSource: run_manta/manta_prepass_vcf}
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: run_mutect2/mutect2_pass_vcf}
   vardict_prepass_vcf: {type: File, outputSource: run_vardict/vardict_prepass_vcf}
@@ -190,21 +188,6 @@ steps:
     out:
       [lancet_prepass_vcf, lancet_pass_vcf]
 
-  run_manta:
-    run: ../sub_workflows/kfdrc_manta_sub_wf.cwl
-    in:
-      indexed_reference_fasta: indexed_reference_fasta
-      reference_dict: reference_dict
-      strelka2_bed: strelka2_bed
-      input_tumor_aligned: input_tumor_aligned
-      input_tumor_name: input_tumor_name
-      input_normal_aligned: input_normal_aligned
-      input_normal_name: input_normal_name
-      vep_cache: vep_cache
-      output_basename: output_basename
-      select_vars_mode: select_vars_mode
-    out:
-      [manta_prepass_vcf, manta_pass_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
