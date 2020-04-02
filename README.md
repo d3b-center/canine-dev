@@ -31,8 +31,8 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
     - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dict](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.dict?region=us-east-1) - need to have  access to D3B  s3 bucket
     - `wgs_calling_interval_list`: [Canis_familiaris.CanFam3.1.dna.chromosome.interval_list
 ](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e797425e4b09d9acf762d32/) - this was created using `picard  BedToIntervalList` from BED file and reference fasta file
-    - `92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
-    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e7b9982e4b09d9acf7805d7/) - this link here has the bed-formatted text needed to copy to create this file. You will need to bgzip this file.
+    - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
+    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e7b9982e4b09d9acf7805d7/) - BED file with all regions in the genome. Should be gzipped
      - `threads`: 16
 
 4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
@@ -44,12 +44,20 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
         - Mutect2:
             - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
             - `mutect2_pass_vcf`: All somatic and indel calls from mutect2 filtered with `PASS`
+        - Lancet:
+            - `lancet_prepass_vcf`: Somatic  SNV and indel call results with  all the `FILTER` categories from lancet tool. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
+            - `lancet_pass_vcf`: All somatic and indel calls from lancet filtered with `PASS`
+        - Vardict:
+            - `vardict_prepass_vcf`:  Somatic snv and indel call results with all `FILTER` categories for vardict. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.   
+            - `vardict_pass_vcf`: All somatic and indel calls from vardict filtered with `PASS`
 
 
 
 5) Docker images - the workflow tools will automatically pull them, but as a convenience are listed below:
     - `Strelka2`: obenauflab/strelka
     - `Mutect2` and all `GATK` tools: kfdrc/gatk:4.1.1.0
+    - `Lancet`: kfdrc/lancet:1.0.7
+    - `VarDict Java`: kfdrc/vardict:1.7.0 
     - `samtools`: kfdrc/samtools:1.9
     - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
 
