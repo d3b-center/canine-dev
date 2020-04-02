@@ -9,6 +9,8 @@ requirements:
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
   reference_dict: File
+  snpeff_database: File
+  snpeff_genomeversion: string
   strelka2_bed: {type: File, secondaryFiles: ['.tbi']}
   input_tumor_aligned:
     type: File
@@ -45,6 +47,7 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: rename_strelka_samples/reheadered_vcf}
   strelka2_pass_vcf: {type: File, outputSource: gatk_selectvariants_strelka2/pass_vcf}
+  strelka2_snpeff_vcf: {type: File, outputSource: snpeff_annot_strelka2/out_variants}
 
 steps:
   strelka2:
@@ -87,4 +90,10 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  
+  snpeff_annot_strelka2:
+    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    in:
+      database: snpeff_database
+      in_variants: gatk_selectvariants_strelka2/pass_vcf
+      assembly: snpeff_genomeversion
+    out: [out_variants]  
