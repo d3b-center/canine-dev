@@ -7,7 +7,6 @@ requirements:
   - class: SubworkflowFeatureRequirement
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
-  reference_fai: File
   reference_dict: File
   input_tumor_aligned:
     type: File
@@ -53,29 +52,19 @@ inputs:
   mutect2_af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
   mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
   hg38_strelka_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
-  combined_include_expression: {type: ['null', string], doc: "Filter expression if vcf has non-PASS combined calls, use as-needed, i.e. for VarDict: FILTER=\"PASS\" && (INFO/STATUS=\"Germline\" | INFO/STATUS=\"StrongSomatic\")"}
-  combined_exclude_expression: {type: ['null', string], doc: "Filter expression if vcf has non-PASS combined calls, use as-needed"}  
   output_basename: string
 
 outputs:
-  strelka2_vep_vcf: {type: File, outputSource: run_strelka2/strelka2_vep_vcf}
-  strelka2_vep_tbi: {type: File, outputSource: run_strelka2/strelka2_vep_tbi}
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
-  strelka2_vep_maf: {type: File, outputSource: run_strelka2/strelka2_vep_maf}
+  strelka2_pass_vcf: {type: File, outputSource: run_strelka2/strelka2_pass_vcf}
   manta_pass_vcf: {type: File, outputSource: run_manta/manta_pass_vcf}
   manta_prepass_vcf: {type: File, outputSource: run_manta/manta_prepass_vcf}
-  mutect2_vep_vcf: {type: File, outputSource: run_mutect2/mutect2_vep_vcf}
-  mutect2_vep_tbi: {type: File, outputSource: run_mutect2/mutect2_vep_tbi}
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
-  mutect2_vep_maf: {type: File, outputSource: run_mutect2/mutect2_vep_maf}
-  vardict_vep_somatic_only_vcf: {type: File, outputSource: run_vardict/vardict_vep_somatic_only_vcf}
-  vardict_vep_somatic_only_tbi: {type: File, outputSource: run_vardict/vardict_vep_somatic_only_tbi}
-  vardict_vep_somatic_only_maf: {type: File, outputSource: run_vardict/vardict_vep_somatic_only_maf}
+  mutect2_pass_vcf: {type: File, outputSource: run_mutect2/mutect2_pass_vcf}
   vardict_prepass_vcf: {type: File, outputSource: run_vardict/vardict_prepass_vcf}
-  lancet_vep_vcf: {type: File, outputSource: run_lancet/lancet_vep_vcf}
-  lancet_vep_tbi: {type: File, outputSource: run_lancet/lancet_vep_tbi}
-  lancet_vep_maf: {type: File, outputSource: run_lancet/lancet_vep_maf}
+  vardict_pass_vcf: {type: File, outputSource: run_vardict/vardict_pass_vcf}
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
+  lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
 
 steps:
   gatk_intervallisttools:
