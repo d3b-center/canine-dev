@@ -53,6 +53,9 @@ inputs:
   mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
   strelka2_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
   output_basename: string
+  snpeff_database: File
+  snpeff_genomeversion: string
+
 
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
@@ -140,6 +143,8 @@ steps:
       exome_flag: exome_flag
       output_basename: output_basename
       select_vars_mode: select_vars_mode
+      snpeff_database: snpeff_database
+      snpeff_genomeversion: snpeff_genomeversion
     out:
       [strelka2_prepass_vcf, strelka2_pass_vcf]
 
@@ -173,9 +178,7 @@ steps:
     in:
       indexed_reference_fasta: indexed_reference_fasta
       input_tumor_aligned: input_tumor_aligned
-      input_tumor_name: input_tumor_name
       input_normal_aligned: input_normal_aligned
-      input_normal_name: input_normal_name
       output_basename: output_basename
       select_vars_mode: select_vars_mode
       reference_dict: reference_dict
@@ -183,8 +186,6 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
-      vep_cache: vep_cache
-      vep_ref_build: vep_ref_build
     out:
       [lancet_prepass_vcf, lancet_pass_vcf]
 
