@@ -4,7 +4,7 @@ id: snpeff_annotate
 label: SnpEff
 doc: |
   Simplified description of what this tool does:
-    1. Untar the cache
+    1. Unzip the database
     2. Run SnpEff on input VCF
     3. bgzip output VCF
     4. tabix output VCF.GZ

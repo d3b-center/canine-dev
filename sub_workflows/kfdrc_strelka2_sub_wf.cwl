@@ -47,7 +47,7 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: rename_strelka_samples/reheadered_vcf}
   strelka2_pass_vcf: {type: File, outputSource: gatk_selectvariants_strelka2/pass_vcf}
-  strelka2_snpeff_vcf: {type: File, outputSource: snpeff_annot_strelka2/out_variants}
+  strelka2_snpeff_vcf: {type: File, outputSource: snpeff_annot_strelka2/output_vcf}
 
 steps:
   strelka2:
@@ -93,7 +93,9 @@ steps:
   snpeff_annot_strelka2:
     run: ../tools/snpeff-4-3t-cwl1-0.cwl
     in:
-      database: snpeff_database
-      in_variants: gatk_selectvariants_strelka2/pass_vcf
-      assembly: snpeff_genomeversion
-    out: [out_variants]  
+      ref_tar_gz: snpeff_database
+      input_vcf: gatk_selectvariants_strelka2/pass_vcf
+      reference_name: snpeff_genomeversion
+      output_basename: output_basename
+      tool_name: "snpeff"
+    out: [output_vcf]  
