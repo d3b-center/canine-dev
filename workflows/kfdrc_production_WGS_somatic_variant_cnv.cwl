@@ -55,7 +55,9 @@ inputs:
   output_basename: string
   snpeff_database: File
   snpeff_genomeversion: string
-
+  cnvkit_annotation_file: {type: File, doc: "refFlat.txt file"}
+  cnvkit_wgs_mode: {type: ['null', string], doc: "for WGS mode, input Y. leave blank for hybrid mode", default: "Y"}
+  cnvkit_sex: {type: ['null', string ], doc: "If known, choices are m,y,male,Male,f,x,female,Female"}
 
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
@@ -72,7 +74,12 @@ outputs:
   lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
   manta_prepass_vcf: {type: File, outputSource: run_manta/manta_prepass_vcf}
   manta_pass_vcf: {type: File, outputSource: run_manta/manta_pass_vcf}
-
+  cnvkit_cnr: {type: File, outputSource: run_cnvkit/cnvkit_cnr}
+  cnvkit_cnn_output: {type: ['null', File], outputSource: run_cnvkit/cnvkit_cnn_output}
+  cnvkit_calls: {type: File, outputSource: run_cnvkit/cnvkit_calls}
+  cnvkit_metrics: {type: File, outputSource: run_cnvkit/cnvkit_metrics}
+  cnvkit_gainloss: {type: File, outputSource: run_cnvkit/cnvkit_gainloss}
+  cnvkit_seg: {type: File, outputSource: run_cnvkit/cnvkit_seg}
   
 steps:
   gatk_intervallisttools:
@@ -93,6 +100,17 @@ steps:
     in:
       wgs_bed_file: wgs_calling_interval_list
     out: [split_intervals_bed]
+
+
+  gatk_filter_germline:
+    run: ../tools/gatk_filter_germline_variant.cwl
+    in:
+      input_vcf: b_allele
+      reference_fasta: indexed_reference_fasta
+      output_basename: output_basename
+    out:
+      [filtered_vcf, filtered_pass_vcf]
+
 
   run_vardict:
     hints:
@@ -218,6 +236,22 @@ steps:
       select_vars_mode: select_vars_mode
     out:
       [manta_prepass_vcf, manta_pass_vcf]  
+
+  run_cnvkit:
+    run: ../sub_workflows/kfdrc_cnvkit_sub_wf.cwl
+    in:
+      input_tumor_aligned: samtools_cram2bam_plus_calmd_tumor/bam_file
+      tumor_sample_name: input_tumor_name
+      input_normal_aligned: samtools_cram2bam_plus_calmd_normal/bam_file
+      reference: indexed_reference_fasta
+      normal_sample_name: input_normal_name
+      wgs_mode: cnvkit_wgs_mode
+      b_allele_vcf: gatk_filter_germline/filtered_pass_vcf
+      annotation_file: cnvkit_annotation_file
+      output_basename: output_basename
+      sex: cnvkit_sex
+    out:
+      [cnvkit_cnr, cnvkit_cnn_output, cnvkit_calls, cnvkit_metrics, cnvkit_gainloss, cnvkit_seg]
 
 $namespaces:
   sbg: https://sevenbridges.com
