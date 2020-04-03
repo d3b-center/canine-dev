@@ -58,6 +58,7 @@ inputs:
   cnvkit_annotation_file: {type: File, doc: "refFlat.txt file"}
   cnvkit_wgs_mode: {type: ['null', string], doc: "for WGS mode, input Y. leave blank for hybrid mode", default: "Y"}
   cnvkit_sex: {type: ['null', string ], doc: "If known, choices are m,y,male,Male,f,x,female,Female"}
+  b_allele: {type: ['null', File], secondaryFiles: ['.tbi'],  doc: "germline calls, needed for BAF.  GATK HC VQSR input recommended.  Tool will prefilter for germline and pass if expression given"}
 
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
@@ -240,9 +241,9 @@ steps:
   run_cnvkit:
     run: ../sub_workflows/kfdrc_cnvkit_sub_wf.cwl
     in:
-      input_tumor_aligned: samtools_cram2bam_plus_calmd_tumor/bam_file
+      input_tumor_aligned: input_tumor_aligned
       tumor_sample_name: input_tumor_name
-      input_normal_aligned: samtools_cram2bam_plus_calmd_normal/bam_file
+      input_normal_aligned: input_normal_aligned
       reference: indexed_reference_fasta
       normal_sample_name: input_normal_name
       wgs_mode: cnvkit_wgs_mode
