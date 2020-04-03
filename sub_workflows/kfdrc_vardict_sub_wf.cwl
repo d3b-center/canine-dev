@@ -25,7 +25,7 @@ inputs:
 outputs:
   vardict_pass_vcf: {type: File, outputSource: gatk_selectvariants_vardict/pass_vcf}
   vardict_prepass_vcf: {type: File, outputSource: sort_merge_vardict_vcf/merged_vcf}
-  vardict_snpeff_vcf: {type: File, outputSource: snpeff_annot_vardict/out_variants}
+  vardict_snpeff_vcf: {type: File, outputSource: snpeff_annot_vardict/output_vcf}
 
 steps:
 
@@ -76,12 +76,13 @@ steps:
     out: [pass_vcf]
 
   snpeff_annot_vardict:
-    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    run: ../tools/snpeff_annotate.cwl
     in:
-      database: snpeff_database
-      in_variants: gatk_selectvariants_vardict/pass_vcf
-      assembly: snpeff_genomeversion
-    out: [out_variants]
+      ref_tar_gz: snpeff_database
+      input_vcf: gatk_selectvariants_vardict/pass_vcf
+      reference_name: snpeff_genomeversion
+      output_basename: output_basename
+    out: [output_vcf]
 
 
 $namespaces:

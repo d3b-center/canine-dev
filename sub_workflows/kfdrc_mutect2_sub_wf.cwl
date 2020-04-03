@@ -52,7 +52,7 @@ outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: gatk_selectvariants/pass_vcf}
-  mutect2_snpeff_vcf: {type: File, outputSource: snpeff_annot_mutect2/out_variants}
+  mutect2_snpeff_vcf: {type: File, outputSource: snpeff_annot_mutect2/output_vcf}
   
 steps:
   mutect2:
@@ -125,12 +125,13 @@ steps:
     out: [pass_vcf]
 
   snpeff_annot_mutect2:
-    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    run: ../tools/snpeff_annotate.cwl
     in:
-      database: snpeff_database
-      in_variants: gatk_selectvariants/pass_vcf
-      assembly: snpeff_genomeversion
-    out: [out_variants]  
+      ref_tar_gz: snpeff_database
+      input_vcf: gatk_selectvariants/pass_vcf
+      reference_name: snpeff_genomeversion
+      output_basename: output_basename
+    out: [output_vcf]    
   
 
 $namespaces:

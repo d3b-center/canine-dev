@@ -23,7 +23,7 @@ inputs:
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: sort_merge_lancet_vcf/merged_vcf}
   lancet_pass_vcf: {type: File, outputSource: gatk_selectvariants_lancet/pass_vcf}
-  lancet_snpeff_vcf: {type: File, outputSource: snpeff_annot_lancet/out_variants}
+  lancet_snpeff_vcf: {type: File, outputSource: snpeff_annot_lancet/output_vcf}
   
 
 steps:
@@ -64,12 +64,13 @@ steps:
     out: [pass_vcf]
 
   snpeff_annot_lancet:
-    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    run: ../tools/snpeff_annotate.cwl
     in:
-      database: snpeff_database
-      in_variants: gatk_selectvariants_lancet/pass_vcf
-      assembly: snpeff_genomeversion
-    out: [out_variants]
+      ref_tar_gz: snpeff_database
+      input_vcf: gatk_selectvariants_lancet/pass_vcf
+      reference_name: snpeff_genomeversion
+      output_basename: output_basename
+    out: [output_vcf]  
 
 
 $namespaces:

@@ -97,5 +97,4 @@ steps:
       input_vcf: gatk_selectvariants_strelka2/pass_vcf
       reference_name: snpeff_genomeversion
       output_basename: output_basename
-
     out: [output_vcf]  
