@@ -18,7 +18,7 @@ arguments:
     shellQuote: false
     valueFrom: >-
       ${
-        var std = " --ref " + inputs.reference.path + " --callRegions " + inputs._strelka2_bed.path + " --runDir=./ && ./runWorkflow.py -m local -j " + inputs.cores + " --quiet ";
+        var std = " --ref " + inputs.reference.path + " --callRegions " + inputs.strelka2_bed.path + " --runDir=./ && ./runWorkflow.py -m local -j " + inputs.cores + " --quiet ";
         var mv = " && mv results/variants/";
         if (typeof inputs.input_tumor_bam === 'undefined' || inputs.input_tumor_bam === null){
           var mv_cmd = mv + "diploidSV.vcf.gz " +  inputs.output_basename + ".manta.diploidSV.vcf.gz" + mv + "diploidSV.vcf.gz.tbi " + inputs.output_basename + ".manta.diploidSV.vcf.gz.tbi";
