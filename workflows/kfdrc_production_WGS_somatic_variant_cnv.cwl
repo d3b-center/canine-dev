@@ -70,7 +70,10 @@ outputs:
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
   lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
+  manta_prepass_vcf: {type: File, outputSource: run_manta/manta_prepass_vcf}
+  manta_pass_vcf: {type: File, outputSource: run_manta/manta_pass_vcf}
 
+  
 steps:
   gatk_intervallisttools:
     run: ../tools/gatk_intervallisttool.cwl
@@ -199,6 +202,22 @@ steps:
     out:
       [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
 
+  run_manta:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: c5.9xlarge
+    run: ../sub_workflows/kfdrc_manta_sub_wf.cwl    
+    in:
+      indexed_reference_fasta: indexed_reference_fasta
+      strelka2_bed: strelka2_bed
+      input_tumor_aligned: input_tumor_aligned
+      input_tumor_name: input_tumor_name
+      input_normal_aligned: input_normal_aligned
+      input_normal_name: input_normal_name
+      output_basename: output_basename
+      select_vars_mode: select_vars_mode
+    out:
+      [manta_prepass_vcf, manta_pass_vcf]  
 
 $namespaces:
   sbg: https://sevenbridges.com
