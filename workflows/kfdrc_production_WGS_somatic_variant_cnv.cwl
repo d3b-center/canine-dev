@@ -60,12 +60,16 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
   strelka2_pass_vcf: {type: File, outputSource: run_strelka2/strelka2_pass_vcf}
+  strelka2_snpeff_vcf: {type: File, outputSource: run_strelka2/strelka2_snpeff_vcf}
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: run_mutect2/mutect2_pass_vcf}
+  mutect2_snpeff_vcf: {type: File, outputSource: run_mutect2/mutect2_snpeff_vcf}
   vardict_prepass_vcf: {type: File, outputSource: run_vardict/vardict_prepass_vcf}
   vardict_pass_vcf: {type: File, outputSource: run_vardict/vardict_pass_vcf}
+  vardict_snpeff_vcf: {type: File, outputSource: run_vardict/vardict_snpeff_vcf}
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
+  lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
 
 steps:
   gatk_intervallisttools:
@@ -106,8 +110,10 @@ steps:
       select_vars_mode: select_vars_mode
       cpus: vardict_cpus
       ram: vardict_ram
+      snpeff_database: snpeff_database
+      snpeff_genomeversion: snpeff_genomeversion
     out:
-      [vardict_pass_vcf, vardict_prepass_vcf]
+      [vardict_pass_vcf, vardict_prepass_vcf, vardict_snpeff_vcf]
 
   run_mutect2:
     hints:
@@ -127,8 +133,10 @@ steps:
       exome_flag: exome_flag
       output_basename: output_basename
       select_vars_mode: select_vars_mode
+      snpeff_database: snpeff_database
+      snpeff_genomeversion: snpeff_genomeversion
     out:
-      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_pass_vcf]
+      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_pass_vcf, mutect2_snpeff_vcf]
 
   run_strelka2:
     run: ../sub_workflows/kfdrc_strelka2_sub_wf.cwl
@@ -146,7 +154,7 @@ steps:
       snpeff_database: snpeff_database
       snpeff_genomeversion: snpeff_genomeversion
     out:
-      [strelka2_prepass_vcf, strelka2_pass_vcf]
+      [strelka2_prepass_vcf, strelka2_pass_vcf, strelka2_snpeff_vcf]
 
   bedops_gen_lancet_intervals:
     run: ../tools/preprocess_lancet_intervals.cwl
@@ -186,8 +194,10 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
+      snpeff_database: snpeff_database
+      snpeff_genomeversion: snpeff_genomeversion
     out:
-      [lancet_prepass_vcf, lancet_pass_vcf]
+      [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
 
 
 $namespaces:

@@ -9,6 +9,8 @@ requirements:
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
   reference_dict: File
+  snpeff_database: File
+  snpeff_genomeversion: string
   bed_invtl_split: {type: 'File[]', doc: "Bed file intervals passed on from and outside pre-processing step"}
   af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
   exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
@@ -50,7 +52,7 @@ outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: gatk_selectvariants/pass_vcf}
-  
+  mutect2_snpeff_vcf: {type: File, outputSource: snpeff_annot_mutect2/out_variants}
   
 steps:
   mutect2:
@@ -122,6 +124,13 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
+  snpeff_annot_mutect2:
+    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    in:
+      database: snpeff_database
+      in_variants: gatk_selectvariants/pass_vcf
+      assembly: snpeff_genomeversion
+    out: [out_variants]  
   
 
 $namespaces:

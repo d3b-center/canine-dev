@@ -17,10 +17,14 @@ inputs:
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
   window: {type: int, doc: "window size for lancet.  default is 600, recommend 500 for WGS, 600 for exome+"}
   padding: {type: int, doc: "If WGS (less likely), default 25, if exome+, recommend half window size"}
+  snpeff_database: File
+  snpeff_genomeversion: string
 
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: sort_merge_lancet_vcf/merged_vcf}
   lancet_pass_vcf: {type: File, outputSource: gatk_selectvariants_lancet/pass_vcf}
+  lancet_snpeff_vcf: {type: File, outputSource: snpeff_annot_lancet/out_variants}
+  
 
 steps:
   lancet:
@@ -58,6 +62,15 @@ steps:
         valueFrom: ${return "lancet"}
       mode: select_vars_mode
     out: [pass_vcf]
+
+  snpeff_annot_lancet:
+    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    in:
+      database: snpeff_database
+      in_variants: gatk_selectvariants_lancet/pass_vcf
+      assembly: snpeff_genomeversion
+    out: [out_variants]
+
 
 $namespaces:
   sbg: https://sevenbridges.com
