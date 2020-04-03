@@ -70,6 +70,8 @@ steps:
       input_vcf: gatk_selectvariants_lancet/pass_vcf
       reference_name: snpeff_genomeversion
       output_basename: output_basename
+      tool_name:
+        valueFrom: ${return "lancet"}
     out: [output_vcf]  
 
 

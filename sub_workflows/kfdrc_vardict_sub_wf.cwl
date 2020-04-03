@@ -82,6 +82,8 @@ steps:
       input_vcf: gatk_selectvariants_vardict/pass_vcf
       reference_name: snpeff_genomeversion
       output_basename: output_basename
+      tool_name:
+        valueFrom: ${return "vardict"}
     out: [output_vcf]
 
 

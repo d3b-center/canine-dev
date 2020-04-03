@@ -131,6 +131,8 @@ steps:
       input_vcf: gatk_selectvariants/pass_vcf
       reference_name: snpeff_genomeversion
       output_basename: output_basename
+      tool_name:
+        valueFrom: ${return "mutect2"}
     out: [output_vcf]    
   
 
