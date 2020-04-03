@@ -53,14 +53,15 @@ arguments:
       -v
       $(inputs.reference_name)
       $(inputs.input_vcf.path)
-      | bgzip -c > $(inputs.output_basename).$(inputs.reference_name).snpeff.vcf.gz
-      && tabix $(inputs.output_basename).$(inputs.reference_name).snpeff.vcf.gz
+      | bgzip -c > $(inputs.output_basename).$(inputs.reference_name).$(inputs.tool_name).snpeff.vcf.gz
+      && tabix $(inputs.output_basename).$(inputs.reference_name).$(inputs.tool_name).snpeff.vcf.gz
 
 inputs:
   ref_tar_gz: { type: File, doc: "TAR gzipped snpEff reference" }
   input_vcf: { type: File,  secondaryFiles: [.tbi] , doc: "VCF file (with associated index) to be annotated" }
   reference_name: { type: string , doc: "Reference genome used to generate input VCF" }
   output_basename: { type: string, doc: "String that will be used in the output filenames" }
+  tool_name: { type: string, doc: "Tool name to be used in output filenames" }
 
 outputs:
   output_vcf: { type: File, outputBinding: { glob: '*.snpeff.vcf.gz' }, secondaryFiles: [.tbi] }
