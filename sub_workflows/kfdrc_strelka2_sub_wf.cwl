@@ -91,11 +91,11 @@ steps:
     out: [pass_vcf]
 
   snpeff_annot_strelka2:
-    run: ../tools/snpeff-4-3t-cwl1-0.cwl
+    run: ../tools/snpeff_annotate.cwl
     in:
       ref_tar_gz: snpeff_database
       input_vcf: gatk_selectvariants_strelka2/pass_vcf
       reference_name: snpeff_genomeversion
       output_basename: output_basename
-      tool_name: "snpeff"
+
     out: [output_vcf]  

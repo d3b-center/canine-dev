@@ -19,13 +19,13 @@ doc: |
   An example run of this tool will use a command like this:
     /bin/bash -c
     set -eo pipefail
-    tar -xzvf /path/to/ref_tar_gz.ext &&
+    tar -xzvf /path/to/snpeff_database.ext &&
     java -jar /snpEff/snpEff.jar
       -dataDir data/
       -nodownload
       -t
       -v
-      hg38
+      CanFam3.1
       /path/to/input_vcf.ext |
     bgzip -c > output_basename-string-value.tool_name-string-value.snpEff.vcf.gz &&
     tabix output_basename-string-value.tool_name-string-value.snpEff.vcf.gz
@@ -53,15 +53,14 @@ arguments:
       -v
       $(inputs.reference_name)
       $(inputs.input_vcf.path)
-      | bgzip -c > $(inputs.output_basename).$(inputs.reference_name).$(inputs.tool_name).vcf.gz
-      && tabix $(inputs.output_basename).$(inputs.reference_name).$(inputs.tool_name).vcf.gz
+      | bgzip -c > $(inputs.output_basename).$(inputs.reference_name).snpeff.vcf.gz
+      && tabix $(inputs.output_basename).$(inputs.reference_name).snpeff.vcf.gz
 
 inputs:
   ref_tar_gz: { type: File, doc: "TAR gzipped snpEff reference" }
   input_vcf: { type: File,  secondaryFiles: [.tbi] , doc: "VCF file (with associated index) to be annotated" }
   reference_name: { type: string , doc: "Reference genome used to generate input VCF" }
   output_basename: { type: string, doc: "String that will be used in the output filenames" }
-  tool_name: { type: string, doc: "Tool name to be used in output filenames" }
 
 outputs:
-  output_vcf: { type: File, outputBinding: { glob: '*.vcf.gz' }, secondaryFiles: [.tbi] }
+  output_vcf: { type: File, outputBinding: { glob: '*.snpeff.vcf.gz' }, secondaryFiles: [.tbi] }
