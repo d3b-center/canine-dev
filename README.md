@@ -27,12 +27,12 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 3) Suggested reference inputs are:
 
-    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.fa?region=us-east-1) - need to have access to D3B  s3 bucket
-    - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dict](https://s3.console.aws.amazon.com/s3/object/bix-dev-data-bucket/references/canine-references/Canis_familiaris.CanFam3.1.dna.toplevel.dict?region=us-east-1) - need to have  access to D3B  s3 bucket
+    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
+    - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dict] - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
     - `wgs_calling_interval_list`: [Canis_familiaris.CanFam3.1.dna.chromosome.interval_list
-](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e797425e4b09d9acf762d32/) - this was created using `picard  BedToIntervalList` from BED file and reference fasta file
+] - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
     - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
-    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'](https://cavatica.sbgenomics.com/u/d3b-bixu/dev-canine-workflow/files/5e7b9982e4b09d9acf7805d7/) - BED file with all regions in the genome. Should be gzipped
+    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'] - BED file with full canonical chromosomes. Should be gzipped
      - `threads`: 16
 
 4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
