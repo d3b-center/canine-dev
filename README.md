@@ -15,7 +15,7 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 ### Variant Annotation
 
-WIP
+[SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
 ### Tips To Run:
 
@@ -27,13 +27,12 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 3) Suggested reference inputs are:
 
-    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
-    - `reference_dict`: [Canis_familiaris.CanFam3.1.dna.toplevel.dict] - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
-    - `wgs_calling_interval_list`: [Canis_familiaris.CanFam3.1.dna.chromosome.interval_list
-] - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
-    - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
-    - `strelka2_bed`: ['Canis_WGS_withoutcontigs_withoutchrY.bed.gz'] - BED file with full canonical chromosomes. Should be gzipped
-     - `threads`: 16
+    - **`reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz)** - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
+    - **`reference_dict`: `Canis_familiaris.CanFam3.1.dna.toplevel.dict`** - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
+    - **`wgs_calling_interval_list`: `Canis_familiaris.CanFam3.1.dna.chromosome.interval_list`** - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
+    - **`af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp)** - Used for VCF annotations
+    - **`strelka2_bed`: `Canis_WGS_withoutcontigs_withoutchrY.bed.gz`** - BED file with full canonical chromosomes. Should be gzipped and tabix indexed
+     - **`threads`**: 16
 
 4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
 
