@@ -13,7 +13,15 @@ This workflow takes aligned bam input and performs somatic variant calling using
 [Mutect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.1.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php) v4.1.10 from the Broad institute calls SNV, multi-nucleotide variants (MNV, basically equal length substitutions with length > 1) and INDEL.
 The pre-`PASS` filtered results can still be obtained from the workflow in the event the user wishes to keep some calls that failed `PASS` criteria.
 
-### Variant Annotation
+### CNV estimation:
+
+[cnvkit](https://cnvkit.readthedocs.io/en/stable/) v2.9.3 is currently being used to predict copy number alterations. The result files include calls.cns, calls.cnr, gain_loss, seg and metrics files
+
+### SV calling:
+
+[Manta](https://github.com/Illumina/manta) v1.4.0 is used to call SVs. Output is also in vcf format, with calls filtered on PASS. Default settings are used at run time.
+
+### Variant Annotation:
 
 [SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
@@ -27,7 +35,7 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 3) Suggested reference inputs are:
 
-    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
+    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
     - `reference_dict`: `Canis_familiaris.CanFam3.1.dna.toplevel.dict` - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
     - `wgs_calling_interval_list`: `Canis_familiaris.CanFam3.1.dna.chromosome.interval_list` - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
     - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
