@@ -27,12 +27,12 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 3) Suggested reference inputs are:
 
-    - **`reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz)** - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
-    - **`reference_dict`: `Canis_familiaris.CanFam3.1.dna.toplevel.dict`** - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
-    - **`wgs_calling_interval_list`: `Canis_familiaris.CanFam3.1.dna.chromosome.interval_list`** - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
-    - **`af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp)** - Used for VCF annotations
-    - **`strelka2_bed`: `Canis_WGS_withoutcontigs_withoutchrY.bed.gz`** - BED file with full canonical chromosomes. Should be gzipped and tabix indexed
-     - **`threads`**: 16
+    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
+    - `reference_dict`: `Canis_familiaris.CanFam3.1.dna.toplevel.dict` - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
+    - `wgs_calling_interval_list`: `Canis_familiaris.CanFam3.1.dna.chromosome.interval_list` - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
+    - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
+    - `strelka2_bed`: `Canis_WGS_withoutcontigs_withoutchrY.bed.gz` - BED file with full canonical chromosomes. Should be gzipped and tabix indexed
+     - `threads`: 16
 
 4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
 
@@ -40,15 +40,19 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
         - Strelka2:
             - `strelka2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for strelka2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
             - `strelka2_pass_vcf`: All somatic and indel calls from strelk2 filtered with `PASS`
+            - `strelka2_snpeff_vcf`: All somatic and indel calls from strelk2 that  were annotated with SnpEff 
         - Mutect2:
             - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
             - `mutect2_pass_vcf`: All somatic and indel calls from mutect2 filtered with `PASS`
+            - `mutect2_snpeff_vcf`: All somatic and indel calls from mutect2 that were  annotated with SnpEff
         - Lancet:
             - `lancet_prepass_vcf`: Somatic  SNV and indel call results with  all the `FILTER` categories from lancet tool. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
             - `lancet_pass_vcf`: All somatic and indel calls from lancet filtered with `PASS`
+            - `lancet_snpeff_vcf`: All somatic and indel calls from lancet that were annotated with  SnpEff
         - Vardict:
             - `vardict_prepass_vcf`:  Somatic snv and indel call results with all `FILTER` categories for vardict. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.   
             - `vardict_pass_vcf`: All somatic and indel calls from vardict filtered with `PASS`
+            - `vardict_snpeff_vcf`: All somatic  and indel calls from vardict that were annotated with SnpEff
 
 
 
