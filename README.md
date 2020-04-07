@@ -24,13 +24,15 @@ Both the annotated vcf and maf file are made available.
 
 ### Tips To Run:
 
-1) For input cram files, be sure to have indexed them beforehand as well.
+1) For input bam files, be sure to have indexed them beforehand as well. For a bam file with name `file.bam`, the corresponding bai file should be  named `file.bai`
 
-2) What is `select_vars_mode` you ask? On occasion, using GATK's `SelectVariants` tool will fail, so a simple `grep` mode on `PASS` can be used instead.
+2) As a cavatica app, certain features  like number of  threads and `PASS` filter mode are populated by default
+
+3) What is `select_vars_mode` you ask? On occasion, using GATK's `SelectVariants` tool will fail, so a simple `grep` mode on `PASS` can be used instead.
 Related, `bcftools_filter_vcf` is built in as a convenience in case your b allele frequency file has not been filtered on `PASS`.
 You can use the `include_expression` `Filter="PASS"` to achieve this.
 
-3) Suggested reference inputs are:
+4) Suggested reference inputs are:
 
     - `reference_fasta`: [Homo_sapiens_assembly38.fasta](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need a valid google account, this is a link to the resource bundle from Broad GATK
     - `reference_dict`: [Homo_sapiens_assembly38.dict](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need a valid google account, this is a link to the resource bundle from Broad GATK
@@ -42,7 +44,7 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
      Current production workflow uses this version, and is compatible with the release used in the vcf2maf tool.
      - `threads`: 16
 
-4) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
+5) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
 
     - Simple variant callers
         - Strelka2:
@@ -57,9 +59,12 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
             - `mutect2_vep_maf`: maf of format of `mutect2_vep_vcf`
 
 
-5) Docker images - the workflow tools will automatically pull them, but as a convenience are listed below:
+6) Docker images - the workflow tools will automatically pull them, but as a convenience are listed below:
     - `Strelka2`: obenauflab/strelka
     - `Mutect2` and all `GATK` tools: kfdrc/gatk:4.1.1.0
+    - `Lancet`: kfdrc/lancet:1.0.7
+    - `VarDict Java`: kfdrc/vardict:1.7.0
+    - `CNVkit`: images.sbgenomics.com/milos_nikolic/cnvkit:0.9.3
     - `samtools`: kfdrc/samtools:1.9
     - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
 
