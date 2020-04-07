@@ -48,15 +48,35 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
     - Simple variant callers
         - Strelka2:
-            - `strelka2_vep_vcf`: Variant effect predictor annotated vcf, filtered on `PASS`, somatic snv and indel call results from strelka2
-            - `strelka2_vep_tbi`: Index file of above bgzipped vcf
-            - `strelka2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for strelka2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
-            - `strelka2_vep_maf`: Mutation annotation file (maf) format of `strelka2_vep_vcf`
+            - `strelka2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for strelka2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
+            - `strelka2_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
+            - `strelka2_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
         - Mutect2:
-            - `mutect2_vep_vcf`: Variant effect predictor annotated vcf, filtered on `PASS`, somatic snv and indel call results from mutect2
-            - `mutect2_vep_tbi`: Index file of above bgzipped vcf
-            - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter.
-            - `mutect2_vep_maf`: maf of format of `mutect2_vep_vcf`
+            - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
+            - `mutect2_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
+            - `mutect2_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+        - VardictJava
+            - `vardict_prepass_vcf`: All call results with all `FILTER` categories for VardictJava. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter and our `StrongSomatic` subset.
+            - `vardict_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
+            - `vardict_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+        - Lancet
+          - `lancet_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for lancet. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
+          - `lancet_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
+          - `lancet_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+
+    - Structural variant callers
+        - Manta:
+            - `manta_prepass_vcf`: SV results with all FILTER categories for manta. Use this file if you believe important variants are being left out when using the algorithm's PASS filter
+            - `manta_pass_vcf`: SV results filtered for `PASS`
+
+    - Copy number variation callers
+        - CNVkit
+          - `cnvkit_cnr`: Copy number ratio
+          - `cnvkit_cnn_output`: Normal/control sample copy number
+          - `cnvkit_calls`: Tumor/sample copy number
+          - `cnvkit_metrics`: Basic seg count and call stats
+          - `cnvkit_gainloss`: Per-gene log2 ratio
+          - `cnvkit_seg`: Classic microarray-style seg file  
 
 
 6) Docker images - the workflow tools will automatically pull them, but as a convenience are listed below:
