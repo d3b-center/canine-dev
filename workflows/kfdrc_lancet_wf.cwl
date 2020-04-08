@@ -48,6 +48,7 @@ inputs:
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
+  lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
 
 steps:
   bedops_gen_lancet_intervals:
@@ -89,7 +90,7 @@ steps:
       window: lancet_window
       padding: lancet_padding
     out:
-      [lancet_prepass_vcf, lancet_pass_vcf]
+      [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
