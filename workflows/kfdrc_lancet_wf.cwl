@@ -44,13 +44,10 @@ inputs:
   lancet_window: {type: ['null', int], doc: "window size for lancet.  default is 600, recommend 500 for WGS, 600 for exome+", default: 600}
   lancet_padding: {type: ['null', int], doc: "Recommend 0 if interval file padded already, half window size if not", default: 300}
   output_basename: string
-  snpeff_database: File
-  snpeff_genomeversion: string
 
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
-  lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
 
 steps:
   bedops_gen_lancet_intervals:
@@ -91,10 +88,8 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
     out:
-      [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
+      [lancet_prepass_vcf, lancet_pass_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
