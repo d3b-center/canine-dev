@@ -3,6 +3,7 @@ Canine WF development
 
 ![data service logo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9BnbvIsTkK3QlSGMDvlgu0tZQJ1q4crMvA-S3fcWfIq6y2d2Y)
 
+
 This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow, which includes somatic variant calling. 
 This workflow takes aligned bam input and performs somatic variant calling using Strelka2, Mutect2, Lancet, and VarDict Java, CNV estimation using CNVkit, and SV calls using Manta. Somatic variant call results are annotated using SnpEff. The `workflows/kfdrc_production_WGS_somatic_variant_cnv.cwl` would run all tools described below for WGS.
 
@@ -17,14 +18,22 @@ Each caller has a different approach to variant calling, and together one can gl
 Furthermore, each tool's results, in variant call format (vcf), are filtered on the `PASS` flag, with VarDict Java results additionally filtered for the flag `StrongSomatic`. Their results also include germline hits and other categories by default.
 The pre-`PASS` filtered results can still be obtained from the workflow in the event the user wishes to keep some calls that failed `PASS` criteria.
 
-### Variant Annotation
+### CNV estimation:
 
-[Variant Effect Predictor](https://useast.ensembl.org/info/docs/tools/vep/index.html) release 93, wrapped by [vcf2maf](https://github.com/mskcc/vcf2maf) v1.6.17 is used to annotate somatic variant and SV calls.
-Both the annotated vcf and maf file are made available.
+[cnvkit](https://cnvkit.readthedocs.io/en/stable/) v2.9.3 is currently being used to predict copy number alterations. The result files include calls.cns, calls.cnr, gain_loss, seg and metrics files
+
+### SV calling:
+
+[Manta](https://github.com/Illumina/manta) v1.4.0 is used to call SVs. Output is also in vcf format, with calls filtered on PASS. Default settings are used at run time.
+
+### Variant Annotation:
+
+[SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
 ### Tips To Run:
 
 1) For input bam files, be sure to have indexed them beforehand as well. For a bam file with name `file.bam`, the corresponding bai file should be  named `file.bai`
+
 
 2) As a cavatica app, certain features  like number of  threads and `PASS` filter mode are populated by default
 
@@ -34,14 +43,11 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
 
 4) Suggested reference inputs are:
 
-    - `reference_fasta`: [Homo_sapiens_assembly38.fasta](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need a valid google account, this is a link to the resource bundle from Broad GATK
-    - `reference_dict`: [Homo_sapiens_assembly38.dict](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need a valid google account, this is a link to the resource bundle from Broad GATK
-    - `wgs_calling_interval_list`: [wgs_calling_regions.hg38.interval_list](https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0?pli=1) - need a valid google account, this is a link to the resource bundle from Broad GATK.*To create our 'wgs_canonical_calling_regions.hg38.interval_list', edit this file* by leaving only entries related to chr 1-22, X,Y, and M.M may need to be added.
-    - `af_only_gnomad_vcf`: [af-only-gnomad.hg38.vcf.gz](https://console.cloud.google.com/storage/browser/-gatk-best-practices/somatic-hg38) - need a valid google account, this is a link to the best practices google bucket from Broad GATK.
-    - `exac_common_vcf`: [small_exac_common_3.hg38.vcf.gz](https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-hg38) - need a valid google account, this is a link to the best practices google bucket from Broad GATK.
-    - `strelka2_bed`: [hg38_strelka.bed.gz'](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#extended-use-cases) - this link here has the bed-formatted text needed to copy to create this file. You will need to bgzip this file.
-     - `vep_cache`: `homo_sapiens_vep_93_GRCh38.tar.gz` from ftp://ftp.ensembl.org/pub/release-93/variation/indexed_vep_cache/ - variant effect predictor cache.
-     Current production workflow uses this version, and is compatible with the release used in the vcf2maf tool.
+    - `reference_fasta`: [Canis_familiaris.CanFam3.1.dna.toplevel.fa](ftp://ftp.ensembl.org/pub/release-86/fasta/canis_familiaris/dna/Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz) - Use `gunzip Canis_familiaris.CanFam3.1.dna.toplevel.fa.gz` to unzip file
+    - `reference_dict`: `Canis_familiaris.CanFam3.1.dna.toplevel.dict` - this was created using `gatk CreateSequenceDictionary` and reference fasta file as input  to generate dict file
+    - `wgs_calling_interval_list`: `Canis_familiaris.CanFam3.1.dna.chromosome.interval_list` - this was created using `picard  BedToIntervalList` and BED file (full canonical chromosomes) and reference fasta file as input
+    - `af_only_gnomad_vcf`: [92indsAEDPCDTaimyr.biallelic.up.sort.vcf.gz](https://bigd.big.ac.cn/dogsdv2/pages/modules/download/vcf.jsp) - Used for VCF annotations
+    - `strelka2_bed`: `Canis_WGS_withoutcontigs_withoutchrY.bed.gz` - BED file with full canonical chromosomes. Should be gzipped and tabix indexed
      - `threads`: 16
 
 5) Output files (Note, all vcf files that don't have an explicit index output have index files output as as secondary file.  In other words, they will be captured at the end of the workflow):
