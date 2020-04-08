@@ -3,8 +3,9 @@ Canine WF development
 
 ![data service logo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9BnbvIsTkK3QlSGMDvlgu0tZQJ1q4crMvA-S3fcWfIq6y2d2Y)
 
-This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow for canine data, which includes somatic variant calling. 
-This workflow takes aligned bam input and performs somatic variant calling using Strelka2, and Mutect2.
+
+This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow, which includes somatic variant calling. 
+This workflow takes aligned bam input and performs somatic variant calling using Strelka2, Mutect2, Lancet, and VarDict Java, CNV estimation using CNVkit, and SV calls using Manta. Somatic variant call results are annotated using SnpEff. The `workflows/kfdrc_production_WGS_somatic_variant_cnv.cwl` would run all tools described below for WGS.
 
 
 ### Somatic Variant Calling:
@@ -92,4 +93,5 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
     - `CNVkit`: images.sbgenomics.com/milos_nikolic/cnvkit:0.9.3
     - `samtools`: kfdrc/samtools:1.9
     - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
+    - `SnpEff`: kfdrc/snpeff:4_3t
 
