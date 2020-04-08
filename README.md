@@ -1,7 +1,8 @@
-# canine-dev
-Canine WF development
+# Canine Somatic WF (beta)
 
-<img class="alignleft wp-image-690" src="http://d3b.wpengine.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01.png" alt="The Center for Data Driven Discovery in Biomedicine (D³b)" srcset="https://wtoz2169xad1fy7dm21hr1w4-wpengine.netdna-ssl.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01.png 5182w, https://wtoz2169xad1fy7dm21hr1w4-wpengine.netdna-ssl.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01-300x58.png 300w, https://wtoz2169xad1fy7dm21hr1w4-wpengine.netdna-ssl.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01-768x147.png 768w, https://wtoz2169xad1fy7dm21hr1w4-wpengine.netdna-ssl.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01-1024x197.png 1024w" sizes="(max-width: 768px) 100vw, 768px" width="768" height="147">
+<div style="background-color:#00A1DE">
+<img  src="https://wtoz2169xad1fy7dm21hr1w4-wpengine.netdna-ssl.com/wp-content/uploads/2015/12/CHOP-Branded-Center-for-Data-Driven-Discovery-Logo_WHITE-01.png">
+ </div>
 
 This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow, which includes somatic variant calling. 
 This workflow takes aligned bam input and performs somatic variant calling using Strelka2, Mutect2, Lancet, and VarDict Java, CNV estimation using CNVkit, and SV calls using Manta. Somatic variant call results are annotated using SnpEff. The `workflows/kfdrc_production_WGS_somatic_variant_cnv.cwl` would run all tools described below for WGS.
