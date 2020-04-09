@@ -30,6 +30,10 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 [SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
+### Consensus calling for somatic SNV and INDEL calling
+
+Consensus calling is performed for all variants generated via the four somatic  callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus along with some custom changes for MNP.
+
 ### Tips To Run:
 
 1) For input bam files, be sure to have indexed them beforehand as well. For a bam file with name `file.bam`, the corresponding bai file should be  named `file.bai`
