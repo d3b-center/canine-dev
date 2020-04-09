@@ -11,7 +11,7 @@ This workflow takes aligned bam input and performs somatic variant calling using
 ### Somatic Variant Calling:
 
 [Strelka2](https://github.com/Illumina/strelka) v2.9.3 calls single nucleotide variants (SNV) and insertions/deletions (INDEL).
-[Mutect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.1.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php) v4.1.10 from the Broad institute calls SNV, multi-nucleotide variants (MNV, basically equal length substitutions with length > 1) and INDEL.
+[Mutect2](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.1.0/org_broadinstitute_hellbender_tools_walkers_mutect_Mutect2.php) v4.1.1.0 from the Broad institute calls SNV, multi-nucleotide variants (MNV, basically equal length substitutions with length > 1) and INDEL.
 [Lancet](https://github.com/nygenome/lancet) v1.0.7 from the New York Genome Center (NYGC) calls SNV, MNV, and INDEL.
 [VarDict Java](https://github.com/AstraZeneca-NGS/VarDictJava) v1.7.0 from AstraZeneca calls SNV, MNV, INDEL and more.
 Each caller has a different approach to variant calling, and together one can glean confident results. Strelka2 is run with default settings, similarly Mutect2 following Broad Best Practices, as of this [workflow](https://github.com/broadinstitute/gatk/blob/4.1.1.0/scripts/mutect2_wdl/mutect2.wdl). Lancet is run in what I'd call an "Exome+" mode, based on the NYGC methods described [here](https://www.biorxiv.org/content/biorxiv/early/2019/04/30/623702.full.pdf). In short, regions from GENCODE gtf with feature annotations `exon` and `UTR` are used as intervals, as well as regions flanking hits from `strelka2` and `mutect2`. Lastly, VarDict Java run params follow the protocol that the [Blue Collar Bioinformatics](https://bcbio-nextgen.readthedocs.io/en/latest/index.html) uses, with the exception of using a min variant allele frequency (VAF) of 0.05 instead of 0.1, which we find to be relevant for rare cancer variant discovery. We also employ their false positive filtering methods.
@@ -29,6 +29,19 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 ### Variant Annotation:
 
 [SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
+
+### Consensus calling for somatic variants:
+
+Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus, with acceptance criteria of two or more callers considered a consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNPs. The process can be outlined as:
+1) Multi-allelic calls are split into multiple lines
+2) Non-snps are left-aligned normalized as callers may vary on how they start the position of indels and MNPs.
+3) Stelka2 MNPs are constructed as follows:
+    a) All MNPs from three callers(Mutect2, VarDict and Lancet) were extracted
+    b) Strelka2 snps are scanned for overlap with existing MNPs, and constructed to become an mnp is if overlaps with an existing one from one of the other three callers, withth elongest possible mnp chosen
+    c) Newly constructed MNPs will replace the component snps, with GT and depth information from the first base used
+4) The bcbio ensemble tool is used to evaluate consensus among the normalized and modified strelka2 vcf
+
+The above described process for Strelka2 MNP construction has not been validated, use at your own risk
 
 ### Tips To Run:
 
@@ -94,4 +107,5 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
     - `samtools`: kfdrc/samtools:1.9
     - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
     - `SnpEff`: kfdrc/snpeff:4_3t
+    - `bcbio variant recall`: kfdrc/bcbio_vr:0.2.4
 
