@@ -30,9 +30,9 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 [SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
-### Consensus calling for somatic SNV and INDEL calling
+### Consensus calling for somatic SNV and INDEL calling:
 
-Consensus calling is performed for all variants generated via the four somatic  callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus along with some custom changes for MNP.
+Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNP's. All MNP's from three callers(Mutect2, VarDict and Lancet) were changed to consecutive SNP positions in the  VCF files. Once  consensus is performed, all SNP's on consecutive positions are moved to one line labelled as MNP. Lancet calls an extra base pair at  the beginning of the MNP even though the alternate base pair is the same as reference(Ex: `TGT > TTA`). The first pair was lopped off for all MNP calls from Lancet before consensus was called so it stays consistent with Mutect2 and VarDict calls.  
 
 ### Tips To Run:
 
