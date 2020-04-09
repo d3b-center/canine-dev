@@ -32,16 +32,16 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 ### Consensus calling for somatic variants:
 
-Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus, with acceptance criteria of two or more callers considered a consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNP's. The process can be outlined as:
+Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus, with acceptance criteria of two or more callers considered a consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNPs. The process can be outlined as:
 1) Multi-allelic calls are split into multiple lines
-2) Non-snps are left-aligned normalized as callers may vary on how they start the position of indels and mnps.
-3) Stelka2 mnps are constructed as follows:
+2) Non-snps are left-aligned normalized as callers may vary on how they start the position of indels and MNPs.
+3) Stelka2 MNPs are constructed as follows:
     a) All MNPs from three callers(Mutect2, VarDict and Lancet) were extracted
     b) Strelka2 snps are scanned for overlap with existing MNPs, and contructed to become an mnp is if overlaps with an existing one from one of the other three callers, withth elongest possible mnp chosen
-    c) Newly contructed mnps will replace the compement snps, with GT and depth inforamtion from the first base used
+    c) Newly contructed MNPs will replace the compement snps, with GT and depth inforamtion from the first base used
 4) The bcbio ensemble tool is used to evaluate consensus among the normalized and modified strelka2 vcf
 
-The above described process for Strelka2 mnp construction has not been validated, use at your own risk
+The above described process for Strelka2 MNP construction has not been validated, use at your own risk
 
 ### Tips To Run:
 
