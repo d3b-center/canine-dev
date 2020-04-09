@@ -37,8 +37,8 @@ Consensus calling is performed for all variants generated via the four somatic c
 2) Non-snps are left-aligned normalized as callers may vary on how they start the position of indels and MNPs.
 3) Stelka2 MNPs are constructed as follows:
     a) All MNPs from three callers(Mutect2, VarDict and Lancet) were extracted
-    b) Strelka2 snps are scanned for overlap with existing MNPs, and contructed to become an mnp is if overlaps with an existing one from one of the other three callers, withth elongest possible mnp chosen
-    c) Newly contructed MNPs will replace the compement snps, with GT and depth inforamtion from the first base used
+    b) Strelka2 snps are scanned for overlap with existing MNPs, and constructed to become an mnp is if overlaps with an existing one from one of the other three callers, withth elongest possible mnp chosen
+    c) Newly constructed MNPs will replace the component snps, with GT and depth information from the first base used
 4) The bcbio ensemble tool is used to evaluate consensus among the normalized and modified strelka2 vcf
 
 The above described process for Strelka2 MNP construction has not been validated, use at your own risk
