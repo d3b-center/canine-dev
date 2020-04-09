@@ -30,9 +30,18 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 [SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
 
-### Consensus calling for somatic SNV and INDEL calling:
+### Consensus calling for somatic variants:
 
-Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNP's. All MNP's from three callers(Mutect2, VarDict and Lancet) were changed to consecutive SNP positions in the  VCF files. Once  consensus is performed, all SNP's on consecutive positions are moved to one line labelled as MNP. Lancet calls an extra base pair at  the beginning of the MNP even though the alternate base pair is the same as reference(Ex: `TGT > TTA`). The first pair was lopped off for all MNP calls from Lancet before consensus was called so it stays consistent with Mutect2 and VarDict calls.  
+Consensus calling is performed for all variants generated via the four somatic callers. [bcio ensembl](https://github.com/bcbio/bcbio.variation.recall#ensemble) calling for multiple callers was used for consensus, with acceptance criteria of two or more callers considered a consensus. Custom changes were performed to the MNP calls before consensus because strelka2 does not call MNP's. The process can be outlined as:
+1) Multi-allelic calls are split into multiple lines
+2) Non-snps are left-aligned normalized as callers may vary on how they start the position of indels and mnps.
+3) Stelka2 mnps are constructed as follows:
+    a) All MNPs from three callers(Mutect2, VarDict and Lancet) were extracted
+    b) Strelka2 snps are scanned for overlap with existing MNPs, and contructed to become an mnp is if overlaps with an existing one from one of the other three callers, withth elongest possible mnp chosen
+    c) Newly contructed mnps will replace the compement snps, with GT and depth inforamtion from the first base used
+4) The bcbio ensemble tool is used to evaluate consensus among the normalized and modified strelka2 vcf
+
+The above described process for Strelka2 mnp construction has not been validated, use at your own risk
 
 ### Tips To Run:
 
@@ -98,4 +107,5 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
     - `samtools`: kfdrc/samtools:1.9
     - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
     - `SnpEff`: kfdrc/snpeff:4_3t
+    - `bcbio variant recall`: kfdrc/bcbio_vr:0.2.4
 
