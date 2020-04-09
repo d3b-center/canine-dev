@@ -11,17 +11,12 @@ inputs:
   mutect2_vcf: {type: File, secondaryFiles: ['.tbi']}
   lancet_vcf: {type: File, secondaryFiles: ['.tbi']}
   vardict_vcf: {type: File, secondaryFiles: ['.tbi']}
-  input_tumor_name: string
-  input_normal_name: string
   output_basename: string
   min_overlap: {type: ['null', int], default: 2, doc: "Min number of callers to declare consensus.  Default is 2"}
-  vep_cache: {type: File, doc: "tar gzipped cache from ensembl/local converted cache"}
   strip_info: {type: ['null', string], doc: "If given, remove previous annotation information based on INFO file, i.e. to strip VEP info, use INFO/CSQ or INFO/ANN depending on how VEP was run for instance"}
 
 outputs:
-  vep_consensus_vcf: {type: File, outputSource: vep_annot_consensus/output_vcf}
-  vep_consensus_tbi: {type: File, outputSource: vep_annot_consensus/output_tbi}
-  vep_consensus_maf: {type: File, outputSource: vep_annot_consensus/output_maf}
+  consensus_vcf: {type: File, outputSource: bcbio_variant_recall_ensemble/consensus_vcf}
 
 steps:
   normalize_strelka2_vcf:
@@ -87,15 +82,3 @@ steps:
       output_basename: output_basename
     out: [consensus_vcf]
 
-  vep_annot_consensus:
-    run: ../tools/vep_vcf2maf.cwl
-    in:
-      input_vcf: bcbio_variant_recall_ensemble/consensus_vcf
-      output_basename: output_basename
-      tumor_id: input_tumor_name
-      normal_id: input_normal_name
-      tool_name:
-        valueFrom: ${return "consensus_somatic"}
-      reference: indexed_reference_fasta
-      cache: vep_cache
-    out: [output_vcf, output_tbi, output_maf, warn_txt]
