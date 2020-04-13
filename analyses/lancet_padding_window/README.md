@@ -21,4 +21,8 @@ Output -
     - `results/all_samples_with_var_comparison` - This file has variant numbers  and also annotations/locations of where  the missing variants are
     - `results/var_comparison.png`
 
+Conclusion - 
+
+The biggest difference in runtimes is when we switch  from 300-600 to 200-400. 
+
     
