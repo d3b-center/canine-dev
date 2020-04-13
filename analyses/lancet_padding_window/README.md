@@ -21,8 +21,8 @@ Output -
     - `results/all_samples_with_var_comparison` - This file has variant numbers  and also annotations/locations of where  the missing variants are
     - `results/var_comparison.png`
 
-Conclusion - 
+##### Conclusion
 
-The biggest difference in runtimes is when we switch  from 300-600 to 200-400. 
+Most of  the runtime difference was when we switched from 300-600 to 200-400. There  is not a significant number of  variants lost between both these parameters. Also note, canine samples were sequenced at 151 read length. So switching to 200-400 (or even 150-300?) cuts down the runtimnme for the the whole WGS workflow
 
     
