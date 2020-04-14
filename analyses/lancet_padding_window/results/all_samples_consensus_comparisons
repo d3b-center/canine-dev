@@ -1,0 +1,20 @@
+300-600	WHCGBM_0000000004	 3578
+200-400	WHCGBM_0000000004	 3581	 2 intergenic_region 3 intron_variant
+150-300	WHCGBM_0000000004	 3564	 1 downstream_gene_variant 10 intergenic_region 13 intron_variant
+75-150	WHCGBM_0000000004	 3533	 1 downstream_gene_variant 22 intergenic_region 20 intron_variant 1 non_coding_transcript_exon_variant 1 synonymous_variant
+300-600	WHCGBM_0000000010	 6506
+200-400	WHCGBM_0000000010	 6474	 1 3_prime_UTR_variant 5 downstream_gene_variant 6 intergenic_region 27 intron_variant 1 synonymous_variant 5 upstream_gene_variant
+150-300	WHCGBM_0000000010	 6428	 1 3_prime_UTR_variant 10 downstream_gene_variant 29 intergenic_region 43 intron_variant 1 splice_region_variant&intron_variant 2 synonymous_variant 11 upstream_gene_variant
+75-150	WHCGBM_0000000010	 6252	 3 3_prime_UTR_variant 1 5_prime_UTR_variant 22 downstream_gene_variant 94 intergenic_region 99 intron_variant 2 missense_variant 1 missense_variant&splice_region_variant 3 splice_region_variant&intron_variant 2 synonymous_variant 26 upstream_gene_variant
+300-600	WHCGBM_0000000011	 8682
+200-400	WHCGBM_0000000011	 8688	 1 3_prime_UTR_variant 7 intergenic_region 4 intron_variant 2 upstream_gene_variant
+150-300	WHCGBM_0000000011	 8653	 1 3_prime_UTR_variant 4 downstream_gene_variant 22 intergenic_region 19 intron_variant 1 non_coding_transcript_exon_variant 6 upstream_gene_variant
+75-150	WHCGBM_0000000011	 8555	 2 3_prime_UTR_variant 5 downstream_gene_variant 64 intergenic_region 43 intron_variant 3 non_coding_transcript_exon_variant 10 upstream_gene_variant
+300-600	WHCGBM_0000000006	 6821
+200-400	WHCGBM_0000000006	 6817	 1 downstream_gene_variant 9 intergenic_region 6 intron_variant 1 synonymous_variant 2 upstream_gene_variant
+150-300	WHCGBM_0000000006	 6791	 2 downstream_gene_variant 21 intergenic_region 20 intron_variant 1 synonymous_variant 5 upstream_gene_variant
+75-150	WHCGBM_0000000006	 6673	 1 3_prime_UTR_variant 6 downstream_gene_variant 76 intergenic_region 48 intron_variant 1 missense_variant 2 synonymous_variant 14 upstream_gene_variant
+300-600	WHCGBM_0000000013	 9396
+200-400	WHCGBM_0000000013	 9391	 1 downstream_gene_variant 4 intergenic_region 1 intron_variant 1 upstream_gene_variant
+150-300	WHCGBM_0000000013	 9388	 7 intergenic_region 3 intron_variant
+75-150	WHCGBM_0000000013	 9363	 2 downstream_gene_variant 16 intergenic_region 12 intron_variant 3 upstream_gene_variant
