@@ -1,0 +1,12 @@
+1) Unxip all VCF files 
+for i in `ls *vcf.gz`; do gunzip $i; done
+
+2) COnvert vcf to  bed
+for i in `ls *vcf`; do sh vcf2bed.sh $i; done
+
+3) Calculate number of variants under each VCF file and annotations
+sh count_var.sh all_samples_bedfiles.txt > all_samples_with_var_comparison
+
+
+
+
