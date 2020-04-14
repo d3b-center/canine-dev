@@ -11,18 +11,18 @@ Apart from the runtime of 300-600, runtimes for padding and window values of 200
 - Python code - `runtime_comparisons.ipynb`
 - Output - `results/runtime_comparison.png`
 
-2. Comaoring variants
+2. Comparing variants
 
-All the  VCF files were converted to BED files (so indels can be represented as multi base regions) and bedtools was used to compare variants of all lancet paranters with 300-600. Number of variants at each window-padding size is shown below
+Each VCF file run at  every padding/window length  was used to run consensus(same inputs  used for mutect2, vardict  and strelka2). All the  VCF files were converted to BED files (so indels can be represented as multi base regions) and bedtools was used to compare variants of all lancet parameters with 300-600. Number of variants at each window-padding size is shown below
 ![](results/var_comparison.png)
-- Inputs used - File with all BEDs listed here - `inputs/all_samples_bedfiles.txt`
+- Inputs used - File with all BEDs listed here - `inputs/consensus_all_samples.txt`
 - Code and readme - `vcf_var_comparison_commands`
 - Output - 
-    - `results/all_samples_with_var_comparison` - This file has variant numbers  and also annotations/locations of where  the missing variants are
-    - `results/var_comparison.png`
+    - `results/all_samples_consensus_comparisons` - This file has variant numbers  and also annotations/locations of where  the missing variants are
+    - `results/var_comparison.pn`
 
 ##### Conclusion
 
-Most of  the runtime difference was when we switched from 300-600 to 200-400. There  is not a significant number of  variants lost between both these parameters. Also note, canine samples were sequenced at 151 read length. So switching to 200-400 (or even 150-300?) cuts down the runtimnme for the the whole WGS workflow
+Most of  the runtime difference was when we switched from 300-600 to 200-400. There  is not a significant number of  variants lost between both these parameters. Also note, canine samples were sequenced at 151 read length. So switching to 200-400 (or even 150-300?) cuts down the runtime for the the whole WGS workflow
 
     
