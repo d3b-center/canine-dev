@@ -23,7 +23,7 @@ Each VCF file run at  every padding/window length  was used to run consensus(sam
 
  3. Comparing variant allele frequencies
 
- Variant allele frequencies between different padding values is compared using lancet VCF files. Variant allele frequencies are calculated from the VCF files using (alt allele DP/total DP from tumor sample). Violin plots below show that the VAF do not vary between different padding lengths except for 75-100 
+ Variant allele frequencies between different padding and window size combinations are compared using lancet VCF files. Variant allele frequencies are calculated from the VCF files using (alt allele DP/total DP from tumor sample). Violin plots below show that the VAF do not vary between different padding lengths except for 75-100 
  ![](results/variant_allele_frequencies.png)
  - Inputs used - File with lancet VCF files - `inputs/all_samples_bedfiles.txt`
  - Code -   `VAF_plots.ipynb`
