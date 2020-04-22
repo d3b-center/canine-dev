@@ -21,6 +21,14 @@ Each VCF file run at  every padding/window length  was used to run consensus(sam
     - `results/all_samples_consensus_comparisons` - This file has variant numbers  and also annotations/locations of where  the missing variants are
     - `results/var_comparison.pn`
 
+ 3. Comparing variant allele frequencies
+
+ Variant allele frequencies between different padding values is compared using lancet VCF files. Variant allele frequencies are calculated from the VCF files using (alt allele DP/total DP from tumor sample). Violin plots below show that the VAF do not vary between different padding lengths except for 75-100 
+ ![](results/variant_allele_frequencies.png)
+ - Inputs used - File with lancet VCF files - `inputs/all_samples_bedfiles.txt`
+ - Code -   `VAF_plots.ipynb`
+ - Output - `results/variant_allele_frequencies.png`
+
 ##### Conclusion
 
 Most of  the runtime difference was when we switched from 300-600 to 200-400. There  is not a significant number of  variants lost between both these parameters. Also note, canine samples were sequenced at 151 read length. So switching to 200-400 (or even 150-300?) cuts down the runtime for the the whole WGS workflow
