@@ -19,13 +19,15 @@ inputs:
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
   cpus: {type: ['null', int], default: 9}
   ram: {type: ['null', int], default: 18, doc: "In GB"}
-  snpeff_database: File
-  snpeff_genomeversion: string
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
   
 outputs:
   vardict_pass_vcf: {type: File, outputSource: gatk_selectvariants_vardict/pass_vcf}
   vardict_prepass_vcf: {type: File, outputSource: sort_merge_vardict_vcf/merged_vcf}
-  vardict_snpeff_vcf: {type: File, outputSource: snpeff_annot_vardict/output_vcf}
+  vardict_vep_vcf: {type: File, outputSource: vep_annot_vardict/output_vcf}
 
 steps:
 
@@ -75,16 +77,20 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  snpeff_annot_vardict:
-    run: ../tools/snpeff_annotate.cwl
+  vep_annot_vardict:
+    run: ../tools/vep_annotate.cwl
     in:
-      ref_tar_gz: snpeff_database
+      reference_gzipped: reference_gzipped
       input_vcf: gatk_selectvariants_vardict/pass_vcf
-      reference_name: snpeff_genomeversion
+      cache: vep_cache
       output_basename: output_basename
       tool_name:
         valueFrom: ${return "vardict"}
-    out: [output_vcf]
+      assembly: vep_assembly
+      species: 
+        valueFrom: ${return "canis_familiaris"}
+      cache_version: vep_cache_version
+    out: [output_vcf] 
 
 
 $namespaces:

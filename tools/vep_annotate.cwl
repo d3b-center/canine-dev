@@ -97,8 +97,8 @@ arguments:
       tabix $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz
 inputs:
   input_vcf: { type: File, secondaryFiles: [.tbi], doc: "VCF file (with associated index) to be annotated" }
-  reference: { type: 'File?',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes" }
-  cache: { type: 'File?', doc: "tar gzipped cache from ensembl/local converted cache" }
+  reference_gzipped: { type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes" }
+  cache: { type: 'File', doc: "tar gzipped cache from ensembl/local converted cache" }
   output_basename: { type: string, doc: "String that will be used in the output filenames" }
   tool_name: { type: string, doc: "Tool name to be used in output filenames" }
   assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
