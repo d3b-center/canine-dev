@@ -56,7 +56,7 @@ doc: |
       --merged
       --check_existing
       --hgvs
-      --fasta /path/to/reference.ext |
+      --fasta /path/to/reference_gzipped.ext |
     bgzip -c > output_basename-string-value.tool_name-string-value.vep.vcf.gz &&
     tabix output_basename-string-value.tool_name-string-value.vep.vcf.gz
 requirements:
@@ -92,7 +92,7 @@ arguments:
       --cache_version  $(inputs.cache_version)
       --assembly $(inputs.assembly)
       --dir_cache $PWD --cache --merged
-      --hgvs --fasta $(inputs.reference.path) |
+      --hgvs --fasta $(inputs.reference_gzipped.path) |
       bgzip -c > $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz &&
       tabix $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz
 inputs:
