@@ -73,6 +73,7 @@ arguments:
     shellQuote: false
     valueFrom: >-
       set -eo pipefail;
+      perl /opt/vep/src/ensembl-vep/INSTALL.pl --NO_TEST --NO_UPDATE --AUTO p --PLUGINS Blosum62 &&
       tar -xvf  $(inputs.cache.path) &&
       /opt/vep/src/ensembl-vep/vep
       --input_file $(inputs.input_vcf.path)
@@ -82,17 +83,13 @@ arguments:
       --vcf
       --offline
       --fork 16
-      --ccds
-      --uniprot
-      --symbol
-      --numbers
-      --canonical
-      --protein
+      --plugin  Blosum62
+      --everything
       --species $(inputs.species)
       --cache_version  $(inputs.cache_version)
       --assembly $(inputs.assembly)
       --dir_cache $PWD --cache --merged
-      --hgvs --fasta $(inputs.reference_gzipped.path) |
+      --fasta $(inputs.reference_gzipped.path) |
       bgzip -c > $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz &&
       tabix $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz
 inputs:

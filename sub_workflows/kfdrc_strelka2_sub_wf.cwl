@@ -8,9 +8,11 @@ requirements:
 
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
   reference_dict: File
-  snpeff_database: File
-  snpeff_genomeversion: string
   strelka2_bed: {type: File, secondaryFiles: ['.tbi']}
   input_tumor_aligned:
     type: File
@@ -47,7 +49,7 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: rename_strelka_samples/reheadered_vcf}
   strelka2_pass_vcf: {type: File, outputSource: gatk_selectvariants_strelka2/pass_vcf}
-  strelka2_snpeff_vcf: {type: File, outputSource: snpeff_annot_strelka2/output_vcf}
+  strelka2_vep_vcf: {type: File, outputSource: vep_annot_strelka2/output_vcf}
 
 steps:
   strelka2:
@@ -90,13 +92,17 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  snpeff_annot_strelka2:
-    run: ../tools/snpeff_annotate.cwl
+  vep_annot_strelka2:
+    run: ../tools/vep_annotate.cwl
     in:
-      ref_tar_gz: snpeff_database
+      reference_gzipped: reference_gzipped
       input_vcf: gatk_selectvariants_strelka2/pass_vcf
-      reference_name: snpeff_genomeversion
+      cache: vep_cache
       output_basename: output_basename
-      tool_name: 
+      tool_name:
         valueFrom: ${return "strelka2"}
+      assembly: vep_assembly
+      species: 
+        valueFrom: ${return "canis_familiaris"}
+      cache_version: vep_cache_version
     out: [output_vcf]  
