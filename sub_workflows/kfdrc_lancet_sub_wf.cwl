@@ -8,6 +8,10 @@ requirements:
 
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
   input_tumor_aligned: {type: File, secondaryFiles: [^.bai]}
   input_normal_aligned: {type: File, secondaryFiles: [^.bai]}
   output_basename: string
@@ -17,13 +21,12 @@ inputs:
   select_vars_mode: {type: ['null', {type: enum, name: select_vars_mode, symbols: ["gatk", "grep"]}], doc: "Choose 'gatk' for SelectVariants tool, or 'grep' for grep expression", default: "gatk"}
   window: {type: int, doc: "window size for lancet.  default is 600, recommend 500 for WGS, 600 for exome+"}
   padding: {type: int, doc: "If WGS (less likely), default 25, if exome+, recommend half window size"}
-  snpeff_database: File
-  snpeff_genomeversion: string
+  
 
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: sort_merge_lancet_vcf/merged_vcf}
   lancet_pass_vcf: {type: File, outputSource: gatk_selectvariants_lancet/pass_vcf}
-  lancet_snpeff_vcf: {type: File, outputSource: snpeff_annot_lancet/output_vcf}
+  lancet_vep_vcf: {type: File, outputSource: vep_annot_lancet/output_vcf}
   
 
 steps:
@@ -63,16 +66,20 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  snpeff_annot_lancet:
-    run: ../tools/snpeff_annotate.cwl
+  vep_annot_lancet:
+    run: ../tools/vep_annotate.cwl
     in:
-      ref_tar_gz: snpeff_database
+      reference_gzipped: reference_gzipped
       input_vcf: gatk_selectvariants_lancet/pass_vcf
-      reference_name: snpeff_genomeversion
+      cache: vep_cache
       output_basename: output_basename
       tool_name:
         valueFrom: ${return "lancet"}
-    out: [output_vcf]  
+      assembly: vep_assembly
+      species: 
+        valueFrom: ${return "canis_familiaris"}
+      cache_version: vep_cache_version
+    out: [output_vcf]   
 
 
 $namespaces:

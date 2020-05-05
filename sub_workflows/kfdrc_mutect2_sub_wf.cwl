@@ -9,8 +9,10 @@ requirements:
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
   reference_dict: File
-  snpeff_database: File
-  snpeff_genomeversion: string
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
   bed_invtl_split: {type: 'File[]', doc: "Bed file intervals passed on from and outside pre-processing step"}
   af_only_gnomad_vcf: {type: File, secondaryFiles: ['.tbi']}
   exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
@@ -52,7 +54,7 @@ outputs:
   mutect2_filtered_stats: {type: File, outputSource: filter_mutect2_vcf/stats_table}
   mutect2_filtered_vcf: {type: File, outputSource: filter_mutect2_vcf/filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: gatk_selectvariants/pass_vcf}
-  mutect2_snpeff_vcf: {type: File, outputSource: snpeff_annot_mutect2/output_vcf}
+  mutect2_vep_vcf: {type: File, outputSource: vep_annot_mutect2/output_vcf}
   
 steps:
   mutect2:
@@ -124,16 +126,20 @@ steps:
       mode: select_vars_mode
     out: [pass_vcf]
 
-  snpeff_annot_mutect2:
-    run: ../tools/snpeff_annotate.cwl
+  vep_annot_mutect2:
+    run: ../tools/vep_annotate.cwl
     in:
-      ref_tar_gz: snpeff_database
+      reference_gzipped: reference_gzipped
       input_vcf: gatk_selectvariants/pass_vcf
-      reference_name: snpeff_genomeversion
+      cache: vep_cache
       output_basename: output_basename
       tool_name:
         valueFrom: ${return "mutect2"}
-    out: [output_vcf]    
+      assembly: vep_assembly
+      species: 
+        valueFrom: ${return "canis_familiaris"}
+      cache_version: vep_cache_version
+    out: [output_vcf]     
   
 
 $namespaces:

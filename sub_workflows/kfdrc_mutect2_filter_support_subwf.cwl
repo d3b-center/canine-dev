@@ -6,7 +6,6 @@ requirements:
   - class: MultipleInputFeatureRequirement
 
 inputs:
-  indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
   reference_dict: File
   wgs_calling_interval_list: "File[]"
   input_tumor_aligned:

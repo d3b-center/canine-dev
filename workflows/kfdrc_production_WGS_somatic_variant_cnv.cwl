@@ -53,8 +53,10 @@ inputs:
   mutect2_exac_common_vcf: {type: File, secondaryFiles: ['.tbi']}
   strelka2_bed: {type: File, secondaryFiles: ['.tbi'], doc: "Bgzipped interval bed file. Recommend canonical chromosomes"}
   output_basename: string
-  snpeff_database: File
-  snpeff_genomeversion: string
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
   cnvkit_annotation_file: {type: File, doc: "refFlat.txt file"}
   cnvkit_wgs_mode: {type: ['null', string], doc: "for WGS mode, input Y. leave blank for hybrid mode", default: "Y"}
   cnvkit_sex: {type: ['null', string ], doc: "If known, choices are m,y,male,Male,f,x,female,Female"}
@@ -63,16 +65,16 @@ inputs:
 outputs:
   strelka2_prepass_vcf: {type: File, outputSource: run_strelka2/strelka2_prepass_vcf}
   strelka2_pass_vcf: {type: File, outputSource: run_strelka2/strelka2_pass_vcf}
-  strelka2_snpeff_vcf: {type: File, outputSource: run_strelka2/strelka2_snpeff_vcf}
+  strelka2_vep_vcf: {type: File, outputSource: run_strelka2/strelka2_vep_vcf}
   mutect2_prepass_vcf: {type: File, outputSource: run_mutect2/mutect2_filtered_vcf}
   mutect2_pass_vcf: {type: File, outputSource: run_mutect2/mutect2_pass_vcf}
-  mutect2_snpeff_vcf: {type: File, outputSource: run_mutect2/mutect2_snpeff_vcf}
+  mutect2_vep_vcf: {type: File, outputSource: run_mutect2/mutect2_vep_vcf}
   vardict_prepass_vcf: {type: File, outputSource: run_vardict/vardict_prepass_vcf}
   vardict_pass_vcf: {type: File, outputSource: run_vardict/vardict_pass_vcf}
-  vardict_snpeff_vcf: {type: File, outputSource: run_vardict/vardict_snpeff_vcf}
+  vardict_vep_vcf: {type: File, outputSource: run_vardict/vardict_vep_vcf}
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
-  lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
+  lancet_vep_vcf: {type: File, outputSource: run_lancet/lancet_vep_vcf}
   manta_prepass_vcf: {type: File, outputSource: run_manta/manta_prepass_vcf}
   manta_pass_vcf: {type: File, outputSource: run_manta/manta_pass_vcf}
   cnvkit_cnr: {type: File, outputSource: run_cnvkit/cnvkit_cnr}
@@ -132,10 +134,12 @@ steps:
       select_vars_mode: select_vars_mode
       cpus: vardict_cpus
       ram: vardict_ram
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
+      reference_gzipped: reference_gzipped
+      vep_cache: vep_cache
+      vep_assembly: vep_assembly
+      vep_cache_version: vep_cache_version
     out:
-      [vardict_pass_vcf, vardict_prepass_vcf, vardict_snpeff_vcf]
+      [vardict_pass_vcf, vardict_prepass_vcf, vardict_vep_vcf]
 
   run_mutect2:
     hints:
@@ -155,10 +159,12 @@ steps:
       exome_flag: exome_flag
       output_basename: output_basename
       select_vars_mode: select_vars_mode
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
+      reference_gzipped: reference_gzipped
+      vep_cache: vep_cache
+      vep_assembly: vep_assembly
+      vep_cache_version: vep_cache_version
     out:
-      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_pass_vcf, mutect2_snpeff_vcf]
+      [mutect2_filtered_stats, mutect2_filtered_vcf, mutect2_pass_vcf, mutect2_vep_vcf]
 
   run_strelka2:
     run: ../sub_workflows/kfdrc_strelka2_sub_wf.cwl
@@ -173,10 +179,12 @@ steps:
       exome_flag: exome_flag
       output_basename: output_basename
       select_vars_mode: select_vars_mode
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
+      reference_gzipped: reference_gzipped
+      vep_cache: vep_cache
+      vep_assembly: vep_assembly
+      vep_cache_version: vep_cache_version
     out:
-      [strelka2_prepass_vcf, strelka2_pass_vcf, strelka2_snpeff_vcf]
+      [strelka2_prepass_vcf, strelka2_pass_vcf, strelka2_vep_vcf]
 
   bedops_gen_lancet_intervals:
     run: ../tools/preprocess_lancet_intervals.cwl
@@ -216,10 +224,12 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
+      reference_gzipped: reference_gzipped
+      vep_cache: vep_cache
+      vep_assembly: vep_assembly
+      vep_cache_version: vep_cache_version
     out:
-      [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
+      [lancet_prepass_vcf, lancet_pass_vcf, lancet_vep_vcf]
 
   run_manta:
     hints:

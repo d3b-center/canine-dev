@@ -7,6 +7,10 @@ requirements:
   - class: SubworkflowFeatureRequirement
 inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict]}
+  vep_cache: {type: 'File', doc: "tar gzipped cache from ensembl/local converted cache"}
+  vep_assembly: {type: string, doc: "Type of reference  assembly used. Ex: CanFam3.1 for canine"}
+  vep_cache_version: {type: string, doc: "Version of ensembl cache file, Ex: 99, 98"}
+  reference_gzipped: {type: 'File',  secondaryFiles: [.fai,.gzi], doc: "Fasta genome assembly with indexes"}
   reference_dict: File
   input_tumor_aligned:
     type: File
@@ -44,13 +48,12 @@ inputs:
   lancet_window: {type: ['null', int], doc: "window size for lancet.  default is 600, recommend 500 for WGS, 600 for exome+", default: 600}
   lancet_padding: {type: ['null', int], doc: "Recommend 0 if interval file padded already, half window size if not", default: 300}
   output_basename: string
-  snpeff_database: File
-  snpeff_genomeversion: string
+  
 
 outputs:
   lancet_prepass_vcf: {type: File, outputSource: run_lancet/lancet_prepass_vcf}
   lancet_pass_vcf: {type: File, outputSource: run_lancet/lancet_pass_vcf}
-  lancet_snpeff_vcf: {type: File, outputSource: run_lancet/lancet_snpeff_vcf}
+  lancet_vep_vcf: {type: File, outputSource: run_lancet/lancet_vep_vcf}
 
 steps:
   bedops_gen_lancet_intervals:
@@ -91,10 +94,12 @@ steps:
       ram: lancet_ram
       window: lancet_window
       padding: lancet_padding
-      snpeff_database: snpeff_database
-      snpeff_genomeversion: snpeff_genomeversion
+      vep_cache: vep_cache
+      vep_assembly: vep_assembly
+      vep_cache_version: vep_cache_version
+      reference_gzipped: reference_gzipped
     out:
-      [lancet_prepass_vcf, lancet_pass_vcf, lancet_snpeff_vcf]
+      [lancet_prepass_vcf, lancet_pass_vcf, lancet_vep_vcf]
 
 $namespaces:
   sbg: https://sevenbridges.com
