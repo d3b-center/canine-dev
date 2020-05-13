@@ -4,8 +4,8 @@
   <img alt="Logo for The Center for Data Driven Discovery" src="https://raw.githubusercontent.com/d3b-center/handbook/master/website/static/img/chop_logo.svg?sanitize=true" width="400px" />
 </p>
 
-This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow, which includes somatic variant calling. 
-This workflow takes aligned bam input and performs somatic variant calling using Strelka2, Mutect2, Lancet, and VarDict Java, CNV estimation using CNVkit, and SV calls using Manta. Somatic variant call results are annotated using SnpEff. The `workflows/kfdrc_production_WGS_somatic_variant_cnv.cwl` would run all tools described below for WGS.
+This is the Kids First Data Resource Center (DRC) Whole Genome Sequencing (WGS) Somatic Workflow, which includes somatic variant calling.
+This workflow takes aligned bam input and performs somatic variant calling using Strelka2, Mutect2, Lancet, and VarDict Java, CNV estimation using CNVkit, and SV calls using Manta. Somatic variant call results are annotated using VEP. The `workflows/kfdrc_production_WGS_somatic_variant_cnv.cwl` would run all tools described below for WGS.
 
 
 ### Somatic Variant Calling:
@@ -28,7 +28,7 @@ The pre-`PASS` filtered results can still be obtained from the workflow in the e
 
 ### Variant Annotation:
 
-[SnpEff](http://snpeff.sourceforge.net/) with genome version `CanFam3.1.86` was used for VCF annotation of SNV and INDEL calls. Use `java -jar snpEff.jar download  http://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_CanFam3.1.86.zip`  to download annotation database
+[Variant Effect Predictor (VEP)](https://useast.ensembl.org/info/docs/tools/vep/index.html/) with VEP cache version 99 was used for VCF annotation of SNV and INDEL calls. Download cache file from [ensembl](ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/)
 
 ### Consensus calling for somatic variants:
 
@@ -69,19 +69,19 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
         - Strelka2:
             - `strelka2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for strelka2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
             - `strelka2_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
-            - `strelka2_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+            - `strelka2_vep_vcf`: PASS somatic SNV and indel calls that are annotated with VEP
         - Mutect2:
             - `mutect2_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for mutect2. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
             - `mutect2_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
-            - `mutect2_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+            - `mutect2_vep_vcf`: PASS somatic SNV and indel calls that are annotated with VEP
         - VardictJava
             - `vardict_prepass_vcf`: All call results with all `FILTER` categories for VardictJava. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter and our `StrongSomatic` subset.
             - `vardict_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
-            - `vardict_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+            - `vardict_vep_vcf`: PASS somatic SNV and indel calls that are annotated with VEP
         - Lancet
           - `lancet_prepass_vcf`: Somatic snv and indel call results with all `FILTER` categories for lancet. Use this file if you believe important variants are being left out when using the algorithm's `PASS` filter
           - `lancet_pass_vcf`: Somatic SNV and indel call results  that are  filtered for `PASS`
-          - `lancet_snpeff_vcf`: PASS somatic SNV and indel calls that are annotated with SnpEff
+          - `lancet_vep_vcf`: PASS somatic SNV and indel calls that are annotated with VEP
 
     - Structural variant callers
         - Manta:
@@ -105,7 +105,6 @@ You can use the `include_expression` `Filter="PASS"` to achieve this.
     - `VarDict Java`: kfdrc/vardict:1.7.0
     - `CNVkit`: images.sbgenomics.com/milos_nikolic/cnvkit:0.9.3
     - `samtools`: kfdrc/samtools:1.9
-    - `bcftools` and `vcftools`: kfdrc/bvcftools:latest 
-    - `SnpEff`: kfdrc/snpeff:4_3t
+    - `bcftools` and `vcftools`: kfdrc/bvcftools:latest
+    - `VEP`: kfdrc-vep99-canine
     - `bcbio variant recall`: kfdrc/bcbio_vr:0.2.4
-
