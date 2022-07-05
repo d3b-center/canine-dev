@@ -1,30 +1,56 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
-id: gatk4_calulcate_contamination
-label: GATK Calculate Contamination
+id: gatk_calculatecontamination
+doc: "Calculate the fraction of reads coming from cross-sample contamination"
 requirements:
-  - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
-  - class: DockerRequirement
-    dockerPull: 'kfdrc/gatk:4.1.1.0'
+  - class: ShellCommandRequirement
   - class: ResourceRequirement
-    ramMin: 8000
-    coresMin: 2
-baseCommand: [/gatk, CalculateContamination]
+    ramMin: $(inputs.max_memory*1000)
+    coresMin: $(inputs.cpu)
+  - class: DockerRequirement
+    dockerPull: 'broadinstitute/gatk:4.1.8.0'
+baseCommand: []
 arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
-      --java-options "-Xmx8000m"
-      -I $(inputs.tumor_pileup.path)
-      --matched-normal $(inputs.normal_pileup.path)
-      -O $(inputs.output_basename).contamination.table
-      --tumor-segmentation $(inputs.output_basename).segmentation.table
-
+      gatk
+  - position: 1
+    shellQuote: false
+    prefix: "--java-options"
+    valueFrom: >-
+      $("\"-Xmx"+Math.floor(inputs.max_memory*1000/1.074 - 1)+"M\"")
+  - position: 2
+    shellQuote: false
+    valueFrom: >-
+      CalculateContamination 
+  - position: 3
+    shellQuote: false
+    prefix: "--output"
+    valueFrom: >-
+      ${var pre = inputs.output_prefix ? inputs.output_prefix : inputs.input_tumor_pileup.nameroot; var ext = 'contamination.table'; return pre+'.'+ext}
+  - position: 3
+    shellQuote: false
+    prefix: "--tumor-segmentation"
+    valueFrom: >-
+      ${var pre = inputs.output_prefix ? inputs.output_prefix : inputs.input_tumor_pileup.nameroot; var ext = 'segmentation.table'; return pre+'.'+ext}
 inputs:
-  tumor_pileup: File
-  normal_pileup: File
-  output_basename: string
+  input_tumor_pileup: { type: 'File', inputBinding: { position: 2, prefix: "--input"}, doc: "The tumor/test input pileup table" }
+  input_normal_pileup: { type: 'File?', inputBinding: { position: 2, prefix: "--matched-normal"}, doc: "The matched normal input pileup table" }
+  high_coverage_ratio_threshold: { type: 'float?', inputBinding: { position: 2, prefix: "--high-coverage-ratio-threshold"}, doc: "The maximum coverage relative to the mean." }
+  low_coverage_ratio_threshold: { type: 'float?', inputBinding: { position: 2, prefix: "--low-coverage-ratio-threshold"}, doc: "The minimum coverage relative to the median." }
+  output_prefix:
+    type: 'string?'
+    doc: "String to use as the prefix for the outputs."
+  max_memory:
+    type: 'int?'
+    default: 4
+    doc: "Maximum GB of RAM to allocate for this tool."
+  cpu:
+    type: 'int?'
+    default: 1
+    doc: "Number of CPUs to allocate to this task."
 outputs:
   contamination_table:
     type: File
@@ -34,4 +60,3 @@ outputs:
     type: File
     outputBinding:
       glob: '*.segmentation.table'
-

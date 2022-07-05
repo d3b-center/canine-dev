@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: gatk_gatherpileupsummaries
-doc: "Combine output files from GetPileupSummary in the order defined by a sequence dictionary"
+id: gatk_learnreadorientationmodel
+doc: "Get the maximum likelihood estimates of artifact prior probabilities in the orientation bias mixture model filter"
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
@@ -24,23 +24,25 @@ arguments:
   - position: 2
     shellQuote: false
     valueFrom: >-
-      GatherPileupSummaries
+      LearnReadOrientationModel 
   - position: 3
     shellQuote: false
     prefix: "--output"
     valueFrom: >-
-      ${var pre = inputs.output_prefix ? inputs.output_prefix : 'output'; var ext = 'pileups.table.tsv'; return pre+'.'+ext}
+      ${var pre = inputs.output_prefix ? inputs.output_prefix : 'output'; var ext = 'artifact-priors.tar.gz'; return pre+'.'+ext}
+
 inputs:
-  input_tables:
+  input_f1r2_tars:
     type:
       type: array
       items: File
       inputBinding:
-        prefix: -I
+        prefix: --input 
     inputBinding:
       position: 3
-    doc: "Pileup table(s) output from PileupSummaryTable"
-  reference_dict: { type: 'File', inputBinding: { position: 3, prefix: "--sequence-dictionary" }, doc: "sequence dictionary (.dict) file" }
+  convergence_threshold: { type: 'float?', inputBinding: { position: 3, prefix: "--convergence-threshold"}, doc: "Stop the EM when the distance between parameters between iterations falls below this value" }
+  max_depth: { type: 'int?', inputBinding: { position: 3, prefix: "--max-depth"}, doc: "sites with depth higher than this value will be grouped" }
+  num_em_iterations: { type: 'int?', inputBinding: { position: 3, prefix: "--num-em-iterations"}, doc: "give up on EM after this many iterations" }
   output_prefix:
     type: 'string?'
     doc: "String to use as the prefix for the outputs."
@@ -56,4 +58,4 @@ outputs:
   output:
     type: File
     outputBinding:
-      glob: '*.pileups.table.tsv'
+      glob: '*.artifact-priors.tar.gz'

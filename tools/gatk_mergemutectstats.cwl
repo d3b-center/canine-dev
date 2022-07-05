@@ -1,23 +1,35 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
-id: gatk4_mergepileup
-label: GATK Merge Stats
+id: gatk_getpileupsummaries
+doc: "Tabulates pileup metrics for inferring contamination"
 requirements:
-  - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
-  - class: DockerRequirement
-    dockerPull: 'kfdrc/gatk:4.1.1.0'
+  - class: ShellCommandRequirement
   - class: ResourceRequirement
-    ramMin: 4000
-    coresMin: 2
-baseCommand: [/gatk, MergeMutectStats]
+    ramMin: $(inputs.max_memory*1000)
+    coresMin: $(inputs.cpu)
+  - class: DockerRequirement
+    dockerPull: 'broadinstitute/gatk:4.1.8.0'
+baseCommand: []
 arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
-      --java-options "-Xmx3000m"
-      -O $(inputs.output_basename).Mutect2.merged.stats 
-
+      gatk
+  - position: 1
+    shellQuote: false
+    prefix: "--java-options"
+    valueFrom: >-
+      $("\"-Xmx"+Math.floor(inputs.max_memory*1000/1.074 - 1)+"M\"")
+  - position: 2
+    shellQuote: false
+    valueFrom: >-
+      MergeMutectStats
+  - position: 3
+    shellQuote: false
+    prefix: "--output"
+    valueFrom: >-
+      ${var pre = inputs.output_prefix ? inputs.output_prefix : 'output'; var ext = 'Mutect2.merged.stats'; return pre+'.'+ext}
 inputs:
   input_stats:
     type:
@@ -26,8 +38,19 @@ inputs:
       inputBinding:
         prefix: --stats
     inputBinding:
-      position: 1
-  output_basename: string
+      position: 3
+    doc: "Stats from Mutect2 scatters of a single tumor or tumor-normal pair  This argument must be specified at least once."
+  output_prefix:
+    type: 'string?'
+    doc: "String to use as the prefix for the outputs."
+  max_memory:
+    type: 'int?'
+    default: 8
+    doc: "Maximum GB of RAM to allocate for this tool."
+  cpu:
+    type: 'int?'
+    default: 2
+    doc: "Number of CPUs to allocate to this task."
 outputs:
   merged_stats:
     type: File
