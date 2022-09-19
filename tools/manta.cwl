@@ -1,49 +1,73 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
-id: kfdrc-manta-sv
-label: Manta sv caller
-doc: 'Calls structural variants.  Tool designed to pick correct run mode based on if tumor, normal, or both crams are given'
+id: manta 
+doc: "Calls structural variants."
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
   - class: ResourceRequirement
-    ramMin: 10000
-    coresMin: $(inputs.cores)
+    ramMin: $(inputs.ram * 1000)
+    coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'kfdrc/manta:1.4.0'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/manta:1.6.0'
 
-baseCommand: [/manta-1.4.0.centos6_x86_64/bin/configManta.py]
+baseCommand: []
 arguments:
-  - position: 1
+  - position: 0
     shellQuote: false
-    valueFrom: >-
-      ${
-        var std = " --ref " + inputs.reference.path + " --callRegions " + inputs.strelka2_bed.path + " --runDir=./ && ./runWorkflow.py -m local -j " + inputs.cores + " --quiet ";
-        var mv = " && mv results/variants/";
-        if (typeof inputs.input_tumor_bam === 'undefined' || inputs.input_tumor_bam === null){
-          var mv_cmd = mv + "diploidSV.vcf.gz " +  inputs.output_basename + ".manta.diploidSV.vcf.gz" + mv + "diploidSV.vcf.gz.tbi " + inputs.output_basename + ".manta.diploidSV.vcf.gz.tbi";
-          return "--bam ".concat(inputs.input_normal_bam.path, std, mv_cmd);
-        }
-        else if (typeof inputs.input_normal_bam === 'undefined' || inputs.input_normal_bam === null){
-          var mv_cmd = mv + "tumorSV.vcf.gz " + inputs.output_basename + ".manta.tumorSV.vcf.gz" + mv + "tumorSV.vcf.gz.tbi " + inputs.output_basename + ".manta.tumorSV.vcf.gz.tbi";
-          return "--tumorBam " + inputs.input_tumor_bam.path + std + mv_cmd;
-        }
-        else{
-          var mv_cmd = mv + "somaticSV.vcf.gz " + inputs.output_basename + ".manta.somaticSV.vcf.gz" + mv + "somaticSV.vcf.gz.tbi " + inputs.output_basename + ".manta.somaticSV.vcf.gz.tbi";
-          return "--tumorBam " + inputs.input_tumor_bam.path + " --normalBam " + inputs.input_normal_bam.path + std + mv_cmd;
-        }
-      }
+    valueFrom: >
+      /manta-1.6.0.centos6_x86_64/bin/configManta.py --runDir=./
+  - position: 10
+    prefix: "&&"
+    valueFrom: >
+      ./runWorkflow.py -m local
 
 inputs:
-    reference: {type: File, secondaryFiles: [^.dict, .fai]}
-    strelka2_bed: {type: File, secondaryFiles: [.tbi]}
-    input_tumor_bam: {type: ["null", File], secondaryFiles: [.bai]}
-    input_normal_bam: {type: ["null", File], secondaryFiles: [.bai]}
-    cores: {type: ['null', int], default: 18}
-    output_basename: string
+    config: {type: 'File?', inputBinding: {position: 2, prefix: "--config"}, doc: "configuration file to override defaults in global config file (/manta-1.6.0.centos6_x86_64/bin/configManta.py.ini)" }
+    input_tumor_reads: {type: 'File?', inputBinding: {position: 2, prefix: "--tumorBam"}, secondaryFiles: [{pattern: '.crai', required: false}, {pattern: '.bai', required: false}], doc: "Tumor sample BAM or CRAM file. Only up to one tumor bam file accepted."}
+    input_normal_reads:
+      type:
+        - 'null'
+        - type: array
+          items: File
+          inputBinding:
+            prefix: "--normalBam"
+      inputBinding:
+        position: 2
+      secondaryFiles: [{pattern: '.crai', required: false}, {pattern: '.bai', required: false}]
+      doc: |
+        Normal sample BAM or CRAM file(s). May be specified more than once, multiple inputs will be treated as each BAM file representing a different sample.
+    exome: { type: 'boolean?', inputBinding: {position: 2, prefix: "--exome"}, doc: "Set options for WES input: turn off depth filters" } 
+    rna: { type: 'boolean?', inputBinding: {position: 2, prefix: "--rna"}, doc: "Set options for RNA-Seq input. Must specify exactly one bam input file" }
+    unstranded_rna: { type: 'boolean?', inputBinding: {position: 2, prefix: "--unstrandedRNA"}, doc: "Set if RNA-Seq input is unstranded: Allows splice-junctions on either strand" }
+    indexed_reference_fasta: { type: 'File', inputBinding: {position: 2, prefix: "--referenceFasta"}, secondaryFiles: [{pattern: '^.dict', required: true}, {pattern: '.fai', required: true}], doc: "samtools-indexed reference fasta file"}
+    call_regions: { type: 'File?', inputBinding: {position: 2, prefix: "--callRegions"}, doc: "bgzip-compressed/tabix-indexed BED file containing the set of regions to call. No VCF output will be provided outside of these regions." }
+    cpu: {type: 'int?', default: 16, inputBinding: {position:12, prefix: "-j"}, doc: "CPUs to allocate to this task"}
+    ram: {type: 'int?', default: 32, doc: "GB of RAM to allocate to this task"}
+
 outputs:
-  - id: output_sv
+  candidate_sv:
+    type: 'File?'
+    outputBinding:
+      glob: 'results/variants/*candidateSV.vcf.gz'
+    secondaryFiles: [{pattern: '.tbi', required: true}]
+  diploid_sv:
+    type: 'File?'
+    outputBinding:
+      glob: 'results/variants/*diploidSV.vcf.gz'
+    secondaryFiles: [{pattern: '.tbi', required: true}]
+  somatic_sv:
+    type: 'File?'
+    outputBinding:
+      glob: 'results/variants/*somaticSV.vcf.gz'
+    secondaryFiles: [{pattern: '.tbi', required: true}]
+  tumor_sv:
+    type: 'File?'
+    outputBinding:
+      glob: 'results/variants/*tumorSV.vcf.gz'
+    secondaryFiles: [{pattern: '.tbi', required: true}]
+  small_indels:
     type: File
     outputBinding:
-      glob: '*SV.vcf.gz'
-    secondaryFiles: [.tbi]
+      glob: 'results/variants/*candidateSmallIndels.vcf.gz'
+    secondaryFiles: [{pattern: '.tbi', required: true}]
