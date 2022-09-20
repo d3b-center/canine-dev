@@ -31,7 +31,6 @@ arguments:
     valueFrom: >-
       ${var pre = inputs.output_prefix ? inputs.output_prefix : inputs.input_interval_list ? inputs.input_interval_list.nameroot : 'output'; var ext = 'pileups.table'; return pre+'.'+ext}
 inputs:
-
   input_reads:
     type: 'File'
     secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }]
