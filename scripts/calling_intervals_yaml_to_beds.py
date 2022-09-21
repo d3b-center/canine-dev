@@ -11,5 +11,5 @@ for batch in data["calling_intervals"]:
   outname = "scatter_interval_{}.bed".format(count)
   with open(outname, "w") as f:
     for interval in batch:
-      f.write("{}\t{}\t{}\n".format(interval["contig"], interval["start"], interval["stop"]))
+      f.write("{}\t{}\t{}\n".format(interval["contig"], interval["start"] - 1, interval["stop"]))
   count += 1

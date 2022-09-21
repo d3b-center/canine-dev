@@ -175,6 +175,9 @@ steps:
       targets_file: targets_file
     out: [output]
 
+# vcf stats for pass vcf
+# vcf stats for all vcf
+
 $namespaces:
   sbg: https://sevenbridges.com
 

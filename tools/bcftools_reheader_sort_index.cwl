@@ -62,7 +62,7 @@ inputs:
     default: 4
     doc: "Number of CPUs to allocate to this task."
     inputBinding:
-      posiiton: 2
+      position: 2
       prefix: "--threads"
   ram:
     type: 'int?'
