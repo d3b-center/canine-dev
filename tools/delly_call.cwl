@@ -13,8 +13,8 @@ requirements:
     dockerPull: 'dmiller15/delly:0.7.6'
 baseCommand: [delly, call]
 inputs:
-  input_tumor_bam: { type: 'File', inputBinding: { position: 8 }, doc: "Tumor bam" }
-  input_normal_bams: { type: 'File[]?', inputBinding: { position: 9 }, doc: "Normal bam(s)" }
+  input_tumor_bam: { type: 'File', secondaryFiles: [{pattern: '.bai', required: false}, {pattern: '^.bai', required: false}], inputBinding: { position: 8 }, doc: "Tumor bam file that has been sorted, indexed, and duplicate marked." }
+  input_normal_bams: { type: 'File[]?', secondaryFiles: [{pattern: '.bai', required: false}, {pattern: '^.bai', required: false}], inputBinding: { position: 9 }, doc: "Normal bam(s) that has been sorted, indexed, and duplicate marked." }
   sv_type:
     type:
       - 'null'
@@ -26,7 +26,7 @@ inputs:
       position: 2
     doc: |
       SV type to call
-  genome: { type: 'File', inputBinding: { position: 2, prefix: "--genome"}, doc: "genome fasta file" }
+  genome: { type: 'File', secondaryFiles: [{pattern: '.fai', required: false}], inputBinding: { position: 2, prefix: "--genome"}, doc: "genome fasta file with associated fai index" }
   exclude: { type: 'File', inputBinding: { position: 2, prefix: "--exclude"}, doc: "file with regions to exclude" }
   output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--outfile"}, doc: "SV BCF output file" }
 

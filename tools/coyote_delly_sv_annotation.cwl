@@ -12,15 +12,15 @@ requirements:
     coresMin: $(inputs.cpu)
   - class: InitialWorkDirRequirement
     listing:
-    - entryname:  
+    - entryname: svtop.delly.sv_annotation.parallel_8820499.py
       writable: false
-      entry: svtop.delly.sv_annotation.parallel_8820499.py
+      entry:
         $include: ../scripts/svtop.delly.sv_annotation.parallel_8820499.py
 baseCommand: [python, svtop.delly.sv_annotation.parallel_8820499.py]
 inputs:
   input_vcf: { type: 'File', inputBinding: { position: 2, prefix: "--vcf" }, doc: "VCF from Delly" }
   input_annotation_bed: { type: 'File', inputBinding: { position: 2, prefix: "--annof" }, doc: "BED file containing neccsary annotation information for Delly outputs." }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix; "--outvcfname" }, doc: "Name for the output file." }
+  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--outvcfname" }, doc: "Name for the output file." }
 
   cpu:
     type: 'int?'
@@ -31,7 +31,7 @@ inputs:
     default: 16
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  output: 
+  output:
     type: File
     outputBinding:
-      glob: $(inputs.output_filename) 
+      glob: $(inputs.output_filename)
