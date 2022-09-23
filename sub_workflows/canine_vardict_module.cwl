@@ -26,6 +26,8 @@ inputs:
 outputs:
   vardict_all_vcf: { type: 'File', outputSource: bcftools_concat_index/vcf }
   vardict_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
+  varidct_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
+  vardict_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
   # Need to modify this script to use bedtools
@@ -109,8 +111,23 @@ steps:
       targets_file: targets_file
     out: [output]
 
-# vcf stats for pass vcf
-# vcf stats for all vcf
+  bcftools_stats_all:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_concat_index/vcf
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).vardict.all.stats.txt
+    out: [stats]
+
+  bcftools_stats_pass:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_filter_index/output
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).vardict.pass.stats.txt
+    out: [stats]
 
 $namespaces:
   sbg: https://sevenbridges.com

@@ -24,6 +24,8 @@ inputs:
 outputs:
   octopus_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/vcf }
   octopus_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
+  octopus_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
+  octopus_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
   calling_intervals_yaml_to_beds:
@@ -97,8 +99,23 @@ steps:
         valueFrom: $(1 == 1)
     out: [output]
 
-# vcfstats pass vcf
-# vcfstats all vcf
+  bcftools_stats_all:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_concat_sort_index.cwl/vcf
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).octopus.all.stats.txt
+    out: [stats]
+
+  bcftools_stats_pass:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_filter_index/output
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).octopus.pass.stats.txt
+    out: [stats]
 
 $namespaces:
   sbg: https://sevenbridges.com

@@ -17,10 +17,6 @@ arguments:
     shellQuote: false
     valueFrom: >
       bcftools stats 
-  - position: 90
-    shellQuote: false
-    valueFrom: >
-      $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
 
 inputs:
   # Required Inputs

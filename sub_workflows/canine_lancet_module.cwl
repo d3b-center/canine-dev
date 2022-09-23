@@ -25,6 +25,8 @@ inputs:
 outputs:
   lancet_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index.cwl/vcf }
   lancet_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
+  lancet_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
+  lancet_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
   calling_intervals_yaml_to_beds:
@@ -94,8 +96,23 @@ steps:
         valueFrom: $(1 == 1)
     out: [output]
 
-# vcf stats for pass vcf
-# vcf stats for all vcf
+  bcftools_stats_all:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_concat_sort_index.cwl/vcf
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).lancet.all.stats.txt
+    out: [stats]
+
+  bcftools_stats_pass:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_filter_index/output
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).lancet.pass.stats.txt
+    out: [stats]
 
 $namespaces:
   sbg: https://sevenbridges.com

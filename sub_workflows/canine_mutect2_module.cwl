@@ -40,6 +40,8 @@ inputs:
 outputs:
   mutect2_all_vcf: { type: 'File', outputSource: gatk_filtermutectcalls/filtered_vcf }
   mutect2_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
+  mutect2_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
+  mutect2_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
   calling_intervals_yaml_to_beds:
@@ -47,6 +49,7 @@ steps:
     in:
       input_yaml: calling_intervals
     out: [outputs]
+
   gatk_mutect2:
     run: ../tools/gatk_mutect2.cwl
     scatter: [input_interval_list]
@@ -62,6 +65,7 @@ steps:
       max_memory: mutect2_max_memory
       cpu: mutect2_cpu
     out: [vcf, stats, f1r2]
+
   gatk_getpileupsummaries_tumor:
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
@@ -75,6 +79,7 @@ steps:
       max_memory: getpileupsummaries_max_memory
       cpu: getpileupsummaries_cpu
     out: [output]
+
   gatk_getpileupsummaries_normal:
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
@@ -88,6 +93,7 @@ steps:
       max_memory: getpileupsummaries_max_memory
       cpu: getpileupsummaries_cpu
     out: [output]
+
   bcftools_concat_index:
     run: ../tools/bcftools_concat_index.cwl
     in: #vcfs from mutect2 step
@@ -98,6 +104,7 @@ steps:
       output_type:
         valueFrom: "z"
     out: [vcf]
+
   gatk_mergemutectstats:
     run: ../tools/gatk_mergemutectstats.cwl
     in:
@@ -106,6 +113,7 @@ steps:
       max_memory: mergemutectstats_max_memory
       cpu: mergemutectstats_cpu
     out: [merged_stats]
+
   gatk_learnreadorientationmodel:
     run: ../tools/gatk_learnreadorientationmodel.cwl
     in:
@@ -114,6 +122,7 @@ steps:
       max_memory: learnreadorientationmodel_max_memory
       cpu: learnreadorientationmodel_cpu
     out: [output]
+
   gatk_gatherpileupsummaries_tumor:
     run: ../tools/gatk_gatherpileupsummaries.cwl
     in:
@@ -125,6 +134,7 @@ steps:
       max_memory: gatherpileupsummaries_max_memory
       cpu: gatherpileupsummaries_cpu
     out: [output]
+
   gatk_gatherpileupsummaries_normal:
     run: ../tools/gatk_gatherpileupsummaries.cwl
     in:
@@ -136,6 +146,7 @@ steps:
       max_memory: gatherpileupsummaries_max_memory
       cpu: gatherpileupsummaries_cpu
     out: [output]
+
   gatk_calculatecontamination:
     run: ../tools/gatk_calculatecontamination.cwl
     in:
@@ -145,6 +156,7 @@ steps:
       max_memory: calculatecontamination_max_memory
       cpu: calculatecontamination_cpu
     out: [contamination_table, segmentation_table]
+
   gatk_filtermutectcalls:
     run: ../tools/gatk_filtermutectcalls.cwl
     in:
@@ -160,6 +172,7 @@ steps:
       max_memory: filtermutectcalls_max_memory
       cpu: filtermutectcalls_cpu
     out: [stats_table, filtered_vcf]
+
   bcftools_filter_index:
     run: ../tools/bcftools_filter_index.cwl
     in: #gatk_filtermutectcalls/filtered_vcf
@@ -175,8 +188,23 @@ steps:
       targets_file: targets_file
     out: [output]
 
-# vcf stats for pass vcf
-# vcf stats for all vcf
+  bcftools_stats_all:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: gatk_filtermutectcalls/filtered_vcf
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).mutect2.all.stats.txt
+    out: [stats]
+
+  bcftools_stats_pass:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_filter_index/output
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).mutect2.pass.stats.txt
+    out: [stats]
 
 $namespaces:
   sbg: https://sevenbridges.com

@@ -34,6 +34,8 @@ outputs:
   strelka2_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
   strelka2_realigned_normal_cram: { type: 'File?', outputSource: samtools_view_normal_cram/output }
   strelka2_realigned_tumor_cram: { type: 'File?', outputSource: samtools_view_tumor_cram/output }
+  strelka2_all_vcf_stats: { type: 'File', outputSource: bcftool_stats_all/stats }
+  strelka2_pass_vcf_stats: { type: 'File', outputSource: bcftool_stats_pass/stats }
 
 steps:
   strelka2_somatic:
@@ -117,8 +119,23 @@ steps:
         valueFrom: $(1 == 1)
     out: [output]
 
-# vcf stats for pass vcf
-# vcf stats for all vcf
+  bcftools_stats_all:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_concat_index/vcf
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).strelka2.all.stats.txt
+    out: [stats]
+
+  bcftools_stats_pass:
+    run: ../tools/bcftools_stats.cwl
+    in:
+      input_vcf: bcftools_filter_index/output
+      output_filename:
+        source: output_basename
+        valueFrom: $(self).strelka2.pass.stats.txt
+    out: [stats]
 
 $namespaces:
   sbg: https://sevenbridges.com
