@@ -36,7 +36,7 @@ arguments:
 
 inputs:
   # Required Arguments
-  input_bam_file: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: true }], inputBinding: { position: 2, prefix: '-b' }, doc: "Indexed BAM File" }
+  input_bam_files: { type: 'File[]', secondaryFiles: [{ pattern: '.bai', required: true }], inputBinding: { position: 2, prefix: '-b', itemSeparator: '|' }, doc: "Indexed BAM File. Can input multiple BAM files. Inputs will be separated by '|'" }
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], inputBinding: { position: 2, prefix: '-G' }, doc: "The reference fasta. Should be indexed (.fai)." }
   output_filename: { type: 'string', inputBinding: { position: 32, prefix: "--output-file"}, doc: "output file name" } 
 
@@ -73,8 +73,8 @@ inputs:
   read_mismatch_max: { type: 'int?', inputBinding: { position: 2, prefix: '-m' }, doc: "If set, reads with mismatches more than INT will be filtered and ignored. Gaps are not counted as mismatches. Valid only for bowtie2/TopHat or BWA aln followed by sampe. BWA mem is calculated as NM - Indels. Default: 8, or reads with more than 8 mismatches will not be used." }
   monomer_frequency_min: { type: 'float?', inputBinding: { position: 2, prefix: '-mfreq' }, doc: "The variant frequency threshold to determine variant as good in case of monomer MSI. Default: 0.25" }
   nonmonomer_frequency_min: { type: 'float?', inputBinding: { position: 2, prefix: '-nmfreq' }, doc: "The variant frequency threshold to determine variant as good in case of non-monomer MSI. Default: 0.1" }
-  sample_name: { type: 'string?', inputBinding: { position: 2, prefix: '-N' }, doc: "The sample name to be used directly. Will overwrite -n (sample_name_regex) option" }
-  sample_name_regex: { type: 'string?', inputBinding: { position: 2, prefix: '-n' }, doc: "The regular expression to extract sample name from BAM filenames." }
+  sample_name: { type: 'string?', inputBinding: { position: 2, prefix: '-N' }, doc: "The sample name to be used directly. Will overwrite -n (sample_name_regex) option. When multiple BAMs are provided, this value is the tumor sample." }
+  sample_name_regex: { type: 'string?', inputBinding: { position: 2, prefix: '-n' }, doc: "The regular expression to extract sample name from BAM filenames. When multiple BAMs are provided, this value is the tumor sample." }
   read_mean_mapq_min: { type: 'string?', inputBinding: { position: 2, prefix: '-O' }, doc: "The reads should have at least mean MapQ to be considered a valid variant. Default: no filtering" }
   read_mapq_min: { type: 'int?', inputBinding: { position: 2, prefix: '-Q' }, doc: "If set, reads with mapping quality less than INT will be filtered and ignored" }
   qratio: { type: 'float?', inputBinding: { position: 2, prefix: '-o' }, doc: "The Qratio of (good_quality_reads)/(bad_quality_reads+0.5). The quality is defined by -q option. Default: 1.5" }
@@ -130,6 +130,7 @@ inputs:
   region_end_column: { type: 'int?', inputBinding: { position: 2, prefix: '-E' }, doc: "The column for region end, e.g. gene end" }
   segment_start_column: { type: 'int?', inputBinding: { position: 2, prefix: '-s' }, doc: "The column for segment starts in the region, e.g. exon starts" }
   segment_end_column: { type: 'int?', inputBinding: { position: 2, prefix: '-e' }, doc: "The column for segment ends in the region, e.g. exon ends" }
+  regions_file: { type: 'File?', inputBinding: { position: 9 }, doc: "File containing regions over which to call variants." }
 
   # var2vcf_paired Arguments
   drop_chr: { type: 'boolean?', inputBinding: { position: 32, prefix: '-C' }, doc: "If set, chrosomes will have names of 1,32,3,X,Y, instead of chr1, chr32, chrX, chrY" }
@@ -139,7 +140,7 @@ inputs:
   candidate_proximity_max: { type: 'int?', inputBinding: { position: 32, prefix: '-c' }, doc: "If two somatic candidates are within {int} bp, they're both filtered. Default: 0 or no filtering" }
   nonmonomer_max: { type: 'int?', inputBinding: { position: 32, prefix: '-I' }, doc: "The maximum non-monomer MSI allowed for a HT variant with AF < 0.6. By default, 132, or any variants with AF < 0.6 in a region with > 12 non-monomer MSI will be considered false positive. For monomers, that number is 10." }
   read_mean_mismatch_max: { type: 'float?', inputBinding: { position: 32, prefix: '-m' }, doc: "The maximum mean mismatches allowed. Default: 5.25, or if a variant is supported by reads with more than 5.25 mismathes, it'll be considered false positive. Mismatches don't includes indels in the alignment." }
-  sample_names: { type: 'string?', inputBinding: { position: 32, prefix: '-N' }, doc: "The sample name(s). If only one name is given, the matched will be simply names as 'name-match'. Two names are given separated by '|', such as 'tumor|blood'." }
+  sample_names: { type: 'string[]?', inputBinding: { position: 32, prefix: '-N', itemSeparator: '|' }, doc: "The sample name(s). If only one name is given, the matched will be simply names as 'name-match'. Two names are given separated by '|', such as 'tumor|blood'." }
   p_value_max: { type: 'float?', inputBinding: { position: 32, prefix: '-P' }, doc: "The maximum p-value. Default to 0.05." }
   mean_pos_min: { type: 'float?', inputBinding: { position: 32, prefix: '-p' }, doc: "The minimum mean position of variants in the read. Default: 5." }
   mean_bq_min: { type: 'float?', inputBinding: { position: 32, prefix: '-q' }, doc: "The minimum mean base quality. Default to 22.5 for Illumina sequencing" }
