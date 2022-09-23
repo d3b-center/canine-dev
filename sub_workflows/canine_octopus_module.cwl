@@ -97,6 +97,9 @@ steps:
         valueFrom: $(1 == 1)
     out: [output]
 
+# vcfstats pass vcf
+# vcfstats all vcf
+
 $namespaces:
   sbg: https://sevenbridges.com
 

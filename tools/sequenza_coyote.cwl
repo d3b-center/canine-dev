@@ -51,7 +51,7 @@ inputs:
     default: 16
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  wiggle:
-    type: 'File'
+  output:
+    type: 'Directory'
     outputBinding:
-      glob: $(inputs.input_seqz)
+      glob: $(inputs.sample_name)

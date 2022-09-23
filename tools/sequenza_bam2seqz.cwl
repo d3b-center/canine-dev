@@ -130,7 +130,7 @@ inputs:
     default: 2
     doc: "Number of CPUs to allocate to this task."
   ram:
-    type: 'float?'
+    type: 'int?'
     default: 4 
     doc: "GB size of RAM to allocate to this task."
 outputs:
