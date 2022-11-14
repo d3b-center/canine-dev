@@ -12,7 +12,7 @@ requirements:
     dockerPull: 'dmiller15/sequenza:3.0.0'
   - class: InitialWorkDirRequirement
     listing:
-    - entryname: nanocaller_scatter.py
+    - entryname: sequenza.R 
       writable: false
       entry:
         $include: ../scripts/sequenza.R
