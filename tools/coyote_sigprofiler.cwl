@@ -109,7 +109,7 @@ outputs:
     type: 'File?'
     outputBinding:
       glob: "DBS78/**/*De-Novo_Signatures.txt"
-  extraneous_results:
-    type: 'File?'
-    outputBinding:
-      glob: "extraneous_results.tar"
+#  extraneous_results:
+#    type: 'File?'
+#    outputBinding:
+#      glob: "extraneous_results.tar"
