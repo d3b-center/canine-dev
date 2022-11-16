@@ -22,10 +22,15 @@ arguments:
     shellQuote: false
     valueFrom: >
       bcftools filter --threads $(inputs.cpu)
-  - position: 20
+  - position: 90
+    prefix: "&&"
     shellQuote: false
     valueFrom: >
-      $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu + " --output-file " + inputs.output_filename : "")
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? "bcftools index --threads " + inputs.cpu : "echo DONE")
+  - position: 99
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required inputs

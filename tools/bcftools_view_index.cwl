@@ -18,9 +18,14 @@ arguments:
     valueFrom: >
       bcftools view
   - position: 90
+    prefix: "&&"
     shellQuote: false
     valueFrom: >
-      $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? "bcftools index --threads " + inputs.cpu : "echo DONE")
+  - position: 99
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required Inputs

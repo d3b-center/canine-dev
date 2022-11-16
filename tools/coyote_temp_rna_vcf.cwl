@@ -13,7 +13,8 @@ requirements:
     dockerPull: 'ubuntu:20.04'
   - class: InitialWorkDirRequirement
     listing:
-    - entryname: temp_rna_vcf.sh 
+    - $(inputs.output_header)
+    - entryname: temp_rna_vcf.sh
       writable: false
       entry: |
         set -eu
@@ -35,13 +36,14 @@ requirements:
             print $1, $2, ".", $3, $4, ".", ".", "RNA_REF_COUNT=0;RNA_ALT_COUNT="$6";RNA_ALT_FREQ=1.00";
           else if ( $5 == 0 && $6 == 0 )
             print $1, $2, ".", $3, $4, ".", ".", "RNA_REF_COUNT=0;RNA_ALT_COUNT=0;RNA_ALT_FREQ=0.00";
-          }' $(inputs.input_counts.path) >> temp_RNA.vcf
+          }' $(inputs.input_counts.path) >> $(inputs.input_header.basename)
 
-baseCommand: [cat, temp_rna_vcf.sh]
+baseCommand: [/bin/bash, temp_rna_vcf.sh]
 
 inputs:
   # Required Inputs
   input_counts: { type: 'File', doc: "Temp RNA counts TXT made by bcftools query" }
+  input_header: { type: 'File', doc: "Temp RNA header file" }
 
   cpu:
     type: 'int?'
@@ -55,4 +57,4 @@ outputs:
   output:
     type: 'File'
     outputBinding:
-      glob: "temp_RNA.vcf" 
+      glob: $(inputs.input_header.basename)

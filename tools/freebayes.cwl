@@ -57,7 +57,7 @@ inputs:
 
   # Output Variables
 
-  output_basename: { type: 'string', inputBinding: { prefix: "--vcf", valueFrom: '${ return self+".freebayes.vcf" }' }, doc: "Output VCF-format results to path provided." }
+  output_filename: { type: 'string', inputBinding: { prefix: "--vcf" }, doc: "Output VCF-format results to path provided." }
   output_gvcf: { type: 'boolean?', default: false, inputBinding: { prefix: "--gvcf" }, doc: "Write gVCF output, which indicates coverage in uncalled regions." }
   gvcf_chunk: { type: 'long?', inputBinding: { prefix: "--gvcf-chunk" }, doc: "When writing gVCF output emit a record for every NUM bases." }
   gvcf_dont_use_chunk: { type: 'boolean?', inputBinding: { prefix: "--gvcf-dont-use-chunk" }, doc: "When writing the gVCF output emit a record for all bases if set to true , will also route an int to --gvcf-chunk similar to --output-mode EMIT_ALL_SITES from GATK" }
@@ -151,8 +151,8 @@ inputs:
   debug: { type: 'boolean?', default: false, inputBinding: { prefix: "--debug" }, doc: "Print debugging output." }
 
   # Resource Control
-  ram: { type: 'int?', default: 2, doc: "Minimum reserved RAM for the task. default: 16" }
-  cpu: { type: 'int?', default: 1, doc: "Minimum reserved number of CPU cores for the task. default: 4" }
+  ram: { type: 'int?', default: 16, doc: "Minimum reserved RAM for the task. default: 16" }
+  cpu: { type: 'int?', default: 4, doc: "Minimum reserved number of CPU cores for the task. default: 4" }
 
 outputs:
   output: { type: 'File', outputBinding: { glob: "*.freebayes.vcf" } }
