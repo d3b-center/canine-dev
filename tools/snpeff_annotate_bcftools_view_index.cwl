@@ -17,7 +17,7 @@ arguments:
     shellQuote: false
     valueFrom: >
       snpEff ann 
-  - position: 0
+  - position: 10
     shellQuote: false
     prefix: "|"
     valueFrom: >
@@ -30,7 +30,7 @@ arguments:
 inputs:
   # SnpEff Ann Required
   input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "File containing variants" }
-  snpeff_database: { type: 'string', inputBinding: { position: 8 }, doc: "Directory containing SnpEff database information" }
+  snpeff_database: { type: 'string', inputBinding: { position: 8 }, doc: "Name of SnpEff database to use for annotation" }
 
   # SnpEff Ann Options
   chr: { type: 'string?', inputBinding: { position: 2, prefix: "-chr"}, doc: "Prepend 'string' to chromosome name (e.g. 'chr1' instead of '1'). Only on TXT output." }
@@ -38,7 +38,7 @@ inputs:
   in_format: { type: 'string?', inputBinding: { position: 2, prefix: "-i"}, doc: "Input format [ vcf, bed ]. Default: VCF." }
   fileList: { type: 'boolean?', inputBinding: { position: 2, prefix: "-fileList"}, doc: "Input actually contains a list of files to process." }
   out_format: { type: 'string?', inputBinding: { position: 2, prefix: "-o"}, doc: "Ouput format [ vcf, gatk, bed, bedAnn ]. Default: VCF." }
-  stats: { type: 'string?', inputBinding: { position: 2, prefix: "-stats"}, doc: "Name for HTML summary file. Default is 'snpEff_summary.html'" }
+  snpeff_stats: { type: 'string?', inputBinding: { position: 2, prefix: "-stats"}, doc: "Name for HTML summary file. Default is 'snpEff_summary.html'" }
   csvStats: { type: 'string?', inputBinding: { position: 2, prefix: "-csvStats"}, doc: "Name for CSV summary file." }
   noStats: { type: 'boolean?', inputBinding: { position: 2, prefix: "-noStats"}, doc: "Do not create stats (summary) file" }
    
@@ -171,9 +171,6 @@ inputs:
     type: 'int?'
     default: 4
     doc: "Number of CPUs to allocate to this task."
-    inputBinding:
-      position: 12
-      prefix: "--threads"
   ram:
     type: 'int?'
     default: 16
