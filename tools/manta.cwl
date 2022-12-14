@@ -42,7 +42,7 @@ inputs:
     unstranded_rna: { type: 'boolean?', inputBinding: {position: 2, prefix: "--unstrandedRNA"}, doc: "Set if RNA-Seq input is unstranded: Allows splice-junctions on either strand" }
     indexed_reference_fasta: { type: 'File', inputBinding: {position: 2, prefix: "--referenceFasta"}, secondaryFiles: [{pattern: '^.dict', required: true}, {pattern: '.fai', required: true}], doc: "samtools-indexed reference fasta file"}
     call_regions: { type: 'File?', inputBinding: {position: 2, prefix: "--callRegions"}, doc: "bgzip-compressed/tabix-indexed BED file containing the set of regions to call. No VCF output will be provided outside of these regions." }
-    cpu: {type: 'int?', default: 16, inputBinding: {position:12, prefix: "-j"}, doc: "CPUs to allocate to this task"}
+    cpu: {type: 'int?', default: 16, inputBinding: {position: 12, prefix: "-j"}, doc: "CPUs to allocate to this task"}
     ram: {type: 'int?', default: 32, doc: "GB of RAM to allocate to this task"}
 
 outputs:

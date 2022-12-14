@@ -117,9 +117,11 @@ inputs:
     doc: "String to use as the prefix for the outputs."
   max_memory:
     type: 'int?'
+    default: 8
     doc: "Maximum GB of RAM to allocate for this tool."
   cpu:
     type: 'int?'
+    default: 2
     doc: "Number of CPUs to allocate to this task."
 outputs:
   output: { type: 'File', outputBinding: { glob: "*.pileup.table" } }

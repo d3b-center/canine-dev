@@ -34,8 +34,8 @@ outputs:
   strelka2_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
   strelka2_realigned_normal_cram: { type: 'File?', outputSource: samtools_view_normal_cram/output }
   strelka2_realigned_tumor_cram: { type: 'File?', outputSource: samtools_view_tumor_cram/output }
-  strelka2_all_vcf_stats: { type: 'File', outputSource: bcftool_stats_all/stats }
-  strelka2_pass_vcf_stats: { type: 'File', outputSource: bcftool_stats_pass/stats }
+  strelka2_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
+  strelka2_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
   strelka2_somatic:

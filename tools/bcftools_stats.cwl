@@ -43,7 +43,7 @@ inputs:
   exclude: { type: 'string?', inputBinding: { position: 2, prefix: "--exclude"}, doc: "exclude sites for which EXPRESSION is true" }
   exons: { type: 'File?', secondaryFiles: [{pattern: '.tbi', required: true}], inputBinding: { position: 2, prefix: "--exons"}, doc: "bgzipped/tabix indexed tab-delimited file with exons for indel frameshifts statistics. The columns of the file are CHR, FROM, TO, with 1-based, inclusive, positions." }
   apply_filters: { type: 'string?', inputBinding: { position: 2, prefix: "--apply-filters"}, doc: "require at least one of the listed FILTER strings" }
-  indexed_reference_fasta: { type: File?', secondaryFiles: [{pattern: '.fai', required: true}], inputBinding: { position: 2, prefix: "--fasta-ref"}, doc: "faidx indexed reference sequence file to determine INDEL context" }
+  indexed_reference_fasta: { type: 'File?', secondaryFiles: [{pattern: '.fai', required: true}], inputBinding: { position: 2, prefix: "--fasta-ref"}, doc: "faidx indexed reference sequence file to determine INDEL context" }
   include: { type: 'string?', inputBinding: { position: 2, prefix: "--include"}, doc: "include only sites for which EXPRESSION is true" }
   split_by_id: { type: 'boolean?', inputBinding: { position: 2, prefix: "--split-by-ID"}, doc: "collect stats separately for sites which have the ID column set or which do not have the ID column set" }
   regions: { type: 'string?', inputBinding: { position: 2, prefix: "--regions"}, doc: "restrict stats to comma-separated list of regions" }

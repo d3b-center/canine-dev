@@ -37,13 +37,15 @@ steps:
       input_yaml: calling_intervals
     out: [outputs]
 
+
+
   vardict_testsomatic_var2vcf_paired_view_index:
     run: ../tools/vardict_testsomatic_var2vcf_paired_view_index.cwl
     scatter: [regions_file]
     in:
       input_bam_files:
-        source: [input_normal_reads, input_tumor_reads] # Need to figure out to handle this
-      sample_name: tumor_sample_name # Perhaps steal from samples_name variable or something else?
+        source: [input_normal_reads, input_tumor_reads]
+      sample_name: tumor_sample_name
       indexed_reference_fasta: indexed_reference_fasta
       hexical_read_filter:
         valueFrom: "0x500"
@@ -65,14 +67,15 @@ steps:
         valueFrom: $(2)
       region_end_column:
         valueFrom: $(3)
-      regions_file: calling_intervals_yaml_to_beds/outputs 
+      regions_file: calling_intervals_yaml_to_beds/outputs
       sample_names:
-        source: [tumor_sample_name, normal_sample_name] # Need to figure out how to handle this
+        source: normal_sample_name
+        valueFrom: $([inputs.sample_name, self])
       mapq_min:
         valueFrom: $(1)
       output_filename:
         source: output_basename
-        valueFrom: $(self).vardict.vcf.gz 
+        valueFrom: $(self).vardict.vcf.gz
       output_type:
         valueFrom: "z"
       tbi:
@@ -84,7 +87,7 @@ steps:
   bcftools_concat_index:
     run: ../tools/bcftools_concat_index.cwl
     in:
-      input_vcfs: vardict_testsomatic_var2vcf_paired_view_index/output 
+      input_vcfs: vardict_testsomatic_var2vcf_paired_view_index/output
       output_filename:
         source: output_basename
         valueFrom: $(self).vardict.all.vcf.gz

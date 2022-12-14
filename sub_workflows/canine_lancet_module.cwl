@@ -23,7 +23,7 @@ inputs:
   lancet_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Lancet." }
 
 outputs:
-  lancet_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index.cwl/vcf }
+  lancet_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/vcf }
   lancet_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
   lancet_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
   lancet_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
@@ -66,7 +66,7 @@ steps:
       fai: reference_fai
     out: [output]
 
-  bcftools_concat_sort_index.cwl:
+  bcftools_concat_sort_index:
     run: ../tools/bcftools_concat_sort_index.cwl
     in:
       input_vcfs: bcftools_reheader_sort_index/output
@@ -82,7 +82,7 @@ steps:
   bcftools_filter_index:
     run: ../tools/bcftools_filter_index.cwl
     in:
-      input_vcf: bcftools_concat_sort_index.cwl/vcf
+      input_vcf: bcftools_concat_sort_index/vcf
       output_filename:
         source: output_basename
         valueFrom: $(self).lancet.pass.vcf.gz
@@ -99,7 +99,7 @@ steps:
   bcftools_stats_all:
     run: ../tools/bcftools_stats.cwl
     in:
-      input_vcf: bcftools_concat_sort_index.cwl/vcf
+      input_vcf: bcftools_concat_sort_index/vcf
       output_filename:
         source: output_basename
         valueFrom: $(self).lancet.all.stats.txt

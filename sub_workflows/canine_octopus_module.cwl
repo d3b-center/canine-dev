@@ -102,7 +102,7 @@ steps:
   bcftools_stats_all:
     run: ../tools/bcftools_stats.cwl
     in:
-      input_vcf: bcftools_concat_sort_index.cwl/vcf
+      input_vcf: bcftools_concat_sort_index/vcf
       output_filename:
         source: output_basename
         valueFrom: $(self).octopus.all.stats.txt
