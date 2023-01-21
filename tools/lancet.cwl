@@ -21,9 +21,9 @@ requirements:
 baseCommand: [lancet]
 inputs:
   # Required Arguments
-  tumor: { type: 'File', inputBinding: { position: 2, prefix: "--tumor"}, doc: "BAM file of mapped reads for tumor" }
-  normal: { type: 'File', inputBinding: { position: 2, prefix: "--normal"}, doc: "BAM file of mapped reads for normal" }
-  ref: { type: 'File', inputBinding: { position: 2, prefix: "--ref"}, doc: "FASTA file of reference genome" }
+  tumor: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], inputBinding: { position: 2, prefix: "--tumor"}, doc: "BAM file of mapped reads for tumor" }
+  normal: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], inputBinding: { position: 2, prefix: "--normal"}, doc: "BAM file of mapped reads for normal" }
+  ref: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }],  inputBinding: { position: 2, prefix: "--ref"}, doc: "FASTA file of reference genome" }
   reg: { type: 'string?', inputBinding: { position: 2, prefix: "--reg"}, doc: "genomic region (in chr:start-end format); Required if no BED file provided." }
   bed: { type: 'File?', inputBinding: { position: 2, prefix: "--bed"}, doc: "genomic regions from file (BED format); Required if no region string provided." }
   output_filename: { type: 'string', inputBinding: { position: 10, prefix: ">", shellQuote: false}, doc: "Name for output file" } 
@@ -92,4 +92,4 @@ outputs:
   vcf:
     type: 'File'
     outputBinding:
-      glob: $(inputs.input_seqz)
+      glob: $(inputs.output_filename)

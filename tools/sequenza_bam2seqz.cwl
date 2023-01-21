@@ -41,18 +41,21 @@ inputs:
   input_normal:
     type: 'File'
     doc: "BAM/pileup file from the reference/normal sample"
+    secondaryFiles: [{ pattern: ".bai", required: false }, { pattern: "^.bai", required: false }]
     inputBinding:
       position: 2
       prefix: "--normal"
   input_normal2:
     type: 'File?'
     doc: "Optional BAM/pileup file used to compute the depth.normal and depth-ratio, instead of using the normal BAM."
+    secondaryFiles: [{ pattern: ".bai", required: false }, { pattern: "^.bai", required: false }]
     inputBinding:
       position: 2
       prefix: "--normal2"
   input_tumor:
     type: 'File'
     doc: "BAM/pileup file from the tumor sample"
+    secondaryFiles: [{ pattern: ".bai", required: false }, { pattern: "^.bai", required: false }]
     inputBinding:
       position: 2
       prefix: "--tumor"

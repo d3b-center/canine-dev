@@ -11,13 +11,16 @@ requirements:
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'dmiller15/octopus:0.6.3'
+  - class: InitialWorkDirRequirement
+    listing: [$(inputs.premade_cache)]
 baseCommand: [octopus]
 inputs:
+  premade_cache: { type: 'Directory?', doc: "Premade cache of genome" }
   reference: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], inputBinding: { position: 2, prefix: "--reference"}, doc: "FASTA format reference genome file to be analysed. Target regions will be extracted from the reference index if not provded explicitly" }
-  reads: { type: 'File[]?', inputBinding: { position: 2, prefix: "--reads"}, doc: "Space-separated list of BAM/CRAM files to be analysed. May be specified multiple times" }
+  reads: { type: 'File[]?', secondaryFiles: [{ pattern: '.bai', required: false }, { pattern: '^.bai', required: false }, { pattern: '.crai', required: false }, { pattern: '^.crai', required: false }], inputBinding: { position: 2, prefix: "--reads"}, doc: "Space-separated list of BAM/CRAM files to be analysed. May be specified multiple times" }
   reads_file: { type: 'File?', inputBinding: { position: 2, prefix: "--reads-file"}, doc: "Files containing lists of BAM/CRAM files, one per line, to be analysed" }
   output_vcf_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "string to where output is written. If unspecified, calls are written to stdout" }
-  output_bam_filename: { type: 'string?', inputBinding: { position: 2, prefix: "--bamout"}, doc: "Output realigned BAM files" }
+  output_sam_dirname: { type: 'string?', inputBinding: { position: 2, prefix: "--bamout"}, doc: "Name for output directory containing SAM files" }
   output_data_profile_filename: { type: 'string?', inputBinding: { position: 2, prefix: "--data-profile"}, doc: "Output a profile of polymorphisms and errors found in the data" }
 
   # Backend Arguments
@@ -26,7 +29,7 @@ inputs:
   max_reference_cache_footprint: { type: 'string?', inputBinding: { position: 2, prefix: "--max-reference-cache-footprint"}, doc: "Maximum memory footprint for cached reference sequence" }
   target_read_buffer_footprint: { type: 'string?', inputBinding: { position: 2, prefix: "--target-read-buffer-footprint"}, doc: "None binding request to limit the memory footprint of buffered read data" }
   max_open_read_files: { type: 'int?', inputBinding: { position: 2, prefix: "--max-open-read-files"}, doc: "Limits the number of read files that can be open simultaneously" }
-  target_working_memory: { type: 'string?', inputBinding: { position: 2, prefix: "--target-working-memory"}, doc: "Target working memory footprint for analysis not including read or reference footprint" }
+#  target_working_memory: { type: 'string?', inputBinding: { position: 2, prefix: "--target-working-memory"}, doc: "Target working memory footprint for analysis not including read or reference footprint" }
 
   # Input/Output Arguments
   one_based_indexing: { type: 'boolean?', inputBinding: { position: 2, prefix: "--one-based-indexing"}, doc: "Notifies that input regions are given using one based indexing rather than zero based" }
@@ -396,8 +399,12 @@ inputs:
       prefix: "--threads"
   ram:
     type: 'int?'
-    default: 16 
+    default: 8
     doc: "GB size of RAM to allocate to this task."
+    inputBinding:
+      position: 2
+      prefix: "--target-working-memory"
+      valueFrom: $(self)G
 outputs:
   debug_log:
     type: 'File'
@@ -416,10 +423,14 @@ outputs:
     outputBinding:
       glob: '*.legacy.vcf'
   bam:
-    type: 'File?'
+    type: 'Directory?'
     outputBinding:
-      glob: $(inputs.output_bam_filename)
+      glob: $(inputs.output_sam_dirname)
   data_profile:
     type: 'File?'
     outputBinding:
       glob: $(inputs.output_data_profile_filename)
+  cache:
+    type: 'Directory?'
+    outputBinding:
+      glob: ".cache"

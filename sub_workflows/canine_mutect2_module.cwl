@@ -51,6 +51,9 @@ steps:
     out: [outputs]
 
   gatk_mutect2:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: r5.8xlarge
     run: ../tools/gatk_mutect2.cwl
     scatter: [input_interval_list]
     in:
@@ -67,6 +70,9 @@ steps:
     out: [vcf, stats, f1r2]
 
   gatk_getpileupsummaries_tumor:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: m5.8xlarge
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
     in:
@@ -81,6 +87,9 @@ steps:
     out: [output]
 
   gatk_getpileupsummaries_normal:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: m5.8xlarge
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
     in:
@@ -103,6 +112,8 @@ steps:
         valueFrom: $(self).mutect2.raw.vcf.gz
       output_type:
         valueFrom: "z"
+      tbi:
+        valueFrom: $(1 == 1)
     out: [vcf]
 
   gatk_mergemutectstats:
@@ -130,7 +141,7 @@ steps:
       reference_dict: reference_dict
       output_prefix:
         source: output_basename
-        valueFrom: $(self).tumor-
+        valueFrom: $(self).tumor
       max_memory: gatherpileupsummaries_max_memory
       cpu: gatherpileupsummaries_cpu
     out: [output]
@@ -142,7 +153,7 @@ steps:
       reference_dict: reference_dict
       output_prefix:
         source: output_basename
-        valueFrom: $(self).normal-
+        valueFrom: $(self).normal
       max_memory: gatherpileupsummaries_max_memory
       cpu: gatherpileupsummaries_cpu
     out: [output]

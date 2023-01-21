@@ -19,14 +19,14 @@ inputs:
 
 outputs:
   insert_size:
-    type: int 
+    type: float 
     outputBinding:
       glob: stats.tsv
       loadContents: true
-      outputEval: $(self[0].contents.split('\t')[9])
+      outputEval: $(parseFloat(self[0].contents.split('\t')[9]))
   std_is:
     type: float
     outputBinding:
       glob: stats.tsv
       loadContents: true
-      outputEval: $(self[0].contents.split('\t')[11])
+      outputEval: $(parseFloat(self[0].contents.split('\t')[11]))

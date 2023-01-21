@@ -33,6 +33,9 @@ arguments:
     shellQuote: false
     valueFrom: >
       $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
+  - position: 99
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required Arguments
@@ -97,6 +100,7 @@ inputs:
         name: read_strictness 
         symbols: ["STRICT", "LENIENT", "SILENT"]
     inputBinding:
+      position: 2
       prefix: "-VS"
     doc: |
       How strict to be when reading a SAM or BAM.
@@ -118,6 +122,7 @@ inputs:
         name: local_realignment
         symbols: ["0","1"]
     inputBinding:
+      position: 2
       prefix: "-k"
     doc: |
       Indicate whether coordinates are zero-based, as IGV uses.  Default: 1 for BED file or amplicon BED file.
@@ -133,23 +138,23 @@ inputs:
   regions_file: { type: 'File?', inputBinding: { position: 9 }, doc: "File containing regions over which to call variants." }
 
   # var2vcf_paired Arguments
-  drop_chr: { type: 'boolean?', inputBinding: { position: 32, prefix: '-C' }, doc: "If set, chrosomes will have names of 1,32,3,X,Y, instead of chr1, chr32, chrX, chrY" }
-  pass_only: { type: 'boolean?', inputBinding: { position: 32, prefix: '-S' }, doc: "If set, variants that didn't pass filters will not be present in VCF file" }
-  somatic_only: { type: 'boolean?', inputBinding: { position: 32, prefix: '-M' }, doc: "If set, output only candidate somatic" }
-  all_variants: { type: 'boolean?', inputBinding: { position: 32, prefix: '-A' }, doc: "Indicate to output all variants at the same position.  By default, only the variant with the highest allele frequency is converted to VCF." }
-  candidate_proximity_max: { type: 'int?', inputBinding: { position: 32, prefix: '-c' }, doc: "If two somatic candidates are within {int} bp, they're both filtered. Default: 0 or no filtering" }
-  nonmonomer_max: { type: 'int?', inputBinding: { position: 32, prefix: '-I' }, doc: "The maximum non-monomer MSI allowed for a HT variant with AF < 0.6. By default, 132, or any variants with AF < 0.6 in a region with > 12 non-monomer MSI will be considered false positive. For monomers, that number is 10." }
-  read_mean_mismatch_max: { type: 'float?', inputBinding: { position: 32, prefix: '-m' }, doc: "The maximum mean mismatches allowed. Default: 5.25, or if a variant is supported by reads with more than 5.25 mismathes, it'll be considered false positive. Mismatches don't includes indels in the alignment." }
-  sample_names: { type: 'string[]?', inputBinding: { position: 32, prefix: '-N', itemSeparator: '|' }, doc: "The sample name(s). If only one name is given, the matched will be simply names as 'name-match'. Two names are given separated by '|', such as 'tumor|blood'." }
-  p_value_max: { type: 'float?', inputBinding: { position: 32, prefix: '-P' }, doc: "The maximum p-value. Default to 0.05." }
-  mean_pos_min: { type: 'float?', inputBinding: { position: 32, prefix: '-p' }, doc: "The minimum mean position of variants in the read. Default: 5." }
-  mean_bq_min: { type: 'float?', inputBinding: { position: 32, prefix: '-q' }, doc: "The minimum mean base quality. Default to 22.5 for Illumina sequencing" }
-  mapq_min: { type: 'float?', inputBinding: { position: 32, prefix: '-Q' }, doc: "The minimum mapping quality. Default to 0 for Illumina sequencing" }
-  total_depth_min: { type: 'int?', inputBinding: { position: 32, prefix: '-d' }, doc: "The minimum total depth. Default to 5" }
-  var_depth_min: { type: 'int?', inputBinding: { position: 32, prefix: '-v' }, doc: "The minimum variant depth. Default to 3" }
-  allele_freq_min: { type: 'float?', inputBinding: { position: 32, prefix: '-f' }, doc: "The minimum allele frequency. Default to 0.02" }
-  signal_noise_ratio: { type: 'float?', inputBinding: { position: 32, prefix: '-o' }, doc: "The minimum signal to noise, or the ratio of hi/(lo+0.5).  Default to 1.5.  Set it higher for deep sequencing." }
-  genotype_frequency: { type: 'float?', inputBinding: { position: 32, prefix: '-F' }, doc: "The minimum allele frequency to consider to be homozygous. Default to 0.2. Thus frequency > 0.8 (1-0.2) will be considered homozygous '1/1', between 0.5 - (1-0.2) will be '1/0', between (-f) - 0.5 will be '0/1', below (-f) will be '0/0'." }
+  drop_chr: { type: 'boolean?', inputBinding: { position: 22, prefix: '-C' }, doc: "If set, chrosomes will have names of 1,32,3,X,Y, instead of chr1, chr32, chrX, chrY" }
+  pass_only: { type: 'boolean?', inputBinding: { position: 22, prefix: '-S' }, doc: "If set, variants that didn't pass filters will not be present in VCF file" }
+  somatic_only: { type: 'boolean?', inputBinding: { position: 22, prefix: '-M' }, doc: "If set, output only candidate somatic" }
+  all_variants: { type: 'boolean?', inputBinding: { position: 22, prefix: '-A' }, doc: "Indicate to output all variants at the same position.  By default, only the variant with the highest allele frequency is converted to VCF." }
+  candidate_proximity_max: { type: 'int?', inputBinding: { position: 22, prefix: '-c' }, doc: "If two somatic candidates are within {int} bp, they're both filtered. Default: 0 or no filtering" }
+  nonmonomer_max: { type: 'int?', inputBinding: { position: 22, prefix: '-I' }, doc: "The maximum non-monomer MSI allowed for a HT variant with AF < 0.6. By default, 132, or any variants with AF < 0.6 in a region with > 12 non-monomer MSI will be considered false positive. For monomers, that number is 10." }
+  read_mean_mismatch_max: { type: 'float?', inputBinding: { position: 22, prefix: '-m' }, doc: "The maximum mean mismatches allowed. Default: 5.25, or if a variant is supported by reads with more than 5.25 mismathes, it'll be considered false positive. Mismatches don't includes indels in the alignment." }
+  sample_names: { type: 'string[]?', inputBinding: { position: 22, prefix: '-N', itemSeparator: '|' }, doc: "The sample name(s). If only one name is given, the matched will be simply names as 'name-match'. Two names are given separated by '|', such as 'tumor|blood'." }
+  p_value_max: { type: 'float?', inputBinding: { position: 22, prefix: '-P' }, doc: "The maximum p-value. Default to 0.05." }
+  mean_pos_min: { type: 'float?', inputBinding: { position: 22, prefix: '-p' }, doc: "The minimum mean position of variants in the read. Default: 5." }
+  mean_bq_min: { type: 'float?', inputBinding: { position: 22, prefix: '-q' }, doc: "The minimum mean base quality. Default to 22.5 for Illumina sequencing" }
+  mapq_min: { type: 'float?', inputBinding: { position: 22, prefix: '-Q' }, doc: "The minimum mapping quality. Default to 0 for Illumina sequencing" }
+  total_depth_min: { type: 'int?', inputBinding: { position: 22, prefix: '-d' }, doc: "The minimum total depth. Default to 5" }
+  var_depth_min: { type: 'int?', inputBinding: { position: 22, prefix: '-v' }, doc: "The minimum variant depth. Default to 3" }
+  allele_freq_min: { type: 'float?', inputBinding: { position: 22, prefix: '-f' }, doc: "The minimum allele frequency. Default to 0.02" }
+  signal_noise_ratio: { type: 'float?', inputBinding: { position: 22, prefix: '-o' }, doc: "The minimum signal to noise, or the ratio of hi/(lo+0.5).  Default to 1.5.  Set it higher for deep sequencing." }
+  genotype_frequency: { type: 'float?', inputBinding: { position: 22, prefix: '-F' }, doc: "The minimum allele frequency to consider to be homozygous. Default to 0.2. Thus frequency > 0.8 (1-0.2) will be considered homozygous '1/1', between 0.5 - (1-0.2) will be '1/0', between (-f) - 0.5 will be '0/1', below (-f) will be '0/0'." }
 
   # View Generic Arguments
   drop_genotypes: { type: 'boolean?', inputBinding: { position: 32, prefix: "--drop-genotypes"}, doc: "drop individual genotype information (after subsetting if -s option set)" }
@@ -221,10 +226,11 @@ inputs:
       prefix: '-th'
   ram:
     type: 'int?'
-    default: 32 
+    default: 12 
     doc: "GB size of RAM to allocate to this task."
 outputs:
   output:
     type: 'File'
+    secondaryFiles: [{ pattern: '.tbi', required: false }]
     outputBinding:
       glob: $(inputs.output_filename)

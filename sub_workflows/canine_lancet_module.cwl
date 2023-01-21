@@ -11,10 +11,10 @@ requirements:
 
 inputs:
   calling_intervals: { type: 'File', doc: "YAML file contianing the intervals in which to perform variant calling." }
-  reference_fasta: { type: 'File', doc: "Reference fasta" }
+  reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], doc: "Reference fasta" }
   reference_fai: { type: 'File', doc: "Reference fai" }
-  input_tumor_reads: { type: 'File', doc: "BAM file containing mapped reads from the tumor sample" }
-  input_normal_reads: { type: 'File', doc: "BAM file containing mapped reads from the normal sample" }
+  input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], doc: "BAM file containing mapped reads from the tumor sample" }
+  input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], doc: "BAM file containing mapped reads from the normal sample" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
 
@@ -36,6 +36,9 @@ steps:
     out: [outputs]
 
   lancet:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: c5.9xlarge
     run: ../tools/lancet.cwl
     scatter: [bed]
     in:
@@ -45,7 +48,7 @@ steps:
       bed: calling_intervals_yaml_to_beds/outputs
       output_filename:
         source: output_basename
-        valueFrom: $(self).$(inputs.bed.basename).lancet-uns.vcf
+        valueFrom: $(self).$(inputs.bed.nameroot).lancet-uns.vcf
       max_vaf_normal:
         valueFrom: $(0.05)
       max_alt_count_normal:
@@ -60,7 +63,7 @@ steps:
     in:
       input_file: lancet/vcf 
       output_filename:
-        valueFrom: $(inputs.input_file.basename.replace("lancet-uns","lancet"))
+        valueFrom: $(inputs.input_file.nameroot).sorted.vcf
       output_type:
         valueFrom: "v"
       fai: reference_fai
@@ -90,7 +93,7 @@ steps:
         valueFrom: "z"
       include:
         valueFrom: |
-          'FILTER == "PASS"'
+          FILTER == "PASS"
       targets_file: targets_file
       tbi:
         valueFrom: $(1 == 1)

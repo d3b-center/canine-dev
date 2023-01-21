@@ -20,12 +20,16 @@ arguments:
   - position: 20
     shellQuote: false
     valueFrom: >
-      $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu + " --output-file " + inputs.output_filename : "")
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
+  - position: 29
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required inputs
   input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "VCF to filter and optionally index." }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output-file"}, doc: "output file name [stdout]" }
+  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "output file name [stdout]" }
 
   # Filter options
   snpgap: { type: 'int?', inputBinding: { position: 2, prefix: "--SnpGap"}, doc: "filter SNPs within <int> base pairs of an indel" }

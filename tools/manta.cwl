@@ -18,6 +18,7 @@ arguments:
     valueFrom: >
       /manta-1.6.0.centos6_x86_64/bin/configManta.py --runDir=./
   - position: 10
+    shellQuote: false
     prefix: "&&"
     valueFrom: >
       ./runWorkflow.py -m local

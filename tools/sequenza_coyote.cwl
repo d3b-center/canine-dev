@@ -22,7 +22,7 @@ arguments:
     prefix: '--out_dir'
     shellQuote: false
     valueFrom: |
-      .
+      $(inputs.sample_name)
   - position: 99
     prefix: ''
     shellQuote: false

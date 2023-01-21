@@ -16,6 +16,7 @@ inputs:
   normal_sample_name: { type: 'string', doc: "BAM sample name of normal" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
+  premade_cache: { type: 'Directory?', doc: "Premade cache made by Octopus. Octopus will make this in the first run and it can be saved and reused." }
 
   # Resource Control
   octopus_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Octopus." }
@@ -35,19 +36,23 @@ steps:
     out: [outputs]
 
   octopus:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: c5.9xlarge
     run: ../tools/octopus.cwl
     scatter: [regions_file]
     in:
+      premade_cache: premade_cache
       reference: indexed_reference_fasta
       reads: input_reads
-      normal_sample: normal_sample_name 
+      normal_sample: normal_sample_name
       regions_file: calling_intervals_yaml_to_beds/outputs
       caller:
         valueFrom: "cancer"
-      max_reference_cache_footprint:
-        valueFrom: "4GB" 
-      target_read_buffer_footprint:
-        valueFrom: "6GB" 
+#      max_reference_cache_footprint:
+#        valueFrom: "4GB"
+#      target_read_buffer_footprint:
+#        valueFrom: "6GB"
       ignore_unmapped_contigs:
         valueFrom: $(1 == 1)
       somatics_only:
@@ -60,9 +65,9 @@ steps:
         valueFrom: $(["AD","ADP","AF","SB"])
       somatic_filter_expression:
         valueFrom: |
-          "QUAL < 2 | GQ < 20 | MQ < 30 | SMQ < 40 | SD > 0.9 | BQ < 20 | DP < 3 | MF > 0.2 | NC > 5 | FRF > 0.5 | AD < -1 | AF < -1 | ADP > 100000000 | SB < -1"
-      output_bam_filename:
-        valueFrom: $(inputs.regions_file.basename).realigned.bam
+          QUAL < 2 | GQ < 20 | MQ < 30 | SMQ < 40 | SD > 0.9 | BQ < 20 | DP < 3 | MF > 0.2 | NC > 5 | FRF > 0.5 | AD < -1 | AF < -1 | ADP > 100000000 | SB < -1
+      output_sam_dirname:
+        valueFrom: $(inputs.regions_file.basename).realigned
       output_vcf_filename:
         valueFrom: $(inputs.regions_file.basename).octopus.vcf
       cpu: octopus_cpu

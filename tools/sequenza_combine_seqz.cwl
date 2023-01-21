@@ -13,7 +13,7 @@ arguments:
   - position: 1
     shellQuote: false
     valueFrom: | 
-      cat $(inputs.seqz.map(function(i){return i.path}).join(' ')) | awk '{if (NR==1 || $1 != "chromosome") {print $0}}' | bgzip > $(inputs.output_filename)
+      cat $(inputs.input_seqzs.map(function(i){return i.path}).join(' ')) | awk '{if (NR==1 || $1 != "chromosome") {print $0}}' | bgzip > $(inputs.output_filename)
 inputs:
   input_seqzs: { type: 'File[]', doc: "Name of the normal sample" }
   output_filename: { type: 'string', doc: "Sting to use as filename for merged output" }

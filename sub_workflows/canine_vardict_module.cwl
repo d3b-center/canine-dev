@@ -30,16 +30,16 @@ outputs:
   vardict_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
-  # Need to modify this script to use bedtools
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
       input_yaml: calling_intervals
     out: [outputs]
 
-
-
   vardict_testsomatic_var2vcf_paired_view_index:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: m5.8xlarge
     run: ../tools/vardict_testsomatic_var2vcf_paired_view_index.cwl
     scatter: [regions_file]
     in:
@@ -110,8 +110,10 @@ steps:
         valueFrom: "z"
       include:
         valueFrom: |
-          'FILTER == "PASS" & INFO/STATUS == "StrongSomatic"'
+          FILTER == "PASS" & INFO/STATUS == "StrongSomatic"
       targets_file: targets_file
+      tbi:
+        valueFrom: $(1 == 1)
     out: [output]
 
   bcftools_stats_all:

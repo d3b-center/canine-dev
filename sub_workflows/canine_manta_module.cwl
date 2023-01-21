@@ -13,6 +13,7 @@ inputs:
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing mapped reads from the normal sample" }
+  tumor_sample_name: { type: 'string', doc: "BAM sample name of tumor" }
   call_regions: { type: 'File', secondaryFiles: [{ pattern: ".tbi", required: true}], doc: "Calling regions BED file that has been bgzipped and tabix indexed" }
   config: { type: 'File', doc: "Custom config.ini file for Manta. Used to override defaults set in the global config file" }
   exome: { type: 'boolean?', doc: "Run Manta in exome mode? Turns off depth filters" }
@@ -25,7 +26,8 @@ inputs:
   manta_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Manta." }
 
 outputs:
-  manta_pass_vcf: { type: 'File', outputSource: bcftools_view_index_anno/output }
+  manta_somatic_pass_svs: { type: 'File', outputSource: bcftools_view_index_anno/output }
+  manta_small_indels: { type: 'File', outputSource: manta/small_indels }
 
 steps:
   manta:
@@ -51,7 +53,7 @@ steps:
         valueFrom: somaticSV.pass.vcf.gz
       include:
         valueFrom: |
-          'FILTER == "PASS"'
+          FILTER == "PASS"
       output_type:
         valueFrom: "z"
       tbi:
@@ -59,7 +61,7 @@ steps:
     out: [output]
 
   manta_harvest_samtools_stats:
-    run: ../tools/manta_harvest_samtools_stats.cwl 
+    run: ../tools/manta_harvest_samtools_stats.cwl
     in:
       samtools_stats: samtools_stats
     out: [insert_size, std_is]
@@ -70,6 +72,8 @@ steps:
       input_vcf: bcftools_filter_index/output
       tumor_bam_file: input_tumor_reads
       normal_bam_file: input_normal_reads
+      tumor_name: tumor_sample_name
+      refgen: indexed_reference_fasta
       output_filename:
         valueFrom: somaticSV.pass.flag.vcf
       insert_size: manta_harvest_samtools_stats/insert_size
@@ -94,7 +98,7 @@ steps:
     run: ../tools/coyote_manta_sv_annotation_parallel.cwl
     in:
       input_vcf: bcftools_view_index_flag/output
-      annotation_bed: annotation_bed 
+      annotation_bed: annotation_bed
       output_filename:
         source: output_basename
         valueFrom: somaticSV.pass.flag.anno.vcf
@@ -103,7 +107,7 @@ steps:
   bcftools_view_index_anno:
     run: ../tools/bcftools_view_index.cwl
     in:
-      input_vcf: coyote_manta_sv_annotation_parallel/output 
+      input_vcf: coyote_manta_sv_annotation_parallel/output
       output_filename:
         source: output_basename
         valueFrom: $(self).manta.somaticSV.pass.vcf.gz

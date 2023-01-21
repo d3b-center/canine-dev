@@ -1562,7 +1562,7 @@ def main(list_argv):
         opts, args = getopt.getopt(list_argv, "c:di:g:hl:m:n:o:p:s:t:z", ["help", "debug", "vcf_file=", "tumor_bam_file=", "normal_bam_file=",
                                                                           "tumor-name=", "slop=",
                                                                           "minmapq=", "refgen=", "output=", "insert-size=",
-                                                                          "sigma=", "logfile=", "--threads", "gz-out"])
+                                                                          "sigma=", "logfile=", "threads=", "gz-out"])
         # , "index_column_tumor_sample"
         logger.debug(opts)
         for opt, arg in opts:

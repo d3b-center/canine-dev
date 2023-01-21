@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'python:3.7.2'
+    dockerPull: 'dmiller15/pysam-bedtools:3.9'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
@@ -16,7 +16,12 @@ requirements:
       writable: false
       entry:
         $include: ../scripts/manta_sv_annotation_parallel_8820499.py
-baseCommand: [python, manta_prepare_sv_vcf_f94bcc1.py]
+baseCommand: [python, manta_sv_annotation_parallel_8820499.py]
+arguments:
+  - position: 2
+    prefix: "--tempdir"
+    valueFrom:
+      .
 inputs:
   input_vcf: { type: 'File', inputBinding: { position: 2, prefix: "--vcf" }, doc: "input file VCF file" }
   annotation_bed: { type: 'File', inputBinding: { position: 2, prefix: "--annof" }, doc: "BED file containing annotation information" }

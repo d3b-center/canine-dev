@@ -27,6 +27,8 @@ inputs:
   sequenza_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Sequenza R." }
 
 outputs:
+  seqz: { type: 'File', outputSource: sequenza_combine_seqz/output }
+  small_seqz: { type: 'File', outputSource: sequenza_seqz_binning/seqz }
   sequenza_dir: { type: 'Directory', outputSource: sequenza_coyote/output }
 
 steps:

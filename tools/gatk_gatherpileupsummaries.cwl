@@ -27,7 +27,7 @@ arguments:
       GatherPileupSummaries
   - position: 3
     shellQuote: false
-    prefix: "--output"
+    prefix: "-O"
     valueFrom: >-
       ${var pre = inputs.output_prefix ? inputs.output_prefix : 'output'; var ext = 'pileups.table.tsv'; return pre+'.'+ext}
 inputs:

@@ -18,10 +18,12 @@ arguments:
     valueFrom: >
       bcftools stats 
 
+stdout: $(inputs.output_filename)
+
 inputs:
   # Required Inputs
   input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "VCF files to concat, sort, and optionally index" }
-  output_filename: { type: 'string', inputBinding: { position: 10, prefix: ">"}, doc: "output file name [stdout]" }
+  output_filename: { type: 'string', doc: "output file name [stdout]" }
 
   # Stats Options
   af_bins: { type: 'string?', inputBinding: { position: 2, prefix: "--af-bins"}, doc: "comma separated list of allele frequency bins (e.g. 0.1,0.5,1)" }
@@ -67,6 +69,4 @@ inputs:
     doc: "GB size of RAM to allocate to this task."
 outputs:
   stats:
-    type: 'File'
-    outputBinding:
-      glob: $(inputs.output_filename)
+    type: 'stdout'

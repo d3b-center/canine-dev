@@ -21,11 +21,15 @@ arguments:
     shellQuote: false
     valueFrom: >
       $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
+  - position: 99
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required Inputs
   input_vcfs: { type: 'File[]', inputBinding: { position: 9 }, doc: "VCF files to concat, sort, and optionally index" }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output-file"}, doc: "output file name [stdout]" }
+  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "output file name [stdout]" }
 
   # Concat Options
   allow_overlaps: { type: 'boolean?', inputBinding: { position: 2, prefix: "--allow-overlaps"}, doc: "First coordinate of the next file can precede last record of the current file." }
