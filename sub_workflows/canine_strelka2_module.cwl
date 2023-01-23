@@ -113,7 +113,7 @@ steps:
         valueFrom: "z"
       include:
         valueFrom: |
-          'FILTER == "PASS"'
+          FILTER == "PASS"
       targets_file: targets_file 
       tbi:
         valueFrom: $(1 == 1)

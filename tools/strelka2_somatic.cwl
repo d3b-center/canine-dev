@@ -10,7 +10,7 @@ requirements:
   - class: DockerRequirement
     dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/strelka:v2.9.10'
 
-baseCommand: [/strelka-2.9.10.centos6_x86_64/bin/configureStrelkaGermlineWorkflow.py, --runDir=./]
+baseCommand: [/strelka-2.9.10.centos6_x86_64/bin/configureStrelkaSomaticWorkflow.py, --runDir=./]
 arguments:
   - position: 10
     prefix: "&&"
