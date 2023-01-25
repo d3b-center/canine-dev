@@ -104,7 +104,7 @@ inputs:
       valueFrom: |
         $(self*1000)M
 outputs:
-  vcf:
+  output:
     type: 'File'
     secondaryFiles: [{pattern: '.tbi', required: false}, {pattern: '.csi', required: false}]
     outputBinding:

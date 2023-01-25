@@ -17,6 +17,15 @@ arguments:
     shellQuote: false
     valueFrom: >
       bcftools annotate
+  - position: 90
+    prefix: "&&"
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? "bcftools index --threads " + inputs.cpu : "echo DONE")
+  - position: 99
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # Required Inputs
@@ -63,6 +72,14 @@ inputs:
       position: 2
     doc: |
       b: compressed BCF, u: uncompressed BCF, z: compressed VCF, v: uncompressed VCF [v]
+
+  # Index Arguments
+  force: { type: 'boolean?', inputBinding: { position: 92, prefix: "--force"}, doc: "overwrite index if it already exists" }
+  min_shift: { type: 'int?', inputBinding: { position: 92, prefix: "--min-shift"}, doc: "set minimal interval size for CSI indices to 2^INT [14]" }
+  csi: { type: 'boolean?', inputBinding: { position: 92, prefix: "--csi"}, doc: "generate CSI-format index for VCF/BCF files [default]" }
+  tbi: { type: 'boolean?', inputBinding: { position: 92, prefix: "--tbi"}, doc: "generate TBI-format index for VCF files" }
+  nrecords: { type: 'boolean?', inputBinding: { position: 92, prefix: "--nrecords"}, doc: "print number of records based on existing index file" }
+  stats: { type: 'boolean?', inputBinding: { position: 92, prefix: "--stats"}, doc: "print per contig stats based on existing index file" }
 
   cpu:
     type: 'int?'

@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: ResourceRequirement
-    ramMin: $(inputs.jvmheap*1000)
+    ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'dmiller15/gridss:2.6.3'
@@ -21,7 +21,7 @@ inputs:
   indexed_reference:
     type: 'File'
     doc: "Reference fasta. Must have a .fai index file and a bwa index."
-    secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: ".amb", required: true }, { pattern: ".ann", required: true }, { pattern: ".bwt", required: true }, { pattern: ".pac", required: true }, { pattern: ".sa"}]
+    secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: ".amb", required: true }, { pattern: ".ann", required: true }, { pattern: ".bwt", required: true }, { pattern: ".pac", required: true }, { pattern: ".sa", requred: true }]
     inputBinding:
       position: 2
       prefix: "--reference"
@@ -48,10 +48,12 @@ inputs:
     inputBinding:
       position: 2
       prefix: "--threads"
+  ram:
+    type: 'int?'
+    doc: "GB of RAM to allocate to this task."
   jvmheap:
-    type: 'long?'
-    default: 27.5
-    doc: "GB size of JVM heap for assembly and variant calling. Defaults to 27.5 to ensure GRIDSS runs on all cloud instances with approximate 32gb memory."
+    type: 'int?'
+    doc: "GB size of JVM heap for assembly and variant calling. Defaults to 25 to ensure GRIDSS runs on all cloud instances with approximate 32gb memory."
     inputBinding:
       position: 2
       prefix: "--jvmheap"

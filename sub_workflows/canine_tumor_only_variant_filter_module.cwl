@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: Workflow
-id: canine_annotation_module
-doc: "Port of Canine vcfmerger2 Module"
+id: canine_tumor_only_variant_filter_module
+doc: "Port of Canine Tumor Only Variant Filter Module"
 
 requirements:
 - class: ScatterFeatureRequirement
@@ -11,7 +11,6 @@ requirements:
 
 inputs:
   input_vcf: { type: 'File', doc: "VCF file to annotate." }
-  input_annotation_vcf: { type: 'File', secondaryFiles: [ { pattern: '.tbi', required: true } ], doc: "VCF containing EVA GCA annotations: GCA_000002285.2_current_ids_renamed.vcf.gz" }
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
   disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
 
@@ -20,7 +19,7 @@ inputs:
   bcftools_cpu: { type: 'int?', doc: "Number of CPUs to allocate to BCFtools." }
 
 outputs:
-  annotated_vcf: { type: 'File', outputSource: bcftools_view_index_annot/output }
+  filtered_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/output }
 
 steps:
   expr_conditional:
@@ -30,42 +29,51 @@ steps:
       disable: disable_workflow
     out: [output]
 
-  bcftools_view_index:
-    run: ../tools/bcftools_view_index.cwl
+  bcftools_view_view_index_filtered:
+    run: ../tools/bcftools_view_view_index.cwl
     in:
       input_vcf:  input_vcf
+      include:
+        valueFrom: |
+          INFO/CC>=3 & (INFO/GNOMAD_EXOME=1 | INFO/GNOMAD_GENOME=1 | INFO/TOPMED=1) & (INFO/COSMIC_CNT>=1 | INFO/COSMIC_NC_CNT>=1)
+      exclude:
+        valueFrom: |
+          (INFO/TOPMED_AC>5 | INFO/GNOMAD_GENOME_AC>5 | INFO/GNOMAD_EXOME_AC>5)
       output_filename:
-        valueFrom: "temp.db.bcf"
+        valueFrom: "temp.filtered_db.vcf.gz"
       output_type:
-        valueFrom: "b"
+        valueFrom: "z"
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]
 
-  bcftools_annotate_index:
-    run: ../tools/bcftools_annotate_index.cwl
+  bcftools_view_view_index_no_db:
+    run: ../tools/bcftools_view_view_index.cwl
     in:
-      input_vcf: bcftools_view_index/output
+      input_vcf:  input_vcf
+      include:
+        valueFrom: |
+          INFO/CC>=3
+      exclude:
+        valueFrom: |
+          (INFO/TOPMED_AC>5 | INFO/GNOMAD_GENOME_AC>5 | INFO/GNOMAD_EXOME_AC>5)
       output_filename:
-        valueFrom: "tempout.bcf"
-      annotations: input_annotation_vcf
-      mark_sites:
-        valueFrom: "GCA_2285.2"
-      columns:
-        valueFrom: "ID"
+        valueFrom: "temp.not_in_db.vcf.gz"
       output_type:
-        valueFrom: "b"
+        valueFrom: "z"
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]
 
-  bcftools_view_index_annot:
-    run: ../tools/bcftools_view_index.cwl
+  bcftools_concat_sort_index:
+    run: ../tools/bcftools_concat_sort_index.cwl
     in:
-      input_vcf: bcftools_annotate_index/output
+      input_vcfs: [bcftools_view_view_index_filtered/output, bcftools_view_view_index_no_db/output]
       output_filename:
         source: output_basename
-        valueFrom: $(self).db.vcf.gz
+        valueFrom: $(self).db.flt.vcf.gz
+      allow_overlaps:
+        valueFrom: $(1 == 1)
       output_type:
         valueFrom: "z"
       tbi:

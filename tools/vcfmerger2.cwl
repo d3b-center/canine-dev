@@ -11,7 +11,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
 
-baseCommand: []
+baseCommand: [vcfmerger2.py]
 
 inputs:
   vcfs: { type: 'File[]', inputBinding: { position: 2, prefix: "--vcfs", itemSeparator: "|" }, doc: "List of vcfs file" }
@@ -51,8 +51,12 @@ inputs:
     doc: "GB size of RAM to allocate to this task."
 
 outputs:
-  output: 
+  vcf: 
     type: File
     outputBinding:
       glob: |
         $(inputs.merged_vcf_outfilename) 
+  venns:
+    type: Directory[]?
+    outputBinding:
+      glob: "SummaryPlots_*"

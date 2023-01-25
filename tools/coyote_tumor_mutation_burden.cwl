@@ -36,6 +36,9 @@ inputs:
   skip: { type: 'boolean?', inputBinding: { position: 2, prefix: "--skip"}, doc: "This option is only used when --pqarms is provided and the user does not want to get a plot with ALL the regions given; Note; For each region given, a bar will exist in plot; so if you have thousands of region in BED file, you will get thousands of bar in the plot which may take a while to make; If used, then you may consider this as running in the regions in parallel without getting the plot at the end" }
   samtools_depth_only: { type: 'boolean?', inputBinding: { position: 2, prefix: "--samtools-depth-only"}, doc: "Advanced_users_Only; It defies the purpose of this tool as it skips the calculation of the 'Mutation Burden' and only runs the 'samtools depth' commands" }
   force: { type: 'boolean?', inputBinding: { position: 2, prefix: "--force"}, doc: "If the contigs between the two bam files do not perfectly match both at the name and size levels, the script will stop; use this option to force the run knowing that might generate wrong calculi. Use at your own risk unless you are sure that the contigs difference will not impact the Mutation Burden calculation, such as the difference may be in alternate contigs not present in the VCF; [O, Default is 'no']" }
+  sample: { type: 'string?', inputBinding: { position: 2, prefix: "--sample"}, doc: "Name of sample as presented in the tumor BAM read group." }
+  library: { type: 'string?', inputBinding: { position: 2, prefix: "--library"}, doc: "Name of the library as presented in the tumor BAM read group." }
+  rg: { type: 'string?', inputBinding: { position: 2, prefix: "--rg"}, doc: "Read group name as presented in the tumor BAM read group." }
 
   # Advanced Arguments
   region: { type: 'string?', inputBinding: { position: 2, prefix: "--region"}, doc: "You may provide a region formatted as follow 1:100000-200000 ; coordinates value are inclusive here; this will speed up the output while testing if you modified the current script ; the region will only be used with the samtools view to limit the searching region space in bams ; the BED file is still mandatory when using this option ; also help for DEBUGGING by reducing the space;" }
@@ -56,6 +59,6 @@ inputs:
     doc: "GB size of RAM to allocate to this task."
 outputs:
   output:
-    type: 'File?'
+    type: 'File'
     outputBinding:
       glob: $(inputs.output_filename) 

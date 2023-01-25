@@ -14,6 +14,7 @@ inputs:
   snpeff_database: { type: 'string', doc: "Directory containing SnpEff database information" }
   snpeff_config: { type: 'File', doc: "Config file containing run parameters for SnpEff" }
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
 
   # Resource Control
   snpeff_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to SnpEff." }
@@ -24,6 +25,13 @@ outputs:
   snpeff_canon_vcf: { type: 'File', outputSource: snpeff_annotate_bcftools_view_index_canon/output }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   snpeff_annotate_bcftools_view_index_all:
     run: ../tools/snpeff_annotate_bcftools_view_index.cwl
     in:

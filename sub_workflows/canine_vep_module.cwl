@@ -14,6 +14,7 @@ inputs:
   vep_cache: { type: 'Directory', doc: "Directory containing VEP cache information" }
   reference_fasta: { type: 'File', doc: "Reference genome fasta file" }
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
 
   # Resource Control
   bcftools_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to BCFtools." }
@@ -26,6 +27,13 @@ outputs:
   vep_con_vcf: { type: 'File', outputSource: bcftools_view_index_con/output }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   coyote_vep_all:
     run: ../tools/coyote_vep.cwl
     in:
