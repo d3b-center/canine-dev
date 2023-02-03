@@ -187,8 +187,8 @@ steps:
       ram: bcftools_ram
     out: [output]
 
-  bcftools_annotate:
-    run: ../tools/bcftools_annotate.cwl
+  bcftools_annotate_index:
+    run: ../tools/bcftools_annotate_index.cwl
     in:
       input_vcf: input_vcf
       output_filename: output_filename
@@ -197,14 +197,6 @@ steps:
         valueFrom: "INFO"
       output_type:
         valueFrom: "z"
-      cpu: bcftools_cpu
-      ram: bcftools_ram
-    out: [output]
-
-  bcftools_index_tbi:
-    run: ../tools/bcftools_index.cwl
-    in:
-      input_vcf: bcftools_annotate/output
       tbi:
         valueFrom: $(1 == 1)
       cpu: bcftools_cpu
@@ -214,7 +206,7 @@ steps:
   bcftools_index_csi:
     run: ../tools/bcftools_index.cwl
     in:
-      input_vcf: bcftools_index_tbi/output
+      input_vcf: bcftools_annotate_index/output
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]

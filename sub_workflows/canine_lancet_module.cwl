@@ -10,9 +10,11 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   calling_intervals: { type: 'File', doc: "YAML file contianing the intervals in which to perform variant calling." }
-  reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], doc: "Reference fasta" }
-  reference_fai: { type: 'File', doc: "Reference fai" }
+  indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], doc: "Reference fasta and fai index" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], doc: "BAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: '.bai', required: false}, { pattern: '^.bai', required: false}], doc: "BAM file containing mapped reads from the normal sample" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
@@ -23,12 +25,19 @@ inputs:
   lancet_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Lancet." }
 
 outputs:
-  lancet_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/vcf }
+  lancet_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/output }
   lancet_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
   lancet_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
   lancet_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -44,7 +53,7 @@ steps:
     in:
       normal: input_normal_reads
       tumor: input_tumor_reads
-      ref: reference_fasta
+      ref: indexed_reference_fasta
       bed: calling_intervals_yaml_to_beds/outputs
       output_filename:
         source: output_basename
@@ -66,7 +75,10 @@ steps:
         valueFrom: $(inputs.input_file.nameroot).sorted.vcf
       output_type:
         valueFrom: "v"
-      fai: reference_fai
+      fai:
+        source: indexed_reference_fasta
+        valueFrom: |
+          $(self.secondaryFiles.filter(function(e){ return e.nameext == '.fai' })[0])
     out: [output]
 
   bcftools_concat_sort_index:
@@ -80,12 +92,14 @@ steps:
         valueFrom: "z"
       tbi:
         valueFrom: $(1 == 1)
-    out: [vcf]
+      tool_name:
+        valueFrom: "lancet"
+    out: [output]
 
   bcftools_filter_index:
     run: ../tools/bcftools_filter_index.cwl
     in:
-      input_vcf: bcftools_concat_sort_index/vcf
+      input_vcf: bcftools_concat_sort_index/output
       output_filename:
         source: output_basename
         valueFrom: $(self).lancet.pass.vcf.gz
@@ -97,12 +111,14 @@ steps:
       targets_file: targets_file
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "lancet"
     out: [output]
 
   bcftools_stats_all:
     run: ../tools/bcftools_stats.cwl
     in:
-      input_vcf: bcftools_concat_sort_index/vcf
+      input_vcf: bcftools_concat_sort_index/output
       output_filename:
         source: output_basename
         valueFrom: $(self).lancet.all.stats.txt

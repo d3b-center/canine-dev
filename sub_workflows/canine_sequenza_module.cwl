@@ -10,7 +10,10 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
-  calling_contigs: { type: 'string[]', doc: "Contigs over which to perform variant calling." }
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
+  calling_contigs: { type: 'File', doc: "Contigs in TGEN YAML format over which to perform variant calling." }
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }], doc: "Reference fasta with FAI index" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing mapped reads from the normal sample" }
@@ -32,6 +35,19 @@ outputs:
   sequenza_dir: { type: 'Directory', outputSource: sequenza_coyote/output }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
+  clt_grab_contigs_from_yaml:
+    run: ../tools/clt_grab_contigs_from_yaml.cwl  
+    in:
+      file: calling_contigs
+    out: [output]
+
   sequenza_bam2seqz:
     run: ../tools/sequenza_bam2seqz.cwl
     scatter: [chromosome]
@@ -40,7 +56,7 @@ steps:
       input_tumor: input_tumor_reads
       indexed_reference: indexed_reference_fasta
       input_wiggle: gc_content_wiggle
-      chromosome: calling_contigs
+      chromosome: clt_grab_contigs_from_yaml/output
       output_filename:
         valueFrom: $(inputs.chromosome).seqz
       cpu: bam2seqz_cpu

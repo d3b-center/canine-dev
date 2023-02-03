@@ -6,11 +6,17 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/tgen_phoenix_stats2json:20210113-skylake'
+    dockerPull: 'python:3.7.2'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
-baseCommand: [/opt/phoenix/required_scripts/samStats2json_deb00a0.py]
+  - class: InitialWorkDirRequirement
+    listing:
+    - entryname: samStats2json_3a90a2f.py
+      writable: false
+      entry:
+        $include: ../scripts/samStats2json_3a90a2f.py
+baseCommand: [python, samStats2json_3a90a2f.py]
 inputs:
   # Required Arguments
   output: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "string name to use for output file" }

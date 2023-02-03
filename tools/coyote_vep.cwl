@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/tgen_phoenix_vep_all:20210113-skylake'
+    dockerPull: 'ghcr.io/tgen/jetstream_containers/tgen_phoenix_vep:20210113-skylake'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
@@ -44,7 +44,7 @@ arguments:
 inputs:
   input_vcf: { type: 'File', doc: "Input VCF file to be annotated" }
   output_filename: { type: 'string', doc: "Name for output annotated VCF file" }
-  vep_cache: { type: 'Directory', doc: "Directory containing VEP cache information" }
+  vep_cache: { type: 'Directory', loadListing: deep_listing, doc: "Directory containing VEP cache information" }
   reference_fasta: { type: 'File', doc: "Reference genome fasta file" }
   all_or_con: { type: 'string', doc: "VEP all or con?" }
   cpu:

@@ -87,6 +87,9 @@ inputs:
   nrecords: { type: 'boolean?', inputBinding: { position: 92, prefix: "--nrecords"}, doc: "print number of records based on existing index file" }
   stats: { type: 'boolean?', inputBinding: { position: 92, prefix: "--stats"}, doc: "print per contig stats based on existing index file" }
 
+  # Metadata options
+  tool_name: { type: 'string?', default: "bcftools", doc: "Tool name to put in toolname metadata field" }
+
   cpu:
     type: 'int?'
     default: 1
@@ -109,3 +112,10 @@ outputs:
     secondaryFiles: [{pattern: '.tbi', required: false}, {pattern: '.csi', required: false}]
     outputBinding:
       glob: $(inputs.output_filename)
+      outputEval: |
+        ${
+          var outfile = self[0];
+          if (!("metadata" in outfile)) { outfile.metadata = {} };
+          outfile.metadata["toolname"] = inputs.tool_name;
+          return outfile;
+        }

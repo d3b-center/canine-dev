@@ -218,3 +218,10 @@ outputs:
     secondaryFiles: [{ pattern: '.tbi', required: true }]
     outputBinding:
       glob: '*.mutect2.filtered.vcf.gz'
+      outputEval: |
+        ${
+          var outfile = self[0];
+          if (!("metadata" in outfile)) { outfile.metadata = {} };
+          outfile.metadata["toolname"] = "mutect2";
+          return outfile;
+        }

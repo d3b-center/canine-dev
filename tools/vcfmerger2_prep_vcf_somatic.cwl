@@ -6,12 +6,12 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'dmiller15/vcfmerger2:0.9.3'
+    dockerPull: 'dmiller15/vcfmerger2:0.9.3_tgen'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
 
-baseCommand: [/bin/bash, /opt/vcfMerger2-0.9.3/prep_vcfs_somatic/prep_vcf_somatic.sh]
+baseCommand: [/bin/bash, /vcfMerger2/prep_vcfs_somatic/prep_vcf_somatic.sh]
 
 inputs:
   # Required Always Arguments

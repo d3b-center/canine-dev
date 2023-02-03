@@ -10,6 +10,9 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing mapped reads from the normal sample" }
@@ -28,8 +31,18 @@ inputs:
 outputs:
   manta_somatic_pass_svs: { type: 'File', outputSource: bcftools_view_index_anno/output }
   manta_small_indels: { type: 'File', outputSource: manta/small_indels }
+  manta_candidate_svs: { type: 'File', outputSource: manta/candidate_sv }
+  manta_diploid_svs: { type: 'File', outputSource: manta/diploid_sv }
+  manta_somatic_svs: { type: 'File', outputSource: manta/somatic_sv }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   manta:
     run: ../tools/manta.cwl
     in:
@@ -58,6 +71,8 @@ steps:
         valueFrom: "z"
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "manta"
     out: [output]
 
   manta_harvest_samtools_stats:

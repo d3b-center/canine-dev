@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: Workflow
-id: canine_annotation_module
-doc: "Port of Canine vcfmerger2 Module"
+id: canine_bcftools_annotate_module
+doc: "Port of Canine BCFtools Annotate Module"
 
 requirements:
 - class: ScatterFeatureRequirement

@@ -30,7 +30,7 @@ arguments:
 inputs:
   # Required Inputs
   input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "VCF file to annotate and view" }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output-file"}, doc: "output file name [stdout]" }
+  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "output file name [stdout]" }
 
   # Annotate Arguments
   annotations: { type: 'File?', inputBinding: { position: 2, prefix: "--annotations"}, doc: "VCF file or tabix-indexed file with annotations: CHR\tPOS[\tVALUE]+" }

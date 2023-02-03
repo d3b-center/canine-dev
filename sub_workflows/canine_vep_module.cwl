@@ -11,7 +11,7 @@ requirements:
 
 inputs:
   input_vcf: { type: 'File', doc: "VCF file to annotate." }
-  vep_cache: { type: 'Directory', doc: "Directory containing VEP cache information" }
+  vep_cache: { type: 'Directory', loadListing: deep_listing, doc: "Directory containing VEP cache information" }
   reference_fasta: { type: 'File', doc: "Reference genome fasta file" }
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
   disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }

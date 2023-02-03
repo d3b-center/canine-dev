@@ -10,6 +10,9 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }], doc: "Reference fasta with FAI index" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/CRAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/CRAM file containing mapped reads from the normal sample" }
@@ -27,7 +30,6 @@ inputs:
   strelka2_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Strelka2." }
   samtools_view_ram: { type: 'int?', doc: "GB of RAM to allocate to Samtools View." }
   samtools_view_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Samtools View." }
- 
 
 outputs:
   strelka2_all_vcf: { type: 'File', outputSource: bcftools_concat_index/vcf }
@@ -38,6 +40,13 @@ outputs:
   strelka2_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   strelka2_somatic:
     run: ../tools/strelka2_somatic.cwl
     in:
@@ -100,6 +109,8 @@ steps:
         valueFrom: $(1 == 1)
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "strelka2"
     out: [vcf]
 
   bcftools_filter_index:
@@ -117,6 +128,8 @@ steps:
       targets_file: targets_file 
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "strelka2"
     out: [output]
 
   bcftools_stats_all:

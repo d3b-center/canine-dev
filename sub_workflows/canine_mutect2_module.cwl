@@ -10,8 +10,10 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
-  reference_dict: { type: 'File', doc: "sequence dictionary (.dict) file for reference fasta" }
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the normal sample" }
   calling_intervals: { type: 'File', doc: "YAML file contianing the intervals in which to perform variant calling." }
@@ -44,6 +46,13 @@ outputs:
   mutect2_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -114,6 +123,8 @@ steps:
         valueFrom: "z"
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "mutect2"
     out: [vcf]
 
   gatk_mergemutectstats:
@@ -138,7 +149,10 @@ steps:
     run: ../tools/gatk_gatherpileupsummaries.cwl
     in:
       input_tables: gatk_getpileupsummaries_tumor/output
-      reference_dict: reference_dict
+      reference_dict:
+        source: indexed_reference_fasta
+        valueFrom: |
+          $(self.secondaryFiles.filter(function(e){ return e.nameext == '.dict' })[0])
       output_prefix:
         source: output_basename
         valueFrom: $(self).tumor
@@ -150,7 +164,10 @@ steps:
     run: ../tools/gatk_gatherpileupsummaries.cwl
     in:
       input_tables: gatk_getpileupsummaries_normal/output
-      reference_dict: reference_dict
+      reference_dict:
+        source: indexed_reference_fasta
+        valueFrom: |
+          $(self.secondaryFiles.filter(function(e){ return e.nameext == '.dict' })[0])
       output_prefix:
         source: output_basename
         valueFrom: $(self).normal
@@ -197,6 +214,8 @@ steps:
         valueFrom: |
           FILTER == "PASS"
       targets_file: targets_file
+      tool_name:
+        valueFrom: "mutect2"
     out: [output]
 
   bcftools_stats_all:

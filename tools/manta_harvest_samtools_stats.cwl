@@ -2,7 +2,7 @@ cwlVersion: v1.2
 id: manta_harvest_samtools_stats 
 requirements:
   - class: DockerRequirement
-    dockerPull: 'ubuntu:20.04'
+    dockerPull: 'dmiller15/ubuntu:20.04'
   - class: InlineJavascriptRequirement
   - class: ResourceRequirement
     ramMin: 1000 

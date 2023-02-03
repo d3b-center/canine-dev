@@ -10,9 +10,12 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   calling_intervals: { type: 'File', doc: "YAML file contianing the intervals in which to perform variant calling." }
-  input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the tumor sample" }
-  input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the normal sample" }
+  input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing reads from the tumor sample" }
+  input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing reads from the normal sample" }
   tumor_sample_name: { type: 'string', doc: "BAM sample name of tumor" }
   normal_sample_name: { type: 'string', doc: "BAM sample name of normal" }
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }], doc: "Reference fasta with FAI index" }
@@ -30,6 +33,13 @@ outputs:
   vardict_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -97,6 +107,8 @@ steps:
         valueFrom: $(1 == 1)
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "vardict"
     out: [vcf]
 
   bcftools_filter_index:
@@ -114,6 +126,8 @@ steps:
       targets_file: targets_file
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "vardict"
     out: [output]
 
   bcftools_stats_all:

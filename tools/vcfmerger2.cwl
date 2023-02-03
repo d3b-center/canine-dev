@@ -6,12 +6,12 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'dmiller15/vcfmerger2:0.9.3'
+    dockerPull: 'dmiller15/vcfmerger2:0.9.3_tgen'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
 
-baseCommand: [vcfmerger2.py]
+baseCommand: [vcfMerger2.py]
 
 inputs:
   vcfs: { type: 'File[]', inputBinding: { position: 2, prefix: "--vcfs", itemSeparator: "|" }, doc: "List of vcfs file" }
@@ -56,6 +56,12 @@ outputs:
     outputBinding:
       glob: |
         $(inputs.merged_vcf_outfilename) 
+  vcfgz:
+    type: File?
+    secondaryFiles: [{ pattern: '.tbi', required: true }]
+    outputBinding:
+      glob: |
+        $(inputs.merged_vcf_outfilename).gz
   venns:
     type: Directory[]?
     outputBinding:

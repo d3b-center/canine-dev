@@ -16,14 +16,17 @@ requirements:
       writable: false
       entry:
         $include: ../scripts/sigprofiler_d78cc9e.py
-    - $(inputs.input_vcfs)
+    - entryname: invcfs
+      writable: true
+      entry: |
+        $({ class: "Directory", listing: inputs.input_vcfs })
 baseCommand: [python, sigprofiler_d78cc9e.py]
 arguments:
   - position: 2
     prefix: '--vcfpath'
     shellQuote: false
     valueFrom: |
-      .
+      invcfs
   - position: 99
     prefix: ''
     shellQuote: false
@@ -72,7 +75,7 @@ outputs:
   id_activity:
     type: 'File?'
     outputBinding:
-      glob: "SBS96/**/*De-Novo_Activities_refit.txt"
+      glob: "ID83/**/*De-Novo_Activities_refit.txt"
   id_activity_plot:
     type: 'File?'
     outputBinding:

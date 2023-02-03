@@ -18,7 +18,7 @@ inputs:
   bcftools_cpu: { type: 'int?', doc: "Number of CPUs to allocate to BCFtools." }
 
 outputs:
-  rna_headered_vcf: { type: 'File', outputSource: bcftools_index_csi/output }
+  rna_headered_vcf: { type: 'File', outputSource: bcftools_index/output }
 
 steps:
   coyote_temp_rna_header:
@@ -26,32 +26,24 @@ steps:
     in: []
     out: [output]
 
-  bcftools_annotate:
-    run: ../tools/bcftools_annotate.cwl
+  bcftools_annotate_index:
+    run: ../tools/bcftools_annotate_index.cwl
     in:
       input_vcf: input_vcf
       output_filename: output_filename
       header_lines: coyote_temp_rna_header/output
       output_type:
         valueFrom: "z"
-      cpu: bcftools_cpu
-      ram: bcftools_ram
-    out: [output]
-
-  bcftools_index_tbi:
-    run: ../tools/bcftools_index.cwl
-    in:
-      input_vcf: bcftools_annotate/output
       tbi:
         valueFrom: $(1 == 1)
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]
 
-  bcftools_index_csi:
+  bcftools_index:
     run: ../tools/bcftools_index.cwl
     in:
-      input_vcf: bcftools_index_tbi/output
+      input_vcf: bcftools_annotate_index/output
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]

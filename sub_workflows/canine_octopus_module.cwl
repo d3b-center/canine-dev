@@ -10,25 +10,44 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
+  # Killswitch
+  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
+
   calling_intervals: { type: 'File', doc: "YAML file contianing the intervals in which to perform variant calling." }
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI index" }
   input_reads: { type: 'File[]', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/CRAM files to be analysed." }
   normal_sample_name: { type: 'string', doc: "BAM sample name of normal" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
-  premade_cache: { type: 'Directory?', doc: "Premade cache made by Octopus. Octopus will make this in the first run and it can be saved and reused." }
+  cache_tar: { type: 'File?', doc: "Tarball of cache made by Octopus. Octopus will make this in the first run and it can be saved and reused." }
 
   # Resource Control
   octopus_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Octopus." }
   octopus_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Octopus." }
 
 outputs:
-  octopus_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/vcf }
+  octopus_all_vcf: { type: 'File', outputSource: bcftools_concat_sort_index/output }
   octopus_pass_vcf: { type: 'File', outputSource: bcftools_filter_index/output }
   octopus_all_vcf_stats: { type: 'File', outputSource: bcftools_stats_all/stats }
   octopus_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
+  expr_conditional:
+    run: ../tools/expr_conditional.cwl
+    when: $(inputs.disable == true)
+    in:
+      disable: disable_workflow
+    out: [output]
+
+  untar:
+    run: ../tools/untar.cwl
+    when: $(inputs.tarfile != null)
+    in:
+      tarfile: cache_tar
+      output_name:
+        valueFrom: ".cache"
+    out: [output]
+
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -42,7 +61,7 @@ steps:
     run: ../tools/octopus.cwl
     scatter: [regions_file]
     in:
-      premade_cache: premade_cache
+      premade_cache: untar/output
       reference: indexed_reference_fasta
       reads: input_reads
       normal_sample: normal_sample_name
@@ -85,12 +104,14 @@ steps:
         valueFrom: "z"
       tbi:
         valueFrom: $(1 == 1)
-    out: [vcf]
+      tool_name:
+        valueFrom: "octopus"
+    out: [output]
 
   bcftools_filter_index:
     run: ../tools/bcftools_filter_index.cwl
     in:
-      input_vcf: bcftools_concat_sort_index/vcf
+      input_vcf: bcftools_concat_sort_index/output
       include:
         valueFrom: |
           'FILTER == "PASS"'
@@ -102,12 +123,14 @@ steps:
         valueFrom: "z"
       tbi:
         valueFrom: $(1 == 1)
+      tool_name:
+        valueFrom: "octopus"
     out: [output]
 
   bcftools_stats_all:
     run: ../tools/bcftools_stats.cwl
     in:
-      input_vcf: bcftools_concat_sort_index/vcf
+      input_vcf: bcftools_concat_sort_index/output
       output_filename:
         source: output_basename
         valueFrom: $(self).octopus.all.stats.txt

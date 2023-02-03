@@ -1,8 +1,8 @@
 class: CommandLineTool
 cwlVersion: v1.2
-id: samtools_view
+id: samtools_view_stats
 doc: |-
-  views and converts SAM/BAM/CRAM files
+  views and converts SAM/BAM/CRAM files then collects stats on them
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
@@ -16,8 +16,16 @@ arguments:
   - position: 0
     shellQuote: false
     valueFrom: >
-      samtools view
+      samtools view --threads $(inputs.cpu - 1)
+  - position: 10
+    shellQuote: false
+    prefix: "|"
+    valueFrom: >
+      samtools stats --threads 1 $(inputs.reference_fasta ? "--reference " + inputs.reference_fasta.path : "")
+stdout: $(inputs.output_filename)
 inputs:
+  output_filename: { type: 'string', doc: "Write output to FILE" }
+
   # View Positional Arguments
   input_reads: { type: File, inputBinding: { position: 7 }, doc: "Input BAM/CRAM/SAM file" }
   customized_index_file: { type: 'File?', inputBinding: { position: 8 }, doc: "The customized index for the input reads" }
@@ -32,7 +40,6 @@ inputs:
   exclude_header: { type: 'boolean?', inputBinding: { position: 2, prefix: "--no-header" }, doc: "When producing SAM format, output alignment records but not headers." }
   only_header: { type: 'boolean?', inputBinding: { position: 2, prefix: "--header-only" }, doc: "Output the header only." }
   count: { type: 'boolean?', inputBinding: { position: 2, prefix: "--count" }, doc: "Instead of printing the alignments, only count them and print the total number. All filter options are taken into account. The unmap option is ignored in this mode." }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output", shellQuote: false }, doc: "Write output to FILE" }
   output_unselected_filename:  { type: 'string?', inputBinding: { position: 2, prefix: "--unoutput" }, doc: "Output reads not selected by filters to FILE" }
   flag_unmap: { type: 'boolean?', inputBinding: { position: 2, prefix: "--unmap" }, doc: "Set the UNMAP flag on alignments that are not selected by the filter options. These alignments are then written to the normal output." }
   fetch_pairs: { type: 'boolean?', inputBinding: { position: 2, prefix: "--fetch-pairs" }, doc: "Retrieve complete pairs even when outside of region" }
@@ -66,24 +73,39 @@ inputs:
   write_index: { type: 'boolean?', inputBinding: { position: 2, prefix: "--write-index" }, doc: "Automatically index the output files" }
   input_format: { type: 'string?', inputBinding: { position: 2, prefix: "--input-fmt" }, doc: "Specify input format (SAM, BAM, CRAM) and any other options/values FORMAT[,OPT[=VAL]]..." }
   output_format: { type: 'string?', inputBinding: { position: 2, prefix: "--output-fmt" }, doc: "Specify output format (SAM, BAM, CRAM) and any other options/values FORMAT[,OPT[=VAL]]..." }
+
+  # Samtools Stats
+  coverage: { type: 'string?', inputBinding: { position: 12, prefix: "--coverage"}, doc: "Coverage distribution min,max,step [1,1000,1]" }
+  remove_dups: { type: 'boolean?', inputBinding: { position: 12, prefix: "--remove-dups"}, doc: "Exclude from statistics reads marked as duplicates" }
+  required_flag: { type: 'string?', inputBinding: { position: 12, prefix: "--required-flag"}, doc: "Required flag, 0 for unset. See also `samtools flags` [0]" }
+  filtering_flag: { type: 'string?', inputBinding: { position: 12, prefix: "--filtering-flag"}, doc: "Filtering flag, 0 for unset. See also `samtools flags` [0]" }
+  gc_depth: { type: 'float?', inputBinding: { position: 12, prefix: "--GC-depth"}, doc: "the size of GC-depth bins (decreasing bin size increases memory requirement) [2e4]" }
+  insert_size: { type: 'int?', inputBinding: { position: 12, prefix: "--insert-size"}, doc: "Maximum insert size [8000]" }
+  id: { type: 'string?', inputBinding: { position: 12, prefix: "--id"}, doc: "Include only listed read group or sample name" }
+  read_length: { type: 'int?', inputBinding: { position: 12, prefix: "--read-length"}, doc: "Include in the statistics only reads with the given read length [-1]" }
+  most_inserts: { type: 'float?', inputBinding: { position: 12, prefix: "--most-inserts"}, doc: "Report only the main part of inserts [0.99]" }
+  split_prefix: { type: 'string?', inputBinding: { position: 12, prefix: "--split-prefix"}, doc: "Path or string prefix for filepaths output by -S (default is input filename)" }
+  trim_quality: { type: 'int?', inputBinding: { position: 12, prefix: "--trim-quality"}, doc: "The BWA trimming parameter [0]" }
+  ref_seq: { type: 'File?', inputBinding: { position: 12, prefix: "--ref-seq"}, doc: "Reference sequence (required for GC-depth and mismatches-per-cycle calculation)." }
+  split: { type: 'string?', inputBinding: { position: 12, prefix: "--split"}, doc: "Also write statistics to separate files split by tagged field." }
+  target_regions: { type: 'File?', inputBinding: { position: 12, prefix: "--target-regions"}, doc: "Do stats in these regions only. Tab-delimited file chr,from,to, 1-based, inclusive." }
+  sparse: { type: 'boolean?', inputBinding: { position: 12, prefix: "--sparse"}, doc: "Suppress outputting IS rows where there are no insertions." }
+  remove_overlaps: { type: 'boolean?', inputBinding: { position: 12, prefix: "--remove-overlaps"}, doc: "Remove overlaps of paired-end reads from coverage and base count computations." }
+  cov_threshold: { type: 'int?', inputBinding: { position: 12, prefix: "--cov-threshold"}, doc: "Only bases with coverage above this value will be included in the target percentage computation [0]" }
+  input_fmt_option: { type: 'string?', inputBinding: { position: 12, prefix: "--input-fmt-option"}, doc: "Specify a single input file format option in the form of OPTION or OPTION=VALUE" }
+
   cpu:
     type: 'int?'
-    default: 1
+    default: 4
     doc: "Number of CPUs to allocate to this task."
-    inputBinding:
-      prefix: "--threads"
-      position: 2
   ram:
     type: 'int?'
-    default: 4
+    default: 8
     doc: "GB size of RAM to allocate to this task."
 
 outputs:
-  output:
-    type: File
-    secondaryFiles: [{pattern: '.bai', required: false}, {pattern: '^.bai', required: false}, {pattern: '.crai', required: false}, {pattern: '^.crai', required: false}]
-    outputBinding:
-      glob: '*.*am'
+  stats:
+    type: 'stdout'
 
 $namespaces:
   sbg: https://sevenbridges.com

@@ -9,14 +9,14 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/mutation-burden:1.2.3'
+    dockerPull: 'dmiller15/tgen-mutation-burden:1.2.3'
 baseCommand: [tgen_mutation_burden.sh]
 arguments:
-  - position: 99
-    prefix: ''
+  - position: 20
+    prefix: '&&'
     shellQuote: false
     valueFrom: |
-      1>&2
+      printf "\n\n" >> $(inputs.output_filename)
 inputs:
   # Required Arguments
   bed: { type: 'File', inputBinding: { position: 2, prefix: "--bed" }, doc: "BED file representing the TARGETS Regions" }

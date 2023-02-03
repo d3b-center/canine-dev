@@ -11,7 +11,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/msisensor:1.1.a'
+    dockerPull: 'dmiller15/tgen_msisensor:1.1.a'
 baseCommand: [msisensor-pro, msi]
 inputs:
   # Required Arguments

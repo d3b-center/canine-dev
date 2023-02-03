@@ -16,7 +16,7 @@ arguments:
   - position: 0
     shellQuote: false
     valueFrom: >
-      snpEff ann 
+      java -Xmx$(Math.floor(inputs.ram*1000/1.074-1))m -jar /opt/snpEff/snpEff.jar ann
   - position: 10
     shellQuote: false
     prefix: "|"
@@ -26,6 +26,10 @@ arguments:
     shellQuote: false
     valueFrom: >
       $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
+  - position: 99
+    shellQuote: false
+    valueFrom: >
+      $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")
 
 inputs:
   # SnpEff Ann Required
@@ -71,7 +75,7 @@ inputs:
   config: { type: 'File?', inputBinding: { position: 2, prefix: "-c"}, doc: "Specify config file" }
   configOption: { type: 'string?', inputBinding: { position: 2, prefix: "-configOption"}, doc: "Override a config file option" }
   debug: { type: 'boolean?', inputBinding: { position: 2, prefix: "-d"}, doc: "Debug mode (very verbose)." }
-  dataDir: { type: 'Directory?', inputBinding: { position: 2, prefix: "-dataDir"}, doc: "Override data_dir parameter from config file." }
+  dataDir: { type: 'Directory?', loadListing: deep_listing, inputBinding: { position: 2, prefix: "-dataDir"}, doc: "Override data_dir parameter from config file." }
   download: { type: 'boolean?', inputBinding: { position: 2, prefix: "-download"}, doc: "Download a SnpEff database, if not available locally. Default: true" }
   nodownload: { type: 'boolean?', inputBinding: { position: 2, prefix: "-nodownload"}, doc: "Do not download a SnpEff database, if not available locally." }
   noLog: { type: 'boolean?', inputBinding: { position: 2, prefix: "-noLog"}, doc: "Do not report usage statistics to server" }
@@ -174,9 +178,6 @@ inputs:
   ram:
     type: 'int?'
     default: 16
-    inputBinding:
-      position: 2
-      valueFrom: "-Xmx${ return Math.floor(inputs.self*1000/1.074-1) }m"
     doc: "GB size of RAM to allocate to this task."
 outputs:
   output:

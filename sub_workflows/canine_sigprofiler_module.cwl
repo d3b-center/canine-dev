@@ -65,7 +65,7 @@ steps:
     run: ../tools/coyote_sigprofiler.cwl
     in:
       input_vcfs:
-        source: input_vcf
+        source: bcftools_view_index/output
         valueFrom: $([self])
       genome:
         valueFrom: "dog"
