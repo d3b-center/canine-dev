@@ -56,7 +56,7 @@ inputs:
     inputBinding:
       position: 3
     doc: "One or more genomic intervals to exclude from processing."
-  annotated_intervals: { type: 'File', inputBinding: { position: 3, prefix: "--annotated-intervals"}, doc: "Input file containing annotations for genomic intervals (output of AnnotateIntervals). Must be provided if no counts files are provided." }
+  annotated_intervals: { type: 'File?', inputBinding: { position: 3, prefix: "--annotated-intervals"}, doc: "Input file containing annotations for genomic intervals (output of AnnotateIntervals). Must be provided if no counts files are provided." }
   input_read_counts:
     type:
       - 'null'

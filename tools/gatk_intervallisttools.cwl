@@ -44,6 +44,7 @@ arguments:
       }
 
 inputs:
+  disable_tool: { type: 'boolean?', doc: "Hook to disable this tool when using it in a CWL workflow." }
   input_intervals:
     type:
       - type: array

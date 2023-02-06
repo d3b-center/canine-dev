@@ -62,7 +62,7 @@ steps:
   gatk_mutect2:
     hints:
       - class: 'sbg:AWSInstanceType'
-        value: r5.8xlarge
+        value: c5.9xlarge
     run: ../tools/gatk_mutect2.cwl
     scatter: [input_interval_list]
     in:
@@ -81,7 +81,7 @@ steps:
   gatk_getpileupsummaries_tumor:
     hints:
       - class: 'sbg:AWSInstanceType'
-        value: m5.8xlarge
+        value: c5.9xlarge
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
     in:
@@ -98,7 +98,7 @@ steps:
   gatk_getpileupsummaries_normal:
     hints:
       - class: 'sbg:AWSInstanceType'
-        value: m5.8xlarge
+        value: c5.9xlarge
     run: ../tools/gatk_getpileupsummaries.cwl
     scatter: [input_interval_list]
     in:

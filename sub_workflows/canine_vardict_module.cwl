@@ -49,7 +49,7 @@ steps:
   vardict_testsomatic_var2vcf_paired_view_index:
     hints:
       - class: 'sbg:AWSInstanceType'
-        value: m5.8xlarge
+        value: c5.9xlarge
     run: ../tools/vardict_testsomatic_var2vcf_paired_view_index.cwl
     scatter: [regions_file]
     in:

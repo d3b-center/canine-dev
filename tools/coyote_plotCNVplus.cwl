@@ -72,3 +72,7 @@ outputs:
     type: 'File?'
     outputBinding:
       glob: '*.re_centered.cr.igv.seg'
+  dlrs:
+    type: 'File?'
+    outputBinding:
+      glob: '*dLRs.tsv'

@@ -10,7 +10,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'ubuntu:20.04'
+    dockerPull: 'dmiller15/ubuntu:20.04'
   - class: InitialWorkDirRequirement
     listing:
     - entryname: temp_rna_header.sh 
