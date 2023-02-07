@@ -12,7 +12,6 @@ requirements:
 
 inputs:
   # Killswitches
-  disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
   disable_bcftools: { type: 'boolean?', doc: "Set to true to disable bcftools GCA annotation." }
   disable_tumor_only_var_filt: { type: 'boolean?', default: true, doc: "Set to true to disable tumor only variant filtering." }
   disable_snpeff: { type: 'boolean?', doc: "Set to true to disable SnpEff annotation." }
@@ -21,7 +20,7 @@ inputs:
   # Deepvariant
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
   input_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from sample" }
-  deepvariant_model: { type: 'File', doc: "Model for deepvariant: model.ckpt" }
+  deepvariant_model: { type: 'File', secondaryFiles: [{ pattern: "^.index", required: true }, { pattern: "^.meta", required: true }], doc: "Model for deepvariant: model.ckpt" }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
   num_shards: { type: 'int?', default: 40, doc: "Number of shards to create." }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
@@ -54,13 +53,6 @@ outputs:
   vep_con_vcf: { type: 'File?', outputSource: canine_annotation_module/vep_con_vcf }
 
 steps:
-  expr_conditional:
-    run: ../tools/expr_conditional.cwl
-    when: $(inputs.disable == true)
-    in:
-      disable: disable_workflow
-    out: [output]
-
   expr_make_int_array:
     run: ../tools/expr_make_int_array.cwl
     in:
@@ -79,10 +71,10 @@ steps:
       reads:
         source: input_reads
         valueFrom: $([self])
-      examples:
+      examples_outname:
         source: output_basename
         valueFrom: $(self).ex.tfrecord@$(inputs.task_total).gz
-      gvcf: 
+      gvcf_outname: 
         source: output_basename
         valueFrom: $(self).gvcf.tfrecord@$(inputs.task_total).gz
     out: [examples, gvcf]

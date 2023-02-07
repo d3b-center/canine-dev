@@ -18,10 +18,10 @@ inputs:
   customized_classes_labeler_classes_list: { type: 'string?', inputBinding: { position: 2, prefix: "--customized_classes_labeler_classes_list"}, doc: "A comma-separated list of strings that defines customized class labels for variants. This is only set when labeler_algorithm is customized_classes_labeler." }
   customized_classes_labeler_info_field_name: { type: 'string?', inputBinding: { position: 2, prefix: "--customized_classes_labeler_info_field_name"}, doc: "The name from the INFO field of VCF where we should get the customized class labels from. This is only set when labeler_algorithm is customized_classes_labeler." }
   downsample_fraction: { type: 'float?', inputBinding: { position: 2, prefix: "--downsample_fraction"}, doc: "If not 0.0 must be a value between 0.0 and 1.0. Reads will be kept (randomly) with a probability of downsample_fraction from the input BAM. This argument makes it easy to create examples as though the input BAM had less coverage." }
-  examples: { type: 'string', inputBinding: { position: 2, prefix: "--examples"}, doc: "Required. Path to write tf.Example protos in TFRecord format." }
+  examples_outname: { type: 'string', inputBinding: { position: 2, prefix: "--examples"}, doc: "Required. Path to write tf.Example protos in TFRecord format." }
   exclude_regions: { type: 'string?', inputBinding: { position: 2, prefix: "--exclude_regions"}, doc: "Optional. Space-separated list of regions we want to exclude from processing. Elements can be region literals (e.g., chr20   10-20). Region exclusion happens after processing the --regions argument, so --region 20 --exclude_regions 20   100 does everything on chromosome 20 excluding base 100" }
   exclude_regions_file:  { type: 'File?', inputBinding: { position: 2, prefix: "--exclude_regions"}, doc: "Optional. List of regions we want to exclude from processing in BED/BEDPE files. Region exclusion happens after processing the --regions argument, so --region 20 --exclude_regions 20   100 does everything on chromosome 20 excluding base 100" }
-  gvcf: { type: 'File?', inputBinding: { position: 2, prefix: "--gvcf"}, doc: "Optional. Path where we should write gVCF records in TFRecord of Variant proto format." }
+  gvcf_outname: { type: 'string?', inputBinding: { position: 2, prefix: "--gvcf"}, doc: "Optional. Path where we should write gVCF records in TFRecord of Variant proto format." }
   gvcf_gq_binsize: { type: 'int?', inputBinding: { position: 2, prefix: "--gvcf_gq_binsize"}, doc: "Bin size in which to quantize gVCF genotype qualities. Larger bin size reduces the number of gVCF records at a loss of quality granularity." }
   hts_block_size: { type: 'int?', inputBinding: { position: 2, prefix: "--hts_block_size"}, doc: "Sets the htslib block size. Zero or negative uses default htslib setting; larger values (e.g. 1M) may be beneficial for using remote files. Currently only applies to SAM/BAM reading." }
   hts_logging_level: { type: 'string?', inputBinding: { position: 2, prefix: "--hts_logging_level"}, doc: "Sets the htslib logging threshold." }
@@ -73,7 +73,7 @@ inputs:
       used.
   sequencing_type_image: { type: 'boolean?', inputBinding: { position: 2, prefix: "--sequencing_type_image"}, doc: "If True, add an additional channel representing the sequencing type of the input example. This flag is experimental and is not currently being used." }
   task: { type: 'int?', inputBinding: { position: 2, prefix: "--task"}, doc: "Task ID of this task" }
-  task_total: { type: 'int?', inputBinding: { position: 2, prefix: "--task"}, doc: "Total number of task shards being run." }
+  task_total: { type: 'int?', doc: "Total number of task shards being run." }
   training_random_emit_ref_sites: { type: 'float?', inputBinding: { position: 2, prefix: "--training_random_emit_ref_sites"}, doc: "If > 0, emit extra random reference examples with this probability." }
   truth_variants: { type: 'File?', inputBinding: { position: 2, prefix: "--truth_variants"}, doc: "Tabix-indexed VCF file containing the truth variant calls for this labels which we use to label our examples." }
   use_original_quality_scores: { type: 'boolean?', inputBinding: { position: 2, prefix: "--use_original_quality_scores"}, doc: "If True, base quality scores are read from OQ tag." }
@@ -97,8 +97,8 @@ outputs:
   examples:
     type: File
     outputBinding:
-      glob: $(inputs.examples)
+      glob: "*.ex.tfrecord*gz" 
   gvcf:
     type: 'File?'
     outputBinding:
-      glob: $(inputs.gvcf)
+      glob: "*.gvcf.tfrecord*"
