@@ -19,3 +19,4 @@
 - [Sigprofiler Module](docs/SIGPROFILER_MODULE_README.md)
 - [Collect Somatic Metrics Module](docs/COLLECT_SOMATIC_METRICS_MODULE_README.md)
 - [VCFMerger2 Module](docs/VCFMERGER2_MODULE_README.md)
+- [Manta Module](docs/MANTA_MODULE_README.md)
