@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'biowdl/pyyaml:latest'
+    dockerPull: 'dmiller15/python-util:3.9'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
