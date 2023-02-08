@@ -22,7 +22,7 @@ stdout: $(inputs.output_filename)
 
 inputs:
   # Required Inputs
-  input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "VCF files to concat, sort, and optionally index" }
+  input_vcf: { type: 'File', inputBinding: { position: 9 }, doc: "VCF file to call stats on." }
   output_filename: { type: 'string', doc: "output file name [stdout]" }
 
   # Stats Options

@@ -31,13 +31,6 @@ outputs:
   lancet_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
-  expr_conditional:
-    run: ../tools/expr_conditional.cwl
-    when: $(inputs.disable == true)
-    in:
-      disable: disable_workflow
-    out: [output]
-
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -59,6 +52,7 @@ steps:
         source: output_basename
         valueFrom: $(self).$(inputs.bed.nameroot).lancet-uns.vcf
       max_vaf_normal:
+        source: disable_workflow # hiding killswitch here because I hate cavatica
         valueFrom: $(0.05)
       max_alt_count_normal:
         valueFrom: $(50)
