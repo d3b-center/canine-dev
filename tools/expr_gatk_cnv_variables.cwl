@@ -27,8 +27,8 @@ outputs:
   min_dp: { type: int }
   min_vaf: { type: int }
   padding: { type: 'int?' }
-expression: |
-  ${
+expression:
+  "${
     var tmp_bin_length = 0;
 
     if (inputs.exome) {
@@ -56,4 +56,4 @@ expression: |
 
     var out = { 'bin_length': 100, 'exp_1x_counts': 100, 'max_vaf': 100, 'min_db': 100, 'min_vaf': 100, 'padding': 100  };
     return out; 
-  }
+  }"

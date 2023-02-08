@@ -2,7 +2,7 @@ cwlVersion: v1.2
 class: CommandLineTool
 id: bcftools_concat_index
 doc: |
-  BCFTOOLS concat and  optionally index 
+  BCFTOOLS concat and optionally index 
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
