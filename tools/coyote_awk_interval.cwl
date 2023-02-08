@@ -26,7 +26,7 @@ baseCommand: [/bin/bash, coyote_awk_bamstats.sh]
 
 inputs:
   # Required Inputs
-  disable_tool: { type: 'boolean?', doc: "Killswitch for tool in workflow" }
+  enable_tool: { type: 'string?', doc: "Killswitch for tool in workflow" }
   max_length: { type: 'int', doc: "Max length value from the normal bam stats file" }
   interval_list: { type: 'File', doc: "Interval list to awk from" }
 

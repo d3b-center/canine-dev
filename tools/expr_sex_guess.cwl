@@ -19,7 +19,7 @@ outputs:
 
 expression: |
   ${
-    var out_sex = (["Male", "Female"].includes(inputs.sex_check_sex) ? inputs.sex_check_sex : ["Male", "Female"].includes(inputs.config_sex) ? inputs.config_sex : "Female")
+    var out_sex = (["Male", "Female"].indexOf(inputs.sex_check_sex) != -1 ? inputs.sex_check_sex : ["Male", "Female"].indexOf(inputs.config_sex) != -1 ? inputs.config_sex : "Female")
 
     return {
       'output': out_sex

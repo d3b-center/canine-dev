@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 id: gatk_annotateintervals
 doc: >-
@@ -30,7 +30,7 @@ inputs:
   reference:
     type: File
     doc: "Reference fasta"
-    secondaryFiles: ['.fai']
+    secondaryFiles: [ { pattern: '.fai', required: true } ]
     inputBinding:
       position: 2
       prefix: "-R"
@@ -99,7 +99,7 @@ inputs:
   mappability_track:
     type: 'File?'
     doc: "Path to Umap single-read mappability track in .bed or .bed.gz format (see https://bismap.hoffmanlab.org/). Overlapping intervals must be merged."
-    secondaryFiles: ['.tbi']
+    secondaryFiles: [{ pattern: '.tbi', required: false }, { pattern: '.idx', required: false }]
     inputBinding:
       position: 2
       prefix: "--mappability-track"

@@ -11,7 +11,7 @@ class: CommandLineTool
 baseCommand: [grep]
 stdout: $(inputs.outfile)
 inputs:
-  disable_tool: { type: 'boolean?', doc: "Killswitch for tool in workflow" }
+  enable_tool: { type: 'string?', doc: "Killswitch for tool in workflow" }
   infile: { type: 'File', inputBinding: { position: 9, prefix: "--file"}, doc: "Obtain patterns from FILE, one per line.  If this option is used multiple times or is combined with the -e (--regexp) option, search for all patterns given.  The  empty  file  contains zero patterns, and therefore matches nothing." }
   outfile: { type: 'string', default: "out.txt", doc: "Output filename" } 
   regexp: { type: 'string', inputBinding: { position: 8, prefix: "--regexp"}, doc: "Use  PATTERN  as  the  pattern.   If this option is used multiple times or is combined with the -f (--file) option, search for all patterns given.  This option can be used to protect a pattern beginning with '-'." }

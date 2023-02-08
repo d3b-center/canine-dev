@@ -17,11 +17,11 @@ arguments:
     shellQuote: false
     valueFrom: >
       bcftools filter
-  - position: 20
+  - position: 90
     shellQuote: false
     valueFrom: >
       $(inputs.output_type == "b" || inputs.output_type == "z" ? "&& bcftools index --threads " + inputs.cpu : "")
-  - position: 29
+  - position: 99
     shellQuote: false
     valueFrom: >
       $(inputs.output_type == "b" || inputs.output_type == "z" ? inputs.output_filename : "")

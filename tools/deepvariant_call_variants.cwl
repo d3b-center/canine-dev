@@ -10,13 +10,27 @@ requirements:
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'google/deepvariant:0.10.0-gpu'
+  - class: InitialWorkDirRequirement
+    listing: $(inputs.examples)
 baseCommand: [/opt/deepvariant/bin/call_variants]
+arguments:
+  - position: 2
+    prefix: "--checkpoint"
+    shellQuote: false
+    valueFrom: >
+      /opt/models/$(inputs.sample_type)/model.ckpt
 inputs:
   batch_size: { type: 'int?', inputBinding: { position: 2, prefix: "--batch_size"}, doc: "Number of candidate variant tensors to batch together during inference. Larger batches use more memory but are more computational efficient." }
-  checkpoint: { type: 'File', secondaryFiles: [{ pattern: "^.index", required: true }, { pattern: "^.meta", required: true }], inputBinding: { position: 2, prefix: "--checkpoint" }, doc: "Required. Path to the TensorFlow model checkpoint to use to evaluate candidate variant calls." }
+  sample_type: 
+    type:
+      - type: enum
+        name: sample_type
+        symbols: ["pacbio", "wes", "wgs"]
+    doc: "Type of sample. Used to pick the appropriate checkpoint model."
   config_string: { type: 'string?', inputBinding: { position: 2, prefix: "--config_string"}, doc: "String representation of a tf.ConfigProto message, with comma-separated key: value pairs, such as 'allow_soft_placement: True'. The value can itself be another message, such as 'gpu_options: {per_process_gpu_memory_fraction: 0.5}'." }
   debugging_true_label_mode: { type: 'boolean?', inputBinding: { position: 2, prefix: "--debugging_true_label_mode"}, doc: "If true, read the true labels from examples and add to output. Note that the program will crash if the input examples do not have the label field. When true, this will also fill everything when --include_debug_info is set to true." }
-  examples: { type: 'File[]', inputBinding: { position: 2, prefix: "--examples", itemSeparator: ",", shellQuote: false }, doc: "Required. tf.Example protos containing DeepVariant candidate variants in TFRecord format, as emitted by make_examples. Can be a comma-separated list of files, and the file names can contain wildcard characters." }
+  examples: { type: 'File[]', doc: "Required. tf.Example protos containing DeepVariant candidate variants in TFRecord format, as emitted by make_examples. Can be a comma-separated list of files, and the file names can contain wildcard characters." }
+  examples_name: { type: 'string', inputBinding: { position: 2, prefix: "--examples" }, doc: "Short name convention for all example files (e.g. filename@10.gz)" }
   execution_hardware: { type: 'string?', inputBinding: { position: 2, prefix: "--execution_hardware"}, doc: "When in cpu mode, call_variants will not place any ops on the GPU, even if one is available. In accelerator mode call_variants validates that at least some hardware accelerator (GPU/TPU) was available for us. This option is primarily for QA purposes to allow users to validate their accelerator environment is correctly configured. In auto mode, the default, op placement is entirely left up to TensorFlow.  In tpu mode, use and require TPU." }
   gcp_project: { type: 'string?', inputBinding: { position: 2, prefix: "--gcp_project"}, doc: "Project name for the Cloud TPU-enabled project. If not specified, we will attempt to automatically detect the GCE project from metadata." }
   include_debug_info: { type: 'boolean?', inputBinding: { position: 2, prefix: "--include_debug_info"}, doc: "If true, include extra debug info in the output." }

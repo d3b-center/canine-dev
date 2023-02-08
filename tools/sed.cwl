@@ -11,7 +11,7 @@ class: CommandLineTool
 baseCommand: [sed]
 stdout: $(inputs.outfile)
 inputs:
-  disable_tool: { type: 'boolean?', doc: "Killswitch for tool in workflow" }
+  enable_tool: { type: 'string?', doc: "Killswitch for tool in workflow" }
   outfile: { type: 'string?', default: "out.txt", doc: "Output filename" } 
   infile: { type: 'File', inputBinding: { position: 9 }, doc: "File to sed" }
   silent: { type: 'boolean?', inputBinding: { position: 2, prefix: "--silent"}, doc: "suppress automatic printing of pattern space" }

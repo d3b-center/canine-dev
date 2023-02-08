@@ -20,9 +20,14 @@ inputs:
   # Deepvariant
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
   input_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from sample" }
-  deepvariant_model: { type: 'File', secondaryFiles: [{ pattern: "^.index", required: true }, { pattern: "^.meta", required: true }], doc: "Model for deepvariant: model.ckpt" }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
   num_shards: { type: 'int?', default: 40, doc: "Number of shards to create." }
+  sample_type:
+    type:
+      - type: enum
+        name: sample_type
+        symbols: ["pacbio", "wes", "wgs"]
+    doc: "Type of sample. Used to pick the appropriate checkpoint model."
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
 
   # Annotation
@@ -85,8 +90,12 @@ steps:
         value: p3.2xlarge
     run: ../tools/deepvariant_call_variants.cwl
     in:
-      checkpoint: deepvariant_model
+      sample_type: sample_type 
       examples: deepvariant_make_examples/examples
+      examples_name:
+        source: num_shards
+        valueFrom: |
+          $(inputs.examples[0].basename.split('tfrecord')[0])tfrecord@$(self).gz
       outfile:
         source: output_basename
         valueFrom: $(self).cvo.tfrecord.gz
@@ -108,8 +117,8 @@ steps:
       nonvariant_site_tfrecord_path:
         source: num_shards
         valueFrom: |
-          *.gvcf.tfrecord@$(self).gz 
-      nonvariant_site_tfrecord: deepvariant_make_examples/gvcf
+          $(inputs.nonvariant_site_tfrecords[0].basename.split('tfrecord')[0])tfrecord@$(self).gz
+      nonvariant_site_tfrecords: deepvariant_make_examples/gvcf
       gvcf_outfile:
         source: output_basename
         valueFrom: $(self).deepvariant.all.g.vcf.gz
@@ -136,6 +145,8 @@ steps:
         valueFrom: |
           FILTER == "PASS"
       targets_file: targets_file
+      tbi:
+        valueFrom: $(1 == 1)
       tool_name:
         valueFrom: "deepvariant"
     out: [output]

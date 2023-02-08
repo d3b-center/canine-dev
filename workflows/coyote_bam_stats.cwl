@@ -26,7 +26,7 @@ inputs:
       Sequencing Read Format (PairedEnd or SingleEnd)
 
 outputs:
-  bamstats:  type: 'File', outputSource: samtools_view_stats/stats }
+  bamstats: { type: 'File', outputSource: samtools_view_stats/stats }
   base_dist_plot: { type: 'File?', outputSource: coyote_summarize_samstats/base_dist_plot} 
   base_qual_dist_hist_plot: { type: 'File?', outputSource: coyote_summarize_samstats/base_qual_dist_hist_plot }
   base_qual_dist_hist: { type: 'File?', outputSource: coyote_summarize_samstats/base_qual_dist_hist }

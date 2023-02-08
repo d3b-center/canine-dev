@@ -44,7 +44,7 @@ arguments:
       }
 
 inputs:
-  disable_tool: { type: 'boolean?', doc: "Hook to disable this tool when using it in a CWL workflow." }
+  enable_tool: { type: 'string?', doc: "Hook to disable this tool when using it in a CWL workflow." }
   input_intervals:
     type:
       - type: array
@@ -121,7 +121,7 @@ inputs:
     doc: |
       What value to output to COUNT_OUTPUT file or stdout (for scripting). If
       COUNT_OUTPUT is provided, this parameter must not be NONE.
-  count_output: { type: 'string?', inputBinding: { position: 2, prefix: "--COUNT_OUTPUT"}, doc: "File to which to print count of bases or intervals in final output interval list. When not set, value indicated by OUTPUT_VALUE will be printed to stdout. If this parameter is set, OUTPUT_VALUE must not be NONE." }
+  count_output_filename: { type: 'string?', inputBinding: { position: 2, prefix: "--COUNT_OUTPUT"}, doc: "File to which to print count of bases or intervals in final output interval list. When not set, value indicated by OUTPUT_VALUE will be printed to stdout. If this parameter is set, OUTPUT_VALUE must not be NONE." }
   padding: { type: 'int?', inputBinding: { position: 2, prefix: "--PADDING"}, doc: "The amount to pad each end of the intervals by before other operations are undertaken. Negative numbers are allowed and indicate intervals should be shrunk. Resulting intervals < 0 bases long will be removed. Padding is applied to the interval lists (both INPUT and SECOND_INPUT, if provided) before the ACTION is performed." }
   scatter_content: { type: 'int?', inputBinding: { position: 2, prefix: "--SCATTER_CONTENT"}, doc: "When scattering with this argument, each of the resultant files will (ideally) have this amount of 'content', which means either base-counts or interval-counts depending on SUBDIVISION_MODE. When provided, overrides SCATTER_COUNT" }
   scatter_count: { type: 'int?', inputBinding: { position: 2, prefix: "--SCATTER_COUNT"}, doc: "The number of files into which to scatter the resulting list by locus; in some situations, fewer intervals may be emitted." }
@@ -193,4 +193,4 @@ outputs:
   count_output:
     type: 'File?'
     outputBinding:
-      glob: $(inputs.count_output)
+      glob: $(inputs.count_output_filename)
