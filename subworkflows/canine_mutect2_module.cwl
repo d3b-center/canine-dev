@@ -197,7 +197,7 @@ steps:
 
   bcftools_filter_index:
     run: ../tools/bcftools_filter_index.cwl
-    in: #gatk_filtermutectcalls/filtered_vcf
+    in:
       input_vcf: gatk_filtermutectcalls/filtered_vcf
       output_filename:
         source: output_basename
@@ -208,6 +208,8 @@ steps:
         valueFrom: |
           FILTER == "PASS"
       targets_file: targets_file
+      tbi:
+        valueFrom: $(1 == 1)
       tool_name:
         valueFrom: "mutect2"
     out: [output]

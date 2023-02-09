@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: bcftools_reheader_sort
+id: bcftools_filter_index
 doc: |
-  BCFTOOLS reheader and sort
+  BCFTOOLS filter and optionally index
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
@@ -107,7 +107,7 @@ outputs:
       outputEval: |
         ${
           var outfile = self[0];
-          if (!("metadata" in outfile)) { outfile.metadata = {} }; 
+          if (!("metadata" in outfile)) { outfile.metadata = {} };
           outfile.metadata["toolname"] = inputs.tool_name;
           return outfile;
         }
