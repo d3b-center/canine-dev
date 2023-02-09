@@ -22,13 +22,13 @@ inputs:
   min_bin_length: { type: 'int?', default: 2000 }
 outputs:
   bin_length: { type: int }
-  exp_1x_counts: { type: int }
-  max_vaf: { type: int }
+  exp_1x_counts: { type: int } 
+  max_vaf: { type: float }
   min_dp: { type: int }
-  min_vaf: { type: int }
+  min_vaf: { type: float }
   padding: { type: 'int?' }
-expression:
-  "${
+expression: |
+  ${
     var tmp_bin_length = 0;
 
     if (inputs.exome) {
@@ -41,19 +41,20 @@ expression:
     }
 
     var corr_bin_len = (inputs.exome ? tmp_bin_length * 20 : tmp_bin_length); // Exome gets multiplied by 20 to reach an estimated 20x depth
-    var out_exp_1x_counts = corr_bin_len/inputs.bamstats_max_length/2; // Divide by two to accomidate autosomes
+    var out_exp_1x_counts = Math.floor(corr_bin_len / inputs.bamstats_max_length / 2); // Divide by two to accomidate autosomes
 
     var out_bin_length = (inputs.exome ? 0 : tmp_bin_length); // Ultimately the value we need for bin_length in exome samples is zero
 
-    var out_min_vaf = 0.333;
-    var out_max_vaf = 0.666;
-    var out_min_db = 5;
-    if (inputs.exome || inputs.normal_average_depth >= 20) {
-      out_min_vaf = 0.45;
-      out_max_vaf = 0.55;
-      out_min_db = 20;
-    }
+    var out_min_vaf = (inputs.exome || inputs.normal_average_depth >= 20 ? 0.45 : 0.333);
+    var out_max_vaf = (inputs.exome || inputs.normal_average_depth >= 20 ? 0.55 : 0.666);
+    var out_min_db = (inputs.exome || inputs.normal_average_depth >= 20 ? 20 : 5);
 
-    var out = { 'bin_length': 100, 'exp_1x_counts': 100, 'max_vaf': 100, 'min_db': 100, 'min_vaf': 100, 'padding': 100  };
-    return out; 
-  }"
+    return {
+      'bin_length': out_bin_length,
+      'exp_1x_counts': out_exp_1x_counts,
+      'max_vaf': out_max_vaf,
+      'min_dp': out_min_db,
+      'min_vaf': out_min_vaf,
+      'padding': (inputs.exome ? 100 : null)
+    };
+  }

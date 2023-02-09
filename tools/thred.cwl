@@ -11,7 +11,7 @@ requirements:
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'dmiller15/thred:1.1.0'
-baseCommand: [/opt/thred/tHRed.py]
+baseCommand: [python, /opt/thred/tHReD.py]
 inputs:
   seg: { type: 'File', inputBinding: { position: 2, prefix: "--seg"}, doc: "SEG file with non-overlapping segments (default: None)" }
   genomic_regions: { type: 'File', inputBinding: { position: 2, prefix: "--genomic-regions"}, doc: "Genomic Regions File defining Centromere (required) and optionally telomeres, p and q arms. NOTE: defined regions MUST not overlap (default: None)" }

@@ -16,11 +16,11 @@ requirements:
       writable: false
       entry:
         $include: ../scripts/annotSeg_7102f1c.pl
-    - $(inputs.input_seg)
+    - $(inputs.input_file)
 baseCommand: [perl, annotSeg_7102f1c.pl]
 inputs:
   input_annotation_gtf: { type: 'File',  inputBinding: { position: 1 }, doc: "Annotation file downloaded from Ensembl (eg. Ensembl_v70_hs37d5.gtf)." }
-  input_file: { type: 'File', inputBinding: { position: 2 }, doc: "File to annotate" }
+  input_file: { type: 'File', inputBinding: { position: 2, valueFrom: $(self.basename) }, doc: "File to annotate" }
   amp_threshold: { type: 'float', inputBinding: { position: 4 }, doc: "threshold for marking amplifications as PASS (e.g 0.58) and annotating" }
   del_threshold: { type: 'float', inputBinding: { position: 4 }, doc: "threshold for marking deletions as PASS (e.g -0.9) and annotating" }
 

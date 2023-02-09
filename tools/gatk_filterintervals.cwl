@@ -115,4 +115,4 @@ inputs:
     default: 1
     doc: "Number of CPUs to allocate to this task."
 outputs:
-  output: { type: 'File?', outputBinding: { glob: '*.annotated.tsv' } }
+  output: { type: 'File?', outputBinding: { glob: '*.interval_list' } }

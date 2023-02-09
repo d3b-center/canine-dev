@@ -16,7 +16,8 @@ requirements:
       writable: false
       entry:
         $include: ../scripts/seg_extend_229b8c7.py
-    - $(inputs.input_seg)
+    - entry: $(inputs.input_seg)
+      writable: true
 baseCommand: [python, seg_extend_229b8c7.py]
 inputs:
   input_centromere_bed: { type: 'File', inputBinding: { position: 1 }, doc: "BED file containing centromere regions" }

@@ -7,7 +7,7 @@ requirements:
   - class: ShellCommandRequirement
   - class: ResourceRequirement
     ramMin: $(inputs.max_memory * 1000)
-    coresMin: $(inputs.cpus)
+    coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'broadinstitute/gatk:4.1.8.0'
 baseCommand: []
@@ -66,9 +66,11 @@ inputs:
     doc: "String to use as the prefix for the outputs."
   max_memory:
     type: 'int?'
+    default: 16
     doc: "Maximum GB of RAM to allocate for this tool."
   cpu:
     type: 'int?'
+    default: 4
     doc: "Number of CPUs to allocate to this task."
 
 outputs:

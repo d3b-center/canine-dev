@@ -193,8 +193,10 @@ if (!file.exists(modeled_segments_file)) {
 #### Read TSV Function ####
 
 ReadTSV <- function(tsv_file) {
+  print(paste("Reading TSV file: ", tsv_file))
   temp_file <- tempfile()
   system(sprintf('grep -v ^@ "%s" > %s', tsv_file, temp_file))
+  print(paste("Finished reading TSV file: ", tsv_file))
   return(suppressWarnings(fread(temp_file, sep="\t", stringsAsFactors=FALSE, header=TRUE, check.names=FALSE, data.table=FALSE, showProgress=FALSE, verbose=FALSE)))
 }
 
@@ -207,6 +209,7 @@ dLRs <- function(x) {
 denoised_copy_ratios <- ReadTSV(denoised_copy_ratios_file)
 allelic_counts <- ReadTSV(allelic_counts_file)
 modeled_segments <- ReadTSV(modeled_segments_file)
+
 
 setDT(denoised_copy_ratios)
 setDT(allelic_counts)
@@ -228,6 +231,9 @@ hets <- allelic_counts[allelic_counts$DP >= hetDPfilter & allelic_counts$AF >= h
 
 # Filter out hets that are not MINOR_ALLELE_FRACTION_POSTERIOR_10 < AF < MINOR_ALLELE_FRACTION_POSTERIOR_90
 hets$MAF <- ifelse(hets$AF >= 0.5, 1-hets$AF, hets$AF)
+
+# Case contigs to character just in case we don't have any X chrom
+class(hets$CONTIG) = "character"
 
 hets <- hets[modeled_segments, on = .(CONTIG, POSITION >= START, POSITION <= END), MINOR_ALLELE_FRACTION_POSTERIOR_10 := i.MINOR_ALLELE_FRACTION_POSTERIOR_10 ][]
 hets <- hets[modeled_segments, on = .(CONTIG, POSITION >= START, POSITION <= END), MINOR_ALLELE_FRACTION_POSTERIOR_90 := i.MINOR_ALLELE_FRACTION_POSTERIOR_90 ][]

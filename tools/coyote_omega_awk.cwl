@@ -49,18 +49,18 @@ requirements:
     
         for CHR in {1..39}
         do
-          if [[ ${CHR} -eq "39" ]]
+          if [[ $CHR -eq "39" ]]
           then
             CHR="X"
           else
             CHR="$CHR"
           fi
     
-          eval "START=\\\${START_${CHR}}"
-          eval "STOP=\\\${STOP_${CHR}}"
+          eval "START=\\\${START_\${CHR}}"
+          eval "STOP=\\\${STOP_\${CHR}}"
     
-          START_C=\$(awk -v CHR=$CHR '$1==CHR { print $2 }' inputs.input_centromeres.path)
-          STOP_C=\$(awk -v CHR=$CHR '$1==CHR { print $3 }' inputs.input_centromeres.path)
+          START_C=\$(awk -v CHR=$CHR '$1==CHR { print $2 }' $(inputs.input_centromere.path))
+          STOP_C=\$(awk -v CHR=$CHR '$1==CHR { print $3 }' $(inputs.input_centromere.path))
     
           if [[ $START -ge $START_C ]]
           then
@@ -116,7 +116,7 @@ requirements:
     
           mv $(inputs.output_basename).modelFinal.genderCorrected.seg.temp $(inputs.output_basename).modelFinal.genderCorrected.seg
         done
-baseCommand: [/bin/bash, coyote_awk_bamstats.sh]
+baseCommand: [/bin/bash, coyote_omega_awk.sh]
 
 inputs:
   # Required Inputs
@@ -142,4 +142,4 @@ outputs:
   denoisedcr_corr:
     type: File
     outputBinding:
-      glob: '.denoisedCR.genderCorrected.tsv'
+      glob: '*.denoisedCR.genderCorrected.tsv'

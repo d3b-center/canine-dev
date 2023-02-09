@@ -6,10 +6,13 @@ doc: |
 requirements:
   - class: InlineJavascriptRequirement
 inputs:
+  index:
+    type: int?
+    default: 0
   length:
     type: int
 outputs:
   output:
     type: int[] 
 expression: |
-  ${ return { output: Array(inputs.length).fill(0).map(function(x, y) { return  x + y }) } }
+  ${ return { output: Array(inputs.length).fill(inputs.index).map(function(x, y) { return  x + y }) } }
