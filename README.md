@@ -2,6 +2,7 @@
 
 ## Modules
 - [Lancet Module](docs/LANCET_MODULE_README.md)
+<<<<<<< HEAD
 - [BAMstats Module](docs/BAMSTATS_MODULE_README.md)
 - [Strelka2 Module](docs/STRELKA2_MODULE_README.md)
 - [Mutect2 Module](docs/MUTECT2_MODULE_README.md)
@@ -20,3 +21,4 @@
 - [Collect Somatic Metrics Module](docs/COLLECT_SOMATIC_METRICS_MODULE_README.md)
 - [VCFMerger2 Module](docs/VCFMERGER2_MODULE_README.md)
 - [Manta Module](docs/MANTA_MODULE_README.md)
+- [GATK CNV Module](docs/GATK_CNV_MODULE_README.md)
