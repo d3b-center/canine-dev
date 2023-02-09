@@ -22,3 +22,4 @@
 - [Manta Module](docs/MANTA_MODULE_README.md)
 - [GATK CNV Module](docs/GATK_CNV_MODULE_README.md)
 - [Vardict Module](docs/VARDICT_MODULE_README.md)
+- [Sequenza Module](docs/SEQUENZA_MODULE_README.md)
