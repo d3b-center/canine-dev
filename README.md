@@ -21,3 +21,4 @@
 - [VCFMerger2 Module](docs/VCFMERGER2_MODULE_README.md)
 - [Manta Module](docs/MANTA_MODULE_README.md)
 - [GATK CNV Module](docs/GATK_CNV_MODULE_README.md)
+- [Vardict Module](docs/VARDICT_MODULE_README.md)
