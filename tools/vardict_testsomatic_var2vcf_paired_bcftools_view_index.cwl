@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: vardict_testsomatic_var2vcf_paired_bcftools_view_index 
+id: vardict_testsomatic_var2vcf_paired_bcftools_view_index
 doc: |
   Runs Vardict, testsomatic.R, var2vcf_paired.pl, bcftools view, and optionally index
 requirements:
@@ -28,7 +28,7 @@ arguments:
   - position: 30
     shellQuote: false
     valueFrom: >
-      | bcftools view --threads $(inputs.cpu)
+      | bcftools view --threads 1
   - position: 90
     shellQuote: false
     valueFrom: >
@@ -41,7 +41,7 @@ inputs:
   # Required Arguments
   input_bam_files: { type: 'File[]', secondaryFiles: [{ pattern: '.bai', required: true }], inputBinding: { position: 2, prefix: '-b', itemSeparator: '|' }, doc: "Indexed BAM File. Can input multiple BAM files. Inputs will be separated by '|'" }
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], inputBinding: { position: 2, prefix: '-G' }, doc: "The reference fasta. Should be indexed (.fai)." }
-  output_filename: { type: 'string', inputBinding: { position: 32, prefix: "--output-file"}, doc: "output file name" } 
+  output_filename: { type: 'string', inputBinding: { position: 32, prefix: "--output-file"}, doc: "output file name" }
 
   # VarDict Arguments
   indel_3_prime: { type: 'boolean?', inputBinding: { position: 2, prefix: '-3' }, doc: "Indicate to move indels to 3-prime if alternative alignment can be achieved." }
@@ -49,18 +49,18 @@ inputs:
   amplicon: { type: 'string?', inputBinding: { position: 2, prefix: '--amplicon' }, doc: "Indicate it's amplicon based calling. Reads that don't map to the amplicon will be skipped.  A read pair is considered belonging to the amplicon if the edges are less than int bp to the amplicon, and overlap fraction is at least float. Default: 10:0.95" }
   adaptor: { type: 'string?', inputBinding: { position: 2, prefix: '-adaptor' }, doc: "Filter adaptor sequences so that they are not used in realignment. Multiple adaptors can be supplied by setting them with comma, like: --adaptor ACGTTGCTC,ACGGGGTCTC,ACGCGGCTAG"}
   bias_min_reads: { type: 'int?', inputBinding: { position: 2, prefix: '-B' }, doc: "The minimum # of reads to determine strand bias, default 2"}
-  chimeric: { type: 'boolean?', inputBinding: { position: 2, prefix: '-chimeric' }, doc: "Indicate to turn off chimeric reads filtering." } 
+  chimeric: { type: 'boolean?', inputBinding: { position: 2, prefix: '-chimeric' }, doc: "Indicate to turn off chimeric reads filtering." }
   debug: { type: 'boolean?', inputBinding: { position: 2, prefix: '--debug' }, doc: "Debug mode. Will print some error messages and append full genotype at the end." }
   delimiter: { type: 'string?', inputBinding: { position: 2, prefix: '-d' }, doc: "The delimiter for split region_info, default to tab" }
   deldupvar: { type: 'boolean?', inputBinding: { position: 2, prefix: '-deldupvar' }, doc: "Turn on deleting of duplicate variants. Variants in this mode are considered and outputted only if start position of variant is inside the region interest." }
   hexical_read_filter: { type: 'string?', inputBinding: { position: 2, prefix: '-F' }, doc: "The hexical to filter reads using samtools. Default: 0x504 (filter 2nd alignments, unmapped reads and duplicates). Use -F 0 to turn it off." }
   allele_frequency_max: { type: 'float?', inputBinding: { position: 2, prefix: '-f' }, doc: "The threshold for allele frequency, default: 0.01 or 1%" }
-  header: { type: 'boolean?', inputBinding: { position: 2, prefix: '--header' }, doc: "Print a header row describing columns" } 
+  header: { type: 'boolean?', inputBinding: { position: 2, prefix: '--header' }, doc: "Print a header row describing columns" }
   indel_size: { type: 'int?', inputBinding: { position: 2, prefix: '-I' }, doc: "The indel size. Default: 50" }
   splice: { type: 'boolean?', inputBinding: { position: 2, prefix: '--splice' }, doc: "Output splicing read counts" }
   crispr_cutting_site: { type: 'string?', inputBinding: { position: 2, prefix: '--crispr' }, doc: "The genomic position that CRISPR/Cas9 suppose to cut, typically 3bp from the PAM NGG site and within the guide. For CRISPR mode only. It will adjust the variants (mostly In-Del) start and end sites to as close to this location as possible, if there are alternatives. The option should only be used for CRISPR mode." }
   crispr_filtering_bp: { type: 'string?', inputBinding: { position: 2, prefix: '-j' }, doc: "In CRISPR mode, the minimum amount in bp that a read needs to overlap with cutting site. If a read does not meet the criteria, it will not be used for variant calling, since it is likely just a partially amplified PCR. Default: not set, or no filtering" }
-  n_depth: { type: 'boolean?', inputBinding: { position: 2, prefix: '-K' }, doc: "Include Ns in the total depth calculation" } 
+  n_depth: { type: 'boolean?', inputBinding: { position: 2, prefix: '-K' }, doc: "Include Ns in the total depth calculation" }
   local_realignment:
     type:
       - 'null'
@@ -97,7 +97,7 @@ inputs:
     type:
       - 'null'
       - type: enum
-        name: read_strictness 
+        name: read_strictness
         symbols: ["STRICT", "LENIENT", "SILENT"]
     inputBinding:
       position: 2
@@ -110,7 +110,7 @@ inputs:
       Default: LENIENT
   insert_std: { type: 'int?', inputBinding: { position: 2, prefix: '--insert-std' }, doc: "The insert size STD. Used for SV calling. Default: 100" }
   insert_size: { type: 'int?', inputBinding: { position: 2, prefix: '--insert-size' }, doc: "The insert size. Used for SV calling. Default: 300" }
-  indel_extension: { type: 'int?', inputBinding: { position: 2, prefix: '-X' }, doc: "Extension of bp to look for mismatches after insersion or deletion.  Default to 2 bp, or only calls when they're within 2 bp." }
+  indel_extension: { type: 'int?', inputBinding: { position: 2, prefix: '-X' }, doc: "Extension of bp to look for mismatches after insertion or deletion.  Default to 2 bp, or only calls when they're within 2 bp." }
   segment_extension: { type: 'int?', inputBinding: { position: 2, prefix: '-x' }, doc: "The number of nucleotide to extend for each segment, default: 0" }
   ref_extension: { type: 'int?', inputBinding: { position: 2, prefix: '--ref-extension' }, doc: "Extension of bp of reference to build lookup table. Default to 1200 bp. Increase the number will slowdown the program. The main purpose is to call large indels with 1000 bp that can be missed by discordant mate pairs." }
   verbose: { type: 'boolean?', inputBinding: { position: 2, prefix: '--verbose' }, doc: "Verbose logging" }
@@ -138,7 +138,7 @@ inputs:
   regions_file: { type: 'File?', inputBinding: { position: 9 }, doc: "File containing regions over which to call variants." }
 
   # var2vcf_paired Arguments
-  drop_chr: { type: 'boolean?', inputBinding: { position: 22, prefix: '-C' }, doc: "If set, chrosomes will have names of 1,32,3,X,Y, instead of chr1, chr32, chrX, chrY" }
+  drop_chr: { type: 'boolean?', inputBinding: { position: 22, prefix: '-C' }, doc: "If set, chromosomes will have names of 1,32,3,X,Y, instead of chr1, chr32, chrX, chrY" }
   pass_only: { type: 'boolean?', inputBinding: { position: 22, prefix: '-S' }, doc: "If set, variants that didn't pass filters will not be present in VCF file" }
   somatic_only: { type: 'boolean?', inputBinding: { position: 22, prefix: '-M' }, doc: "If set, output only candidate somatic" }
   all_variants: { type: 'boolean?', inputBinding: { position: 22, prefix: '-A' }, doc: "Indicate to output all variants at the same position.  By default, only the variant with the highest allele frequency is converted to VCF." }
@@ -219,14 +219,14 @@ inputs:
 
   cpu:
     type: 'int?'
-    default: 4
+    default: 16
     doc: "Number of CPUs to allocate to this task."
     inputBinding:
       position: 2
       prefix: '-th'
   ram:
     type: 'int?'
-    default: 12 
+    default: 32
     doc: "GB size of RAM to allocate to this task."
 outputs:
   output:
