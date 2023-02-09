@@ -39,6 +39,19 @@ steps:
       input_yaml: calling_intervals
     out: [outputs]
 
+  bedtools_makewindows:
+    run: ../tools/bedtools_makewindows.cwl
+    scatter: [bed]
+    in:
+      bed: calling_intervals_yaml_to_beds/outputs 
+      window_size: 
+        valueFrom: $(20000)
+      step_size:
+        valueFrom: $(19850)
+      output_filename:
+        valueFrom: chunked_$(inputs.bed.basename)
+    out: [output]
+
   vardict_testsomatic_var2vcf_paired_bcftools_view_index:
     hints:
       - class: 'sbg:AWSInstanceType'
@@ -47,7 +60,7 @@ steps:
     scatter: [regions_file]
     in:
       input_bam_files:
-        source: [input_normal_reads, input_tumor_reads]
+        source: [input_tumor_reads, input_normal_reads]
       sample_name: tumor_sample_name
       indexed_reference_fasta: indexed_reference_fasta
       hexical_read_filter:
@@ -71,7 +84,7 @@ steps:
         valueFrom: $(2)
       region_end_column:
         valueFrom: $(3)
-      regions_file: calling_intervals_yaml_to_beds/outputs
+      regions_file: bedtools_makewindows/output 
       sample_names:
         source: normal_sample_name
         valueFrom: $([inputs.sample_name, self])
@@ -91,7 +104,7 @@ steps:
   bcftools_concat_index:
     run: ../tools/bcftools_concat_index.cwl
     in:
-      input_vcfs: vardict_testsomatic_var2vcf_paired_view_index/output
+      input_vcfs: vardict_testsomatic_var2vcf_paired_bcftools_view_index/output
       output_filename:
         source: output_basename
         valueFrom: $(self).vardict.all.vcf.gz
