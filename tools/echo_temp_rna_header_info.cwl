@@ -10,14 +10,13 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/ubuntu:20.04'
+    dockerPull: 'ubuntu:20.04'
   - class: InitialWorkDirRequirement
     listing:
     - entryname: temp_rna_header.sh
       writable: false
       entry: |
         set -eu
-        set -o pipefail
 
         echo "##INFO=<ID=RNA_REF_COUNT,Number=.,Type=Integer,Description=\"Count of REF alleles seen in RNA\">" > $(inputs.output_filename)
         echo "##INFO=<ID=RNA_ALT_FREQ,Number=.,Type=Float,Description=\"Frequency of ALT alleles seen in RNA\">" >> $(inputs.output_filename)
