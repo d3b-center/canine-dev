@@ -11,3 +11,4 @@
 - [Annotation Module](docs/ANNOTATION_MODULE_README.md)
 - [Mutation Burden Module](docs/MUTATION_BURDEN_MODULE_README.md)
 - [Tucon Module](docs/TUCON_MODULE_README.md)
+- [MSIsensor PRO Module](docs/MSISENSOR_PRO_MODULE_README.md)
