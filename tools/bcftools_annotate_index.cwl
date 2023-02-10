@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: bcftools_annotate
+id: bcftools_annotate_index
 doc: |
-  BCFTOOLS annotate
+  BCFTOOLS annotate and optionally index
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement

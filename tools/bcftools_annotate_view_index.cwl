@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: bcftools_annotate_view
+id: bcftools_annotate_view_index
 doc: |
   BCFTOOLS annotate view and optionally index
 requirements:
@@ -39,11 +39,11 @@ inputs:
 
   # Annotate Arguments
   annotations: { type: 'File?', inputBinding: { position: 2, prefix: "--annotations"}, doc: "VCF file or tabix-indexed file with annotations: CHR\tPOS[\tVALUE]+" }
-  collapse: 
+  collapse:
     type:
       - 'null'
       - type: enum
-        name: collapse 
+        name: collapse
         symbols: ["snps","indels","both","all","some","none"]
     inputBinding:
       prefix: "--collapse"
