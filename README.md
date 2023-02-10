@@ -6,3 +6,4 @@
 - [Strelka2 Module](docs/STRELKA2_MODULE_README.md)
 - [Mutect2 Module](docs/MUTECT2_MODULE_README.md)
 - [Octopus Module](docs/OCTOPUS_MODULE_README.md)
+- [Add Matched RNA Module](docs/ADD_MATCHED_RNA_MODULE_README.md)
