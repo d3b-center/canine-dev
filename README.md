@@ -13,3 +13,4 @@
 - [snpEff Module](docs/SNPEFF_MODULE_README.md)
 - [VEP Module](docs/VEP_MODULE_README.md)
 - [Annotation Module](docs/ANNOTATION_MODULE_README.md)
+- [Mutation Burden Module](docs/MUTATION_BURDEN_MODULE_README.md)
