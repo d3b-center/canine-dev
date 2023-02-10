@@ -8,3 +8,4 @@
 - [Tumor Only Variant Filter Module](docs/TUMOR_ONLY_VARIANT_FILTER_MODULE_README.md)
 - [snpEff Module](docs/SNPEFF_MODULE_README.md)
 - [VEP Module](docs/VEP_MODULE_README.md)
+- [Annotation Module](docs/ANNOTATION_MODULE_README.md)
