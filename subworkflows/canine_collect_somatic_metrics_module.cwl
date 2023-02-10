@@ -78,7 +78,7 @@ outputs:
 
 steps:
   canine_mutation_burden_module_snpeff:
-    run: ../sub_workflows/canine_mutation_burden_module.cwl
+    run: ../subworkflows/canine_mutation_burden_module.cwl
     when: $(inputs.disable_workflow != true && inputs.input_vcf != null)
     in:
       input_vcf: input_snpeff_can_vcf
@@ -87,7 +87,7 @@ steps:
       exome_capture_kit_bed: exome_capture_kit_bed
       sample_name: sample_name
       library_name: library_name
-      output_basename: 
+      output_basename:
         source: output_basename
         valueFrom: $(self).snpeff
       disable_workflow: disable_mutation_burden
@@ -105,11 +105,11 @@ steps:
     out: [tmb_metrics_txt, tmb_metrics_json]
 
   canine_tucon_module_snpeff:
-    run: ../sub_workflows/canine_tucon_module.cwl
+    run: ../subworkflows/canine_tucon_module.cwl
     when: $(inputs.disable_workflow != true && inputs.input_vcf != null)
     in:
       input_vcf: input_snpeff_full_vcf
-      output_basename: 
+      output_basename:
         source: output_basename
         valueFrom: $(self).snpeff
       disable_workflow: disable_tucon
@@ -119,7 +119,7 @@ steps:
     out: [tucon_tsv]
 
   canine_mutation_burden_module_vep:
-    run: ../sub_workflows/canine_mutation_burden_module.cwl
+    run: ../subworkflows/canine_mutation_burden_module.cwl
     when: $(inputs.disable_workflow != true && inputs.input_vcf != null)
     in:
       input_vcf: input_vep_pick_vcf
@@ -128,7 +128,7 @@ steps:
       exome_capture_kit_bed: exome_capture_kit_bed
       sample_name: sample_name
       library_name: library_name
-      output_basename: 
+      output_basename:
         source: output_basename
         valueFrom: $(self).vep
       disable_workflow: disable_mutation_burden
@@ -146,11 +146,11 @@ steps:
     out: [tmb_metrics_txt, tmb_metrics_json]
 
   canine_tucon_module_vep:
-    run: ../sub_workflows/canine_tucon_module.cwl
+    run: ../subworkflows/canine_tucon_module.cwl
     when: $(inputs.disable_workflow != true && inputs.input_vcf != null)
     in:
       input_vcf: input_vep_full_vcf
-      output_basename: 
+      output_basename:
         source: output_basename
         valueFrom: $(self).vep
       disable_workflow: disable_tucon
@@ -160,7 +160,7 @@ steps:
     out: [tucon_tsv]
 
   canine_msisensor_pro_module:
-    run: ../sub_workflows/canine_msisensor_pro_module.cwl
+    run: ../subworkflows/canine_msisensor_pro_module.cwl
     when: $(inputs.disable_workflow != true)
     in:
       input_tumor_bam: input_tumor_bam
@@ -176,7 +176,7 @@ steps:
     out: [msisensor_metrics_txt]
 
   canine_sigprofiler_module:
-    run: ../sub_workflows/canine_sigprofiler_module.cwl
+    run: ../subworkflows/canine_sigprofiler_module.cwl
     when: $(inputs.disable_workflow != true)
     in:
       input_vcf: input_merged_vcf
