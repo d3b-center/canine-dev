@@ -14,7 +14,6 @@ inputs:
   tarfile: { type: 'File', inputBinding: { position: 1 } }
   outdir: { type: 'string?', inputBinding: { position: 2, prefix: "--directory" } }
   output_name: { type: 'string?' }
-
 outputs:
   output:
     type: 'Directory?'
