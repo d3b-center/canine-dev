@@ -30,7 +30,7 @@ steps:
       include:
         source: total_callers
         valueFrom: |
-          $(self > 3 ? "INFO/CC>=" + self - 2 : "INFO/CC>=" + self - 1)
+          $(self > 3 ? "INFO/CC>=" + (self - 2) : "INFO/CC>=" + (self - 1))
       output_filename:
         source: output_basename
         valueFrom: $(self).flt.vcf.gz
