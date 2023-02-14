@@ -18,7 +18,6 @@ inputs:
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing mapped reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "BAM file containing mapped reads from the normal sample" }
   gc_content_wiggle: { type: 'File', doc: "The GC-content wiggle file. Can be gzipped" }
-  tumor_sample_name: { type: 'string', doc: "BAM sample name of tumor" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
 
   # Resource Control
@@ -32,16 +31,34 @@ inputs:
 outputs:
   seqz: { type: 'File', outputSource: sequenza_combine_seqz/output }
   small_seqz: { type: 'File', outputSource: sequenza_seqz_binning/seqz }
-  sequenza_dir: { type: 'Directory', outputSource: sequenza_coyote/output }
+  cn_bars: { type: 'File', outputSource: sequenza_coyote/cn_bars }
+  cp_contours: { type: 'File', outputSource: sequenza_coyote/cp_contours }
+  alt_fit: { type: 'File', outputSource: sequenza_coyote/alt_fit }
+  alt_solutions: { type: 'File', outputSource: sequenza_coyote/alt_solutions }
+  chr_depths: { type: 'File', outputSource: sequenza_coyote/chr_depths }
+  chr_view: { type: 'File', outputSource: sequenza_coyote/chr_view }
+  confints_cp: { type: 'File', outputSource: sequenza_coyote/confints_cp }
+  gc_plots: { type: 'File', outputSource: sequenza_coyote/gc_plots }
+  genome_view: { type: 'File', outputSource: sequenza_coyote/genome_view }
+  model_fit: { type: 'File', outputSource: sequenza_coyote/model_fit }
+  mutations: { type: 'File', outputSource: sequenza_coyote/mutations }
+  segments: { type: 'File', outputSource: sequenza_coyote/segments }
+  sequenza_cp_table: { type: 'File', outputSource: sequenza_coyote/sequenza_cp_table }
+  sequenza_extract: { type: 'File', outputSource: sequenza_coyote/sequenza_extract }
+  sequenza_log: { type: 'File', outputSource: sequenza_coyote/sequenza_log }
+  max_likelihood: { type: 'File', outputSource: sequenza_coyote/max_likelihood }
 
 steps:
   clt_grab_yaml_contigs:
-    run: ../tools/clt_grab_yaml_contigs.cwl  
+    run: ../tools/clt_grab_yaml_contigs.cwl
     in:
       file: calling_contigs
     out: [output]
 
   sequenza_bam2seqz:
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: c5.9xlarge
     run: ../tools/sequenza_bam2seqz.cwl
     scatter: [chromosome]
     in:
@@ -51,7 +68,7 @@ steps:
       input_wiggle: gc_content_wiggle
       chromosome: clt_grab_yaml_contigs/output
       output_filename:
-        source: disable_workflow # Hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing
         valueFrom: $(inputs.chromosome).seqz
       cpu: bam2seqz_cpu
       ram: bam2seqz_ram
@@ -80,13 +97,17 @@ steps:
     out: [seqz]
 
   sequenza_coyote:
+    # This is a long running low core/high ram job. Ideally runs alone on the least costly instance.
+    hints:
+      - class: 'sbg:AWSInstanceType'
+        value: r5.2xlarge
     run: ../tools/sequenza_coyote.cwl
     in:
       input_seqz: sequenza_seqz_binning/seqz
-      sample_name: tumor_sample_name 
+      sample_name: output_basename
       cpu: sequenza_cpu
       ram: sequenza_ram
-    out: [output]
+    out: [cn_bars, cp_contours, alt_fit, alt_solutions, chr_depths, chr_view, confints_cp, gc_plots, genome_view, model_fit, mutations, segments, sequenza_cp_table, sequenza_extract, sequenza_log, max_likelihood]
 
 $namespaces:
   sbg: https://sevenbridges.com

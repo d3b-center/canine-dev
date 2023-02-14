@@ -12,7 +12,7 @@ requirements:
     dockerPull: 'dmiller15/sequenza:3.0.0'
   - class: InitialWorkDirRequirement
     listing:
-    - entryname: sequenza.R 
+    - entryname: sequenza.R
       writable: false
       entry:
         $include: ../scripts/sequenza.R
@@ -29,18 +29,8 @@ arguments:
     valueFrom: |
       1>&2
 inputs:
-  input_seqz:
-    type: 'File'
-    doc: "Input seqz.gz file."
-    inputBinding:
-      position: 2
-      prefix: "--sample_input"
-  sample_name:
-    type: 'string'
-    doc: "Name of the sample."
-    inputBinding:
-      position: 2
-      prefix: "--sample_name"
+  input_seqz: { type: 'File', secondaryFiles: [{pattern: '.tbi', required: true}], inputBinding: { position: 2, prefix: "--sample_input" }, doc: "Input seqz.gz file." }
+  sample_name: { type: 'string', inputBinding: { position: 2, prefix: "--sample_name" }, doc: "Name of the sample." }
 
   cpu:
     type: 'int?'
@@ -48,10 +38,70 @@ inputs:
     doc: "Number of CPUs to allocate to this task."
   ram:
     type: 'int?'
-    default: 16
+    default: 64
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  output:
-    type: 'Directory'
+  cn_bars:
+    type: 'File'
     outputBinding:
-      glob: $(inputs.sample_name)
+      glob: "*/*CN_bars.pdf"
+  cp_contours:
+    type: 'File'
+    outputBinding:
+      glob: "*/*CP_contours.pdf"
+  alt_fit:
+    type: 'File'
+    outputBinding:
+      glob: "*/*alternative_fit.pdf"
+  alt_solutions:
+    type: 'File'
+    outputBinding:
+      glob: "*/*alternative_solutions.txt"
+  chr_depths:
+    type: 'File'
+    outputBinding:
+      glob: "*/*chromosome_depths.pdf"
+  chr_view:
+    type: 'File'
+    outputBinding:
+      glob: "*/*chromosome_view.pdf"
+  confints_cp:
+    type: 'File'
+    outputBinding:
+      glob: "*/*confints_CP.txt"
+  gc_plots:
+    type: 'File'
+    outputBinding:
+      glob: "*/*gc_plots.pdf"
+  genome_view:
+    type: 'File'
+    outputBinding:
+      glob: "*/*genome_view.pdf"
+  model_fit:
+    type: 'File'
+    outputBinding:
+      glob: "*/*model_fit.pdf"
+  mutations:
+    type: 'File'
+    outputBinding:
+      glob: "*/*mutations.txt"
+  segments:
+    type: 'File'
+    outputBinding:
+      glob: "*/*segments.txt"
+  sequenza_cp_table:
+    type: 'File'
+    outputBinding:
+      glob: "*/*sequenza_cp_table.RData"
+  sequenza_extract:
+    type: 'File'
+    outputBinding:
+      glob: "*/*sequenza_extract.RData"
+  sequenza_log:
+    type: 'File'
+    outputBinding:
+      glob: "*/*sequenza_log.txt"
+  max_likelihood:
+    type: 'File'
+    outputBinding:
+      glob: "*/*Maximum_Likelihood_plot.png"

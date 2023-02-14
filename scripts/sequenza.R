@@ -99,7 +99,7 @@ CP <- sequenza.fit(sample, mc.core = 4, segment.filter= 5e6)
 
 sequenza.results(sample, CP, out.dir=out_dir, sample.id = sample_name, chromosome.list = chromosome.list)
 
-png(file=paste(paste(out_dir,sample_name,sep=''),'Maximum_Likelihood_plot.png',sep=''),type='cairo')
+png(file=paste(paste(out_dir,sample_name,sep='/'),'Maximum_Likelihood_plot.png',sep='_'),type='cairo')
 cp.plot(CP)
 cp.plot.contours(CP, add = TRUE,
    likThresh = c(0.999, 0.95),
