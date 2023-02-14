@@ -48,5 +48,6 @@ inputs:
 outputs:
   seqz:
     type: 'File'
+    secondaryFiles: [{ pattern: '.tbi', required: true }]
     outputBinding:
       glob: $(inputs.output_filename)
