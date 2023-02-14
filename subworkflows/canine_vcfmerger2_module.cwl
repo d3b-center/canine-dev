@@ -89,29 +89,23 @@ outputs:
   snpeff_all_vcf: { type: 'File?', outputSource: canine_annotation_module/snpeff_all_vcf }
   snpeff_canon_vcf: { type: 'File?', outputSource: canine_annotation_module/snpeff_canon_vcf }
   vep_all_vcf: { type: 'File?', outputSource: canine_annotation_module/vep_all_vcf }
+  vep_all_warnings: { type: 'File?', outputSource: canine_annotation_module/vep_all_warnings }
   vep_con_vcf: { type: 'File?', outputSource: canine_annotation_module/vep_con_vcf }
-  snpeff_mutation_burdern_txt: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/snpeff_mutation_burdern_txt }
-  snpeff_mutation_burdern_json: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/snpeff_mutation_burdern_json }
-  snpeff_tucon: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/snpeff_tucon }
-  vep_mutation_burdern_txt: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/vep_mutation_burdern_txt }
-  vep_mutation_burdern_json: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/vep_mutation_burdern_json }
-  vep_tucon: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/vep_tucon }
+  vep_con_warnings: { type: 'File?', outputSource: canine_annotation_module/vep_con_warnings }
   msisensor_metrics: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/msisensor_metrics }
-  sigprofiler_sbs_activity: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_activity }
-  sigprofiler_sbs_activity_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_activity_plot }
-  sigprofiler_sbs_tmb_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_tmb_plot }
-  sigprofiler_sbs_dnm_prob: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_dnm_prob }
-  sigprofiler_sbs_dn_sigs: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_dn_sigs }
-  sigprofiler_id_activity: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_activity }
-  sigprofiler_id_activity_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_activity_plot }
-  sigprofiler_id_tmb_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_tmb_plot }
-  sigprofiler_id_dnm_prob: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_dnm_prob }
-  sigprofiler_id_dn_sigs: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_dn_sigs }
-  sigprofiler_dbs_activity: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_activity }
-  sigprofiler_dbs_activity_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_activity_plot }
-  sigprofiler_dbs_tmb_plot: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_tmb_plot }
-  sigprofiler_dbs_dnm_prob: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_dnm_prob }
-  sigprofiler_dbs_dn_sigs: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_dn_sigs }
+  mutation_burdern_json_snpeff: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/mutation_burdern_json_snpeff }
+  mutation_burdern_txt_snpeff: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/mutation_burdern_txt_snpeff }
+  mutation_burdern_json_vep: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/mutation_burdern_json_vep }
+  mutation_burdern_txt_vep: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/mutation_burdern_txt_vep }
+  tucon_snpeff: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/tucon_snpeff }
+  tucon_vep: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/tucon_vep }
+  sigprofiler_dbs_activities: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_activities }
+  sigprofiler_dbs_signatures: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_dbs_signatures }
+  sigprofiler_id_activities: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_activities }
+  sigprofiler_id_signatures: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_id_signatures }
+  sigprofiler_sbs_activities: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_activities }
+  sigprofiler_sbs_signatures: { type: 'Directory?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_sbs_signatures }
+  sigprofiler_extraneous_results: { type: 'File?', outputSource: canine_collect_somatic_metrics_module/sigprofiler_extraneous_results }
 
 steps:
   prep_vcf_somatic:
@@ -244,7 +238,7 @@ steps:
       snpeff_cpu: snpeff_cpu
       vep_ram: vep_ram
       vep_cpu: vep_cpu
-    out: [bcftools_vcf, tumor_only_vcf, snpeff_all_vcf, snpeff_canon_vcf, vep_all_vcf, vep_con_vcf]
+    out: [bcftools_vcf, tumor_only_vcf, snpeff_all_vcf, snpeff_canon_vcf, vep_all_vcf, vep_all_warnings, vep_con_vcf, vep_con_warnings]
 
   canine_collect_somatic_metrics_module:
     run: ../subworkflows/canine_collect_somatic_metrics_module.cwl
@@ -282,7 +276,7 @@ steps:
       msisensor_cpu: msisensor_cpu
       sigprofiler_ram: sigprofiler_ram
       sigprofiler_cpu: sigprofiler_cpu
-    out: [snpeff_mutation_burdern_txt, snpeff_mutation_burdern_json, snpeff_tucon, vep_mutation_burdern_txt, vep_mutation_burdern_json, vep_tucon, msisensor_metrics, sigprofiler_sbs_activity, sigprofiler_sbs_activity_plot, sigprofiler_sbs_tmb_plot, sigprofiler_sbs_dnm_prob, sigprofiler_sbs_dn_sigs, sigprofiler_id_activity, sigprofiler_id_activity_plot, sigprofiler_id_tmb_plot, sigprofiler_id_dnm_prob, sigprofiler_id_dn_sigs, sigprofiler_dbs_activity, sigprofiler_dbs_activity_plot, sigprofiler_dbs_tmb_plot, sigprofiler_dbs_dnm_prob, sigprofiler_dbs_dn_sigs]
+    out: [mutation_burdern_txt_snpeff, mutation_burdern_json_snpeff, tucon_snpeff, mutation_burdern_txt_vep, mutation_burdern_json_vep, tucon_vep, msisensor_metrics, sigprofiler_dbs_activities, sigprofiler_dbs_signatures, sigprofiler_id_activities, sigprofiler_id_signatures, sigprofiler_sbs_activities, sigprofiler_sbs_signatures, sigprofiler_extraneous_results]
 
 $namespaces:
   sbg: https://sevenbridges.com

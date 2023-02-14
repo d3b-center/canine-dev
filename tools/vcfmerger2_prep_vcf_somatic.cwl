@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: vcfmerger2_prep_vcf_somatic.cwl
+id: vcfmerger2_prep_vcf_somatic
 doc: "Prepare VCFs for VCFmerger2"
 requirements:
   - class: InlineJavascriptRequirement

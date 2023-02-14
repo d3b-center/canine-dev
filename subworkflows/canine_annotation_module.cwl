@@ -42,7 +42,9 @@ outputs:
   snpeff_all_vcf: { type: 'File?', outputSource: snpeff_annotate/snpeff_all_vcf }
   snpeff_canon_vcf: { type: 'File?', outputSource: snpeff_annotate/snpeff_canon_vcf }
   vep_all_vcf: { type: 'File?', outputSource: vep_annotate/vep_all_vcf }
+  vep_all_warnings: { type: 'File?', outputSource: vep_annotate/vep_all_warnings }
   vep_con_vcf: { type: 'File?', outputSource: vep_annotate/vep_con_vcf }
+  vep_con_warnings: { type: 'File?', outputSource: vep_annotate/vep_con_warnings }
 
 steps:
   bcftools_annotate:
@@ -119,7 +121,7 @@ steps:
       bcftools_cpu: bcftools_cpu
       vep_ram: vep_ram
       vep_cpu: vep_cpu
-    out: [vep_all_vcf, vep_con_vcf]
+    out: [vep_all_vcf, vep_all_warnings, vep_con_vcf, vep_con_warnings]
 
 $namespaces:
   sbg: https://sevenbridges.com

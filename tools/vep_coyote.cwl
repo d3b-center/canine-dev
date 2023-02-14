@@ -61,3 +61,7 @@ outputs:
     type: 'File'
     outputBinding:
       glob: $(inputs.output_filename)
+  warnings:
+    type: 'File'
+    outputBinding:
+      glob: "*vcf_warnings.txt"

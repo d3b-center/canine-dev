@@ -24,7 +24,9 @@ inputs:
 
 outputs:
   vep_all_vcf: { type: 'File', outputSource: bcftools_view_index_all/output }
+  vep_all_warnings: { type: 'File', outputSource: vep_coyote_all/warnings }
   vep_con_vcf: { type: 'File', outputSource: bcftools_view_index_con/output }
+  vep_con_warnings: { type: 'File', outputSource: vep_coyote_con/warnings }
 
 steps:
   vep_coyote_all:
@@ -41,7 +43,7 @@ steps:
         valueFrom: "all"
       cpu: vep_cpu
       ram: vep_ram
-    out: [output]
+    out: [output, warnings]
 
   bcftools_view_index_all:
     run: ../tools/bcftools_view_index.cwl
@@ -73,7 +75,7 @@ steps:
         valueFrom: "con"
       cpu: vep_cpu
       ram: vep_ram
-    out: [output]
+    out: [output, warnings]
 
   bcftools_view_index_con:
     run: ../tools/bcftools_view_index.cwl
