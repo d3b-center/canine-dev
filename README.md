@@ -13,4 +13,3 @@
 - [Tucon Module](docs/TUCON_MODULE_README.md)
 - [MSIsensor PRO Module](docs/MSISENSOR_PRO_MODULE_README.md)
 - [Sigprofiler Module](docs/SIGPROFILER_MODULE_README.md)
-- [Collect Somatic Metrics Module](docs/COLLECT_SOMATIC_METRICS_MODULE_README.md)
