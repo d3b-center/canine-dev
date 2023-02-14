@@ -10,6 +10,8 @@ requirements:
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
     dockerPull: 'dmiller15/sigprofiler:1.1'
+  - class: LoadListingRequirement
+    loadListing: deep_listing
   - class: InitialWorkDirRequirement
     listing:
     - entryname: sigprofiler_d78cc9e.py 
@@ -27,11 +29,11 @@ arguments:
     shellQuote: false
     valueFrom: |
       invcfs
-  - position: 99
-    prefix: ''
+  - position: 10
+    prefix: "&&"
     shellQuote: false
-    valueFrom: |
-      1>&2
+    valueFrom:
+      tar -czf extraneous_results.tar.gz \$(ls -d */)
 inputs:
   input_vcfs: { type: 'File[]', doc: "vcf file(s)" }
   genome: { type: 'string?', inputBinding: { position: 2, prefix: "--genome"}, doc: "Optional definition of genome, defaults to GRCh38" }
@@ -52,67 +54,31 @@ inputs:
     default: 8
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  sbs_activity:
+  dbs_activities:
+    type: 'Directory?'
+    outputBinding:
+      glob: "DBS78/Suggested_Solution/DBS78_De-Novo_Solution/Activities"
+  dbs_signatures:
+    type: 'Directory?'
+    outputBinding:
+      glob: "DBS78/Suggested_Solution/DBS78_De-Novo_Solution/Signatures"
+  id_activities:
+    type: 'Directory?'
+    outputBinding:
+      glob: "ID83/Suggested_Solution/ID83_De-Novo_Solution/Activities"
+  id_signatures:
+    type: 'Directory?'
+    outputBinding:
+      glob: "ID83/Suggested_Solution/ID83_De-Novo_Solution/Signatures"
+  sbs_activities:
+    type: 'Directory?'
+    outputBinding:
+      glob: "SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities"
+  sbs_signatures:
+    type: 'Directory?'
+    outputBinding:
+      glob: "SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Signatures"
+  extraneous_results:
     type: 'File?'
     outputBinding:
-      glob: "SBS96/**/*De-Novo_Activities_refit.txt"
-  sbs_activity_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "SBS96/**/*De-Novo_Activity_Plots_refit.pdf"
-  sbs_tmb_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "SBS96/**/*De-Novo_TMB_plot_refit.pdf"
-  sbs_dnm_prob:
-    type: 'File?'
-    outputBinding:
-      glob: "SBS96/**/*Mutation_Probabilities_refit.txt"
-  sbs_dn_sigs:
-    type: 'File?'
-    outputBinding:
-      glob: "SBS96/**/*De-Novo_Signatures.txt"
-  id_activity:
-    type: 'File?'
-    outputBinding:
-      glob: "ID83/**/*De-Novo_Activities_refit.txt"
-  id_activity_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "ID83/**/*De-Novo_Activity_Plots_refit.pdf"
-  id_tmb_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "ID83/**/*De-Novo_TMB_plot_refit.pdf"
-  id_dnm_prob:
-    type: 'File?'
-    outputBinding:
-      glob: "ID83/**/*Mutation_Probabilities_refit.txt"
-  id_dn_sigs:
-    type: 'File?'
-    outputBinding:
-      glob: "ID83/**/*De-Novo_Signatures.txt"
-  dbs_activity:
-    type: 'File?'
-    outputBinding:
-      glob: "DBS78/**/*De-Novo_Activities_refit.txt"
-  dbs_activity_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "DBS78/**/*De-Novo_Activity_Plots_refit.pdf"
-  dbs_tmb_plot:
-    type: 'File?'
-    outputBinding:
-      glob: "DBS78/**/*De-Novo_TMB_plot_refit.pdf"
-  dbs_dnm_prob:
-    type: 'File?'
-    outputBinding:
-      glob: "DBS78/**/*Mutation_Probabilities_refit.txt"
-  dbs_dn_sigs:
-    type: 'File?'
-    outputBinding:
-      glob: "DBS78/**/*De-Novo_Signatures.txt"
-#  extraneous_results:
-#    type: 'File?'
-#    outputBinding:
-#      glob: "extraneous_results.tar"
+      glob: "extraneous_results.tar.gz"

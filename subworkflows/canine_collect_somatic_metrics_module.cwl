@@ -53,28 +53,20 @@ inputs:
   sigprofiler_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Sigprofiler." }
 
 outputs:
-  snpeff_mutation_burdern_txt: { type: 'File?', outputSource: canine_mutation_burden_module_snpeff/tmb_metrics_txt }
-  snpeff_mutation_burdern_json: { type: 'File?', outputSource: canine_mutation_burden_module_snpeff/tmb_metrics_json }
-  snpeff_tucon: { type: 'File?', outputSource: canine_tucon_module_snpeff/tucon_tsv }
-  vep_mutation_burdern_txt: { type: 'File?', outputSource: canine_mutation_burden_module_vep/tmb_metrics_txt }
-  vep_mutation_burdern_json: { type: 'File?', outputSource: canine_mutation_burden_module_vep/tmb_metrics_json }
-  vep_tucon: { type: 'File?', outputSource: canine_tucon_module_vep/tucon_tsv }
+  mutation_burdern_json_snpeff: { type: 'File?', outputSource: canine_mutation_burden_module_snpeff/tmb_metrics_json }
+  mutation_burdern_txt_snpeff: { type: 'File?', outputSource: canine_mutation_burden_module_snpeff/tmb_metrics_txt }
+  mutation_burdern_json_vep: { type: 'File?', outputSource: canine_mutation_burden_module_vep/tmb_metrics_json }
+  mutation_burdern_txt_vep: { type: 'File?', outputSource: canine_mutation_burden_module_vep/tmb_metrics_txt }
+  tucon_snpeff: { type: 'File?', outputSource: canine_tucon_module_snpeff/tucon_tsv }
+  tucon_vep: { type: 'File?', outputSource: canine_tucon_module_vep/tucon_tsv }
   msisensor_metrics: { type: 'File?', outputSource: canine_msisensor_pro_module/msisensor_metrics_txt }
-  sigprofiler_sbs_activity: { type: 'File?', outputSource: canine_sigprofiler_module/sbs_activity }
-  sigprofiler_sbs_activity_plot: { type: 'File?', outputSource: canine_sigprofiler_module/sbs_activity_plot }
-  sigprofiler_sbs_tmb_plot: { type: 'File?', outputSource: canine_sigprofiler_module/sbs_tmb_plot }
-  sigprofiler_sbs_dnm_prob: { type: 'File?', outputSource: canine_sigprofiler_module/sbs_dnm_prob }
-  sigprofiler_sbs_dn_sigs: { type: 'File?', outputSource: canine_sigprofiler_module/sbs_dn_sigs }
-  sigprofiler_id_activity: { type: 'File?', outputSource: canine_sigprofiler_module/id_activity }
-  sigprofiler_id_activity_plot: { type: 'File?', outputSource: canine_sigprofiler_module/id_activity_plot }
-  sigprofiler_id_tmb_plot: { type: 'File?', outputSource: canine_sigprofiler_module/id_tmb_plot }
-  sigprofiler_id_dnm_prob: { type: 'File?', outputSource: canine_sigprofiler_module/id_dnm_prob }
-  sigprofiler_id_dn_sigs: { type: 'File?', outputSource: canine_sigprofiler_module/id_dn_sigs }
-  sigprofiler_dbs_activity: { type: 'File?', outputSource: canine_sigprofiler_module/dbs_activity }
-  sigprofiler_dbs_activity_plot: { type: 'File?', outputSource: canine_sigprofiler_module/dbs_activity_plot }
-  sigprofiler_dbs_tmb_plot: { type: 'File?', outputSource: canine_sigprofiler_module/dbs_tmb_plot }
-  sigprofiler_dbs_dnm_prob: { type: 'File?', outputSource: canine_sigprofiler_module/dbs_dnm_prob }
-  sigprofiler_dbs_dn_sigs: { type: 'File?', outputSource: canine_sigprofiler_module/dbs_dn_sigs }
+  sigprofiler_dbs_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/dbs_activities }
+  sigprofiler_dbs_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/dbs_signatures }
+  sigprofiler_id_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/id_activities }
+  sigprofiler_id_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/id_signatures }
+  sigprofiler_sbs_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/sbs_activities }
+  sigprofiler_sbs_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/sbs_signatures }
+  sigprofiler_extraneous_results: { type: 'File?', outputSource: canine_sigprofiler_module/extraneous_results }
 
 steps:
   canine_mutation_burden_module_snpeff:
@@ -187,7 +179,7 @@ steps:
       bcftools_cpu: bcftools_cpu
       sigprofiler_ram: sigprofiler_ram
       sigprofiler_cpu: sigprofiler_cpu
-    out: [sbs_activity, sbs_activity_plot, sbs_tmb_plot, sbs_dnm_prob, sbs_dn_sigs, id_activity, id_activity_plot, id_tmb_plot, id_dnm_prob, id_dn_sigs, dbs_activity, dbs_activity_plot, dbs_tmb_plot, dbs_dnm_prob, dbs_dn_sigs]
+    out: [dbs_activities, dbs_signatures, id_activities, id_signatures, sbs_activities, sbs_signatures, extraneous_results]
 
 $namespaces:
   sbg: https://sevenbridges.com

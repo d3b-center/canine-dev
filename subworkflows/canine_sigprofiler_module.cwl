@@ -22,21 +22,13 @@ inputs:
   sigprofiler_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Sigprofiler." }
 
 outputs:
-  sbs_activity: { type: 'File?', outputSource: sigprofiler/sbs_activity }
-  sbs_activity_plot: { type: 'File?', outputSource: sigprofiler/sbs_activity_plot }
-  sbs_tmb_plot: { type: 'File?', outputSource: sigprofiler/sbs_tmb_plot }
-  sbs_dnm_prob: { type: 'File?', outputSource: sigprofiler/sbs_dnm_prob }
-  sbs_dn_sigs: { type: 'File?', outputSource: sigprofiler/sbs_dn_sigs }
-  id_activity: { type: 'File?', outputSource: sigprofiler/id_activity }
-  id_activity_plot: { type: 'File?', outputSource: sigprofiler/id_activity_plot }
-  id_tmb_plot: { type: 'File?', outputSource: sigprofiler/id_tmb_plot }
-  id_dnm_prob: { type: 'File?', outputSource: sigprofiler/id_dnm_prob }
-  id_dn_sigs: { type: 'File?', outputSource: sigprofiler/id_dn_sigs }
-  dbs_activity: { type: 'File?', outputSource: sigprofiler/dbs_activity }
-  dbs_activity_plot: { type: 'File?', outputSource: sigprofiler/dbs_activity_plot }
-  dbs_tmb_plot: { type: 'File?', outputSource: sigprofiler/dbs_tmb_plot }
-  dbs_dnm_prob: { type: 'File?', outputSource: sigprofiler/dbs_dnm_prob }
-  dbs_dn_sigs: { type: 'File?', outputSource: sigprofiler/dbs_dn_sigs }
+  dbs_activities: { type: 'Directory?', outputSource: sigprofiler/dbs_activities }
+  dbs_signatures: { type: 'Directory?', outputSource: sigprofiler/dbs_signatures }
+  id_activities: { type: 'Directory?', outputSource: sigprofiler/id_activities }
+  id_signatures: { type: 'Directory?', outputSource: sigprofiler/id_signatures }
+  sbs_activities: { type: 'Directory?', outputSource: sigprofiler/sbs_activities }
+  sbs_signatures: { type: 'Directory?', outputSource: sigprofiler/sbs_signatures }
+  extraneous_results: { type: 'File?', outputSource: sigprofiler/extraneous_results }
 
 steps:
   bcftools_view_index:
@@ -46,10 +38,10 @@ steps:
       include:
         source: total_callers
         valueFrom: |
-          $(self > 3 ? "INFO/CC>=" + self - 2 : "INFO/CC>=" + self - 1)
+          $(self > 3 ? "INFO/CC>=" + (self - 2) : "INFO/CC>=" + (self - 1))
       output_filename:
         source: output_basename
-        valueFrom: $(self).flt.vcf
+        valueFrom: $(self).pass.vcf
       cpu: bcftools_cpu
       ram: bcftools_ram
     out: [output]
@@ -68,7 +60,7 @@ steps:
         valueFrom: $(1 == 1)
       cpu: sigprofiler_cpu
       ram: sigprofiler_ram
-    out: [sbs_activity, sbs_activity_plot, sbs_tmb_plot, sbs_dnm_prob, sbs_dn_sigs, id_activity, id_activity_plot, id_tmb_plot, id_dnm_prob, id_dn_sigs, dbs_activity, dbs_activity_plot, dbs_tmb_plot, dbs_dnm_prob, dbs_dn_sigs]
+    out: [dbs_activities, dbs_signatures, id_activities, id_signatures, sbs_activities, sbs_signatures, extraneous_results]
 
 $namespaces:
   sbg: https://sevenbridges.com
