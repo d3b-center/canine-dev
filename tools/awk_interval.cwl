@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: awk_interval 
+id: awk_interval
 doc: |
-  TGEN awk command to get min interval size from an interval list. 
+  TGEN awk command to get min interval size from an interval list.
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
@@ -13,14 +13,14 @@ requirements:
     dockerPull: 'ubuntu:20.04'
   - class: InitialWorkDirRequirement
     listing:
-    - entryname: coyote_awk_bamstats.sh 
+    - entryname: coyote_awk_bamstats.sh
       writable: false
       entry: |
         set -eu
 
         MIN_INTERVAL=`awk -F'\t' -v MAX_LENGTH=$(inputs.max_length) 'BEGIN { MIN = MAX_LENGTH } $1 !~ /@/ { if ( $3-$2 < MIN ) { MIN = $3-$2 }} END { print MIN }' $(inputs.interval_list.path)`
 
-        echo -e "$MIN_INTERVAL" > out.txt 
+        echo -e "$MIN_INTERVAL" > out.txt
 baseCommand: [/bin/bash, coyote_awk_bamstats.sh]
 
 inputs:

@@ -19,6 +19,6 @@ expression: |
     var cc_filter = inputs.total_callers > 3 ? inputs.total_callers - 2 : inputs.total_callers - 1;
     var info_prefix = inputs.snpeff ? "INFO/ANN ~ " : "INFO/CSQ ~ ";
     var info_eff = inputs.ns_effects.map(function(e) { return info_prefix + e; });
-    var include = "INFO/CC>=" + cc_filter + " && (" + info_eff.join(" || ") + ")"; 
+    var include = "INFO/CC>=" + cc_filter + " && (" + info_eff.join(" || ") + ")";
     return { output: include }
   }

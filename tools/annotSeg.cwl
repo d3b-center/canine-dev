@@ -33,7 +33,7 @@ inputs:
     default: 4
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  output: 
+  output:
     type: File
     outputBinding:
-      glob: "*.vcf" 
+      glob: "*.vcf"

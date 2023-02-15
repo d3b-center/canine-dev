@@ -2,7 +2,7 @@ cwlVersion: v1.2
 class: ExpressionTool
 id: expr_sex_guess
 doc: |
-  Given config_sex and sex_check_sex, pick the right one. 
+  Given config_sex and sex_check_sex, pick the right one.
 requirements:
   - class: InlineJavascriptRequirement
 inputs:

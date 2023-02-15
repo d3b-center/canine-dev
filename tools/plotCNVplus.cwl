@@ -35,14 +35,14 @@ inputs:
   modeled_seg: { type: 'File', inputBinding: { position: 2, prefix: "--modeled"}, doc: ".modelFinal.seg output from gatk ModelSegments" }
 
   # Optional Arguments
-  contig_names_string: { type: 'string?', inputBinding: { position: 2, prefix: "--contig_names_string"}, doc: "'CONTIG_DELIMITER' seperated list of contig names to plot" }
-  contig_lengths_string: { type: 'string?', inputBinding: { position: 2, prefix: "--contig_lengths_string"}, doc: "'CONTIG_DELIMITER' seperated list of contig lengths in the same order as contig_names" }
+  contig_names_string: { type: 'string?', inputBinding: { position: 2, prefix: "--contig_names_string"}, doc: "'CONTIG_DELIMITER' separated list of contig names to plot" }
+  contig_lengths_string: { type: 'string?', inputBinding: { position: 2, prefix: "--contig_lengths_string"}, doc: "'CONTIG_DELIMITER' separated list of contig lengths in the same order as contig_names" }
   re_center_CNA: { type: 'string?', inputBinding: { position: 2, prefix: "--re_center_CNA"}, doc: "Re-Center all copy number values based on the distribution of heterozygous Log ratio" }
   CNlossColor: { type: 'string?', inputBinding: { position: 2, prefix: "--CNlossColor"}, doc: "Color of points to use for CN losses" }
   CNgainColor: { type: 'string?', inputBinding: { position: 2, prefix: "--CNgainColor"}, doc: "Color of points to use for CN gains" }
   CNhetColor: { type: 'string?', inputBinding: { position: 2, prefix: "--CNhetColor"}, doc: "Color of points to use for hets" }
   BAFcolor: { type: 'string?', inputBinding: { position: 2, prefix: "--BAFcolor"}, doc: "Color of points to use for ALT-Alleles-Frequency" }
-  SEGcolor: { type: 'string?', inputBinding: { position: 2, prefix: "--SEGcolor"}, doc: "Color of lines to denote segements" }
+  SEGcolor: { type: 'string?', inputBinding: { position: 2, prefix: "--SEGcolor"}, doc: "Color of lines to denote segments" }
   CNlossLim: { type: 'float?', inputBinding: { position: 2, prefix: "--CNlossLim"}, doc: "Log2 value used to denote CN losses" }
   CNgainLim: { type: 'float?', inputBinding: { position: 2, prefix: "--CNgainLim"}, doc: "Log2 value used to denote CN gains" }
   hetDPfilter: { type: 'int?', inputBinding: { position: 2, prefix: "--hetDPfilter"}, doc: "Depth requirement to filter hets" }
@@ -64,10 +64,10 @@ inputs:
     default: 16
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  plots: 
+  plots:
     type: 'File[]'
     outputBinding:
-      glob: '*.png' 
+      glob: '*.png'
   recentered_seg:
     type: 'File?'
     outputBinding:

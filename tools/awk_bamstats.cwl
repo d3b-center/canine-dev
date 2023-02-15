@@ -2,7 +2,7 @@ cwlVersion: v1.2
 class: CommandLineTool
 id: awk_bamstats
 doc: |
-  TGEN awk commands to get information from the
+  TGEN awk commands to get information from the tumor and normal samtools BAMstats files.
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement

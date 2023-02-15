@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: thred 
+id: thred
 doc: |
-  TGEN tHRed Program 
+  TGEN tHRed Program
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
@@ -16,11 +16,11 @@ inputs:
   seg: { type: 'File', inputBinding: { position: 2, prefix: "--seg"}, doc: "SEG file with non-overlapping segments (default: None)" }
   genomic_regions: { type: 'File', inputBinding: { position: 2, prefix: "--genomic-regions"}, doc: "Genomic Regions File defining Centromere (required) and optionally telomeres, p and q arms. NOTE: defined regions MUST not overlap (default: None)" }
 
-  
-  outfile: { type: 'string?', inputBinding: { position: 2, prefix: "--outfile"}, doc: "output file where the score HRD will be saved into; Can be rlative or full path (default: hrd_scores.txt)" }
+
+  outfile: { type: 'string?', inputBinding: { position: 2, prefix: "--outfile"}, doc: "output file where the score HRD will be saved into; Can be relative or full path (default: hrd_scores.txt)" }
   th_log2r: { type: 'float?', inputBinding: { position: 2, prefix: "--th-log2r"}, doc: "log2R Threshold value for considering a Deletion (default: -0.1613)" }
   minsize: { type: 'int?', inputBinding: { position: 2, prefix: "--minsize"}, doc: "Minimum size region for a Segment to be considered into HRD score (default: 1000000)" }
-  th_pct_overlapping: { type: 'float?', inputBinding: { position: 2, prefix: "--th-pct-overlapping"}, doc: "Percentage of overlapping between arm and sum of segements with deletions [allow to exclude deletion being an entire arm for instance ] (default: 0.9)" }
+  th_pct_overlapping: { type: 'float?', inputBinding: { position: 2, prefix: "--th-pct-overlapping"}, doc: "Percentage of overlapping between arm and sum of segments with deletions [allow to exclude deletion being an entire arm for instance ] (default: 0.9)" }
   contigs: { type: 'string?', inputBinding: { position: 2, prefix: "--contigs"}, doc: "comma-separated list of contigs to use with the HRD score; Contigs Must Exist in Seg file and Genomic Region file; If None, list will be captured from SEG file (default: .)" }
   sample: { type: 'string?', inputBinding: { position: 2, prefix: "--sample"}, doc: "Sample Name to add to the results output table (default: .)" }
   id: { type: 'string?', inputBinding: { position: 2, prefix: "--id"}, doc: "Kit Code or Any ID you want to add to the results output table (default: .)" }
@@ -34,7 +34,7 @@ inputs:
     doc: "Number of CPUs to allocate to this task."
     inputBinding:
       prefix: "--threads"
-      position: 2 
+      position: 2
   ram:
     type: 'int?'
     default: 2

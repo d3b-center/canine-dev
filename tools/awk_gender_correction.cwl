@@ -2,7 +2,7 @@ cwlVersion: v1.2
 class: CommandLineTool
 id: awk_gender_correction
 doc: |
-  TGEN gender correction 
+  TGEN gender correction
 requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
@@ -13,7 +13,7 @@ requirements:
     dockerPull: 'staphb/bcftools:1.10.2'
   - class: InitialWorkDirRequirement
     listing:
-    - entryname: coyote_omega_awk.sh 
+    - entryname: coyote_omega_awk.sh
       writable: false
       entry: |
         set -eu
@@ -23,15 +23,15 @@ requirements:
         then
           awk -F'\t' '{ if ($1 == "X" || $1 == "Y") { $4 = $4-1} ; { OFS = "\t" ; print $0 }}' $(inputs.input_denoised_cr.path) > \
             $(inputs.output_basename).denoisedCR.genderCorrected.tsv
-    
+
           awk -F'\t' '{ if ($1 == "X" || $1 == "Y") { $6 = $6-1 ; $7 = $7-1 ; $8 = $8-1 } ; { OFS = "\t" ; print $0 }}' $(inputs.input_model_final.path) > \
             $(inputs.output_basename).modelFinal.genderCorrected.seg
-    
+
         else
           cp $(inputs.input_denoised_cr.path) $(inputs.output_basename).denoisedCR.genderCorrected.tsv
           cp $(inputs.input_model_final.path) $(inputs.output_basename).modelFinal.genderCorrected.seg
         fi
-    
+
         for CHR in {1..39}
         do
           if [[ $CHR -eq "39" ]]
@@ -40,13 +40,13 @@ requirements:
           else
             CHR="$CHR"
           fi
-    
+
           declare START_$CHR=\$(awk -F'\t' -v CHROM=$CHR '$1 == CHROM' $(inputs.output_basename).modelFinal.genderCorrected.seg | sort -k2,2n | awk -F'\t' 'NR == 1 { print $2 }')
           export START_$CHR
           declare STOP_$CHR=\$(awk -F'\t' -v CHROM=$CHR '$1 == CHROM' $(inputs.output_basename).modelFinal.genderCorrected.seg | sort -k3,3nr | awk -F'\t' 'NR == 1 { print $3 }')
           export STOP_$CHR
         done
-    
+
         for CHR in {1..39}
         do
           if [[ $CHR -eq "39" ]]
@@ -55,30 +55,30 @@ requirements:
           else
             CHR="$CHR"
           fi
-    
+
           eval "START=\\\${START_\${CHR}}"
           eval "STOP=\\\${STOP_\${CHR}}"
-    
+
           START_C=\$(awk -v CHR=$CHR '$1==CHR { print $2 }' $(inputs.input_centromere.path))
           STOP_C=\$(awk -v CHR=$CHR '$1==CHR { print $3 }' $(inputs.input_centromere.path))
-    
+
           if [[ $START -ge $START_C ]]
           then
             START=$STOP_C
           fi
-    
+
           export CHR
           export START
           export START_C
           export STOP
           export STOP_C
-    
+
           echo -e "$CHR\t$START\t$STOP"
           echo -e "$CHR\t$START_C\t$STOP_C"
-    
+
           LINES=\$(wc -l < $(inputs.output_basename).modelFinal.genderCorrected.seg)
           HEADER=\$(grep -c "@" $(inputs.output_basename).modelFinal.genderCorrected.seg || :)
-    
+
           awk -F'\t' -v HEADER="$HEADER" -v CHROM="$CHR" -v START="$START" -v STOP="$STOP" -v LINES="$LINES" -v STARTC="$START_C" -v STOPC="$STOP_C" 'BEGIN { INC=1 } ;
             # Skip GATK header
             $0 ~ /^@/ { next } ;
@@ -113,7 +113,7 @@ requirements:
             NR != LINES && $1 != CHROM && INC == 2 { OFS = "\t" ; print C1,START,STOP,C4,C5,C6,C7,C8,C9,C10,C11 ; C1=$1 ; C2=$2 ; C3=$3 ; C4=$4 ; C5=$5 ; C6=$6 ; C7=$7 ; C8=$8 ; C9=$9 ; C10=$10 ; C11=$11 ; INC=1 ; next } ;
             NR != LINES && $1 != CHROM && INC == 3 { OFS = "\t" ; print C1,C2,STOP,C4,C5,C6,C7,C8,C9,C10,C11 ; C1=$1 ; C2=$2 ; C3=$3 ; C4=$4 ; C5=$5 ; C6=$6 ; C7=$7 ; C8=$8 ; C9=$9 ; C10=$10 ; C11=$11 ; INC=1 ; next } ;
             NR != LINES && $1 != CHROM && INC == 1 { OFS = "\t" ; print C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11 ; C1=$1 ; C2=$2 ; C3=$3 ; C4=$4 ; C5=$5 ; C6=$6 ; C7=$7 ; C8=$8 ; C9=$9 ; C10=$10 ; C11=$11 ; next }' $(inputs.output_basename).modelFinal.genderCorrected.seg > $(inputs.output_basename).modelFinal.genderCorrected.seg.temp
-    
+
           mv $(inputs.output_basename).modelFinal.genderCorrected.seg.temp $(inputs.output_basename).modelFinal.genderCorrected.seg
         done
 baseCommand: [/bin/bash, coyote_omega_awk.sh]
@@ -138,7 +138,7 @@ outputs:
   modelfinal_corr:
     type: File
     outputBinding:
-      glob: '*.modelFinal.genderCorrected.seg' 
+      glob: '*.modelFinal.genderCorrected.seg'
   denoisedcr_corr:
     type: File
     outputBinding:
