@@ -1,5 +1,5 @@
 cwlVersion: v1.2
-id: grep 
+id: grep
 requirements:
   - class: DockerRequirement
     dockerPull: 'ubuntu:20.04'
@@ -13,7 +13,7 @@ stdout: $(inputs.outfile)
 inputs:
   enable_tool: { type: 'string?', doc: "Killswitch for tool in workflow" }
   infile: { type: 'File', inputBinding: { position: 9, prefix: "--file"}, doc: "Obtain patterns from FILE, one per line.  If this option is used multiple times or is combined with the -e (--regexp) option, search for all patterns given.  The  empty  file  contains zero patterns, and therefore matches nothing." }
-  outfile: { type: 'string', default: "out.txt", doc: "Output filename" } 
+  outfile: { type: 'string', default: "out.txt", doc: "Output filename" }
   regexp: { type: 'string', inputBinding: { position: 8, prefix: "--regexp"}, doc: "Use  PATTERN  as  the  pattern.   If this option is used multiple times or is combined with the -f (--file) option, search for all patterns given.  This option can be used to protect a pattern beginning with '-'." }
   ignore_case: { type: 'boolean?', inputBinding: { position: 2, prefix: "--ignore-case"}, doc: "Ignore case distinctions, so that characters that differ only in case match each other." }
   invert_match: { type: 'boolean?', inputBinding: { position: 2, prefix: "--invert-match"}, doc: "Invert the sense of matching, to select non-matching lines." }

@@ -9,7 +9,7 @@ requirements:
 baseCommand: []
 arguments:
   - position: 0
-    shellQuote: false 
+    shellQuote: false
     valueFrom: >
       grep $(inputs.grep_regex) $(inputs.infile.path) | cut -f$(inputs.cut_field)
 stdout: "out.txt"

@@ -22,7 +22,7 @@ inputs:
   min_bin_length: { type: 'int?', default: 2000 }
 outputs:
   bin_length: { type: int }
-  exp_1x_counts: { type: int } 
+  exp_1x_counts: { type: int }
   max_vaf: { type: float }
   min_dp: { type: int }
   min_vaf: { type: float }
@@ -41,7 +41,7 @@ expression: |
     }
 
     var corr_bin_len = (inputs.exome ? tmp_bin_length * 20 : tmp_bin_length); // Exome gets multiplied by 20 to reach an estimated 20x depth
-    var out_exp_1x_counts = Math.floor(corr_bin_len / inputs.bamstats_max_length / 2); // Divide by two to accomidate autosomes
+    var out_exp_1x_counts = Math.floor(corr_bin_len / inputs.bamstats_max_length / 2); // Divide by two to accommodate autosomes
 
     var out_bin_length = (inputs.exome ? 0 : tmp_bin_length); // Ultimately the value we need for bin_length in exome samples is zero
 

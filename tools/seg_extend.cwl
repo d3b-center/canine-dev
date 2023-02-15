@@ -32,7 +32,7 @@ inputs:
     default: 16
     doc: "GB size of RAM to allocate to this task."
 outputs:
-  output: 
+  output:
     type: File
     outputBinding:
-      glob: $(inputs.input_seg.basename) 
+      glob: $(inputs.input_seg.basename)

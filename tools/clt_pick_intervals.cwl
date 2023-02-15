@@ -1,8 +1,8 @@
 cwlVersion: v1.2
-class: CommandLineTool 
+class: CommandLineTool
 id: clt_pick_interval
 doc: |
-  Pick the right interval list 
+  Pick the right interval list
 requirements:
   - class: InlineJavascriptRequirement
 baseCommand: [echo]
@@ -32,6 +32,6 @@ outputs:
             } else {
               outfile = inputs.genome_male;
             }
-          } 
+          }
           return outfile;
         }

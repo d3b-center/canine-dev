@@ -1,5 +1,5 @@
 cwlVersion: v1.2
-id: grep 
+id: sed
 requirements:
   - class: DockerRequirement
     dockerPull: 'ubuntu:20.04'
@@ -12,7 +12,7 @@ baseCommand: [sed]
 stdout: $(inputs.outfile)
 inputs:
   enable_tool: { type: 'string?', doc: "Killswitch for tool in workflow" }
-  outfile: { type: 'string?', default: "out.txt", doc: "Output filename" } 
+  outfile: { type: 'string?', default: "out.txt", doc: "Output filename" }
   infile: { type: 'File', inputBinding: { position: 9 }, doc: "File to sed" }
   silent: { type: 'boolean?', inputBinding: { position: 2, prefix: "--silent"}, doc: "suppress automatic printing of pattern space" }
   expression: { type: 'string?', inputBinding: { position: 2, prefix: "--expression"}, doc: "add the script to the commands to be executed" }
