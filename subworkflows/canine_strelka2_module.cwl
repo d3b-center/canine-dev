@@ -60,11 +60,11 @@ steps:
     in:
       input_reads: strelka2_somatic/realigned_normal_bam
       output_cram:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(1 == 1)
       output_filename:
         source: normal_sample_name
-        valueFrom: $(self).strelka2.realigned.cram 
+        valueFrom: $(self).strelka2.realigned.cram
       reference_fasta: indexed_reference_fasta
       write_index:
         valueFrom: $(1 == 1)
@@ -72,7 +72,7 @@ steps:
       ram: samtools_view_ram
     out: [output]
 
-  samtools_view_tumor_cram: 
+  samtools_view_tumor_cram:
     run: ../tools/samtools_view.cwl
     when: $(inputs.input_reads != null)
     in:
@@ -81,7 +81,7 @@ steps:
         valueFrom: $(1 == 1)
       output_filename:
         source: tumor_sample_name
-        valueFrom: $(self).strelka2.realigned.cram 
+        valueFrom: $(self).strelka2.realigned.cram
       reference_fasta: indexed_reference_fasta
       write_index:
         valueFrom: $(1 == 1)
@@ -119,7 +119,7 @@ steps:
       include:
         valueFrom: |
           FILTER == "PASS"
-      targets_file: targets_file 
+      targets_file: targets_file
       tbi:
         valueFrom: $(1 == 1)
       tool_name:

@@ -19,7 +19,7 @@ inputs:
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
   disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
 
-  total_callers: { type: 'int', doc: "Total callers run to generate this VCF." } 
+  total_callers: { type: 'int', doc: "Total callers run to generate this VCF." }
   annotate_flag: { type: 'string', doc: "Name of the annotator run to generate the input_vcf" }
   ns_effects: { type: 'string[]', doc: "List of NS effects" }
   canonical_cds_bed: { type: 'File', doc: "BED file contatining Canine canonical CDS intervals for this software." }
@@ -43,8 +43,8 @@ steps:
       snpeff:
         source: annotate_flag
         valueFrom: $(self == 'snpeff')
-      ns_effects: ns_effects 
-      total_callers: total_callers 
+      ns_effects: ns_effects
+      total_callers: total_callers
     out: [output]
 
   bcftools_filter_index:
@@ -52,7 +52,7 @@ steps:
     in:
       input_vcf: input_vcf
       output_filename:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "tmp.vcf.gz"
       include: expr_include_string/output
       output_type:

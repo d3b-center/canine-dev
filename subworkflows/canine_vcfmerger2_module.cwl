@@ -117,7 +117,7 @@ steps:
       toolname: input_toolnames
       ref_genome: indexed_reference_fasta
       prepped_vcf_outfilename:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(inputs.toolname).prepz.vcf
       normal_sname: normal_sample_name
       tumor_sname: tumor_sample_name

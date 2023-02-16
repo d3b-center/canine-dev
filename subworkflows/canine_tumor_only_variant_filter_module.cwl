@@ -27,7 +27,7 @@ steps:
     in:
       input_vcf:  input_vcf
       include:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: |
           INFO/CC>=3 & (INFO/GNOMAD_EXOME=1 | INFO/GNOMAD_GENOME=1 | INFO/TOPMED=1) & (INFO/COSMIC_CNT>=1 | INFO/COSMIC_NC_CNT>=1)
       exclude:

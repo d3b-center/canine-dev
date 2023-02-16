@@ -28,7 +28,7 @@ steps:
     in:
       input_vcf:  input_vcf
       output_filename:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "temp.db.bcf"
       output_type:
         valueFrom: "b"

@@ -13,7 +13,7 @@ inputs:
   input_vcf: { type: 'File', doc: "VCF files to merge." }
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
   disable_workflow: { type: 'boolean?', doc: "For when this workflow is wrapped into a larger workflow, you can use this value in the when statement to toggle the running of this workflow." }
-  total_callers: { type: 'int', doc: "Total callers run to generate this VCF." } 
+  total_callers: { type: 'int', doc: "Total callers run to generate this VCF." }
 
   # Resource Control
   bcftools_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to BCFtools." }
@@ -53,7 +53,7 @@ steps:
         source: bcftools_view_index/output
         valueFrom: $([self])
       genome:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "dog"
       project: output_basename
       extract_only:

@@ -64,7 +64,7 @@ steps:
       output_type:
         valueFrom: "z"
       tbi:
-        source: disable_workflow # Hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(1 == 1)
       tool_name:
         valueFrom: "manta"

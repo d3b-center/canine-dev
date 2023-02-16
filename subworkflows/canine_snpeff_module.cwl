@@ -37,7 +37,7 @@ steps:
       config: snpeff_config
       dataDir: snpeff_datadir
       threads:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cava
         valueFrom: $(1 == 1)
       hgvs:
         valueFrom: $(1 == 1)
