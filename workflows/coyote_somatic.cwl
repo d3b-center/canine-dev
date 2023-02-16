@@ -12,23 +12,23 @@ requirements:
 
 inputs:
   # Killswitches
-  disable_mutect2: { type: 'boolean?', doc: "Set to true to disable Mutect2." }
-  disable_strelka2: { type: 'boolean?', doc: "Set to true to disable Strelka2." }
-  disable_lancet: { type: 'boolean?', doc: "Set to true to disable Lancet." }
-  disable_vardict: { type: 'boolean?', doc: "Set to true to disable Vardict." }
-  disable_octopus: { type: 'boolean?', doc: "Set to true to disable Octopus." }
-  disable_vcfmerger2: { type: 'boolean?', doc: "Set to true to disable vcfmerger2." }
   disable_bcftools: { type: 'boolean?', doc: "Set to true to disable bcftools GCA annotation." }
-  disable_tumor_only_var_filt: { type: 'boolean?', default: true, doc: "Set to true to disable tumor only variant filtering." }
-  disable_snpeff: { type: 'boolean?', doc: "Set to true to disable SnpEff annotation." }
-  disable_vep: { type: 'boolean?', doc: "Set to true to disable VEP annotation." }
-  disable_mutation_burden: { type: 'boolean?', doc: "Set to true to disable Mutation Burden metrics collection." }
-  disable_tucon: { type: 'boolean?', doc: "Set to true to disable Tucon metics collection." }
-  disable_msisensor: { type: 'boolean?', doc: "Set to true to disable Msisensor metrics collection." }
-  disable_sigprofiler: { type: 'boolean?', doc: "Set to true to disable Sigprofiler metrics collection." }
-  disable_manta: { type: 'boolean?', doc: "Set to true to disable Manta." }
-  disable_sequenza: { type: 'boolean?', doc: "Set to true to disable Sequenza." }
   disable_gatk_cnv: { type: 'boolean?', doc: "Set to true to disable GATK CNV." }
+  disable_lancet: { type: 'boolean?', doc: "Set to true to disable Lancet." }
+  disable_manta: { type: 'boolean?', doc: "Set to true to disable Manta." }
+  disable_msisensor: { type: 'boolean?', doc: "Set to true to disable Msisensor metrics collection." }
+  disable_mutation_burden: { type: 'boolean?', doc: "Set to true to disable Mutation Burden metrics collection." }
+  disable_mutect2: { type: 'boolean?', doc: "Set to true to disable Mutect2." }
+  disable_octopus: { type: 'boolean?', doc: "Set to true to disable Octopus." }
+  disable_sequenza: { type: 'boolean?', doc: "Set to true to disable Sequenza." }
+  disable_sigprofiler: { type: 'boolean?', doc: "Set to true to disable Sigprofiler metrics collection." }
+  disable_snpeff: { type: 'boolean?', doc: "Set to true to disable SnpEff annotation." }
+  disable_strelka2: { type: 'boolean?', doc: "Set to true to disable Strelka2." }
+  disable_tucon: { type: 'boolean?', doc: "Set to true to disable Tucon metics collection." }
+  disable_tumor_only_var_filt: { type: 'boolean?', default: true, doc: "Set to true to disable tumor only variant filtering." }
+  disable_vardict: { type: 'boolean?', doc: "Set to true to disable Vardict." }
+  disable_vcfmerger2: { type: 'boolean?', doc: "Set to true to disable vcfmerger2." }
+  disable_vep: { type: 'boolean?', doc: "Set to true to disable VEP annotation." }
 
   # Mutect2
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
@@ -44,7 +44,6 @@ inputs:
   # Manta
   manta_call_regions: { type: 'File?', secondaryFiles: [{ pattern: ".tbi", required: true}], doc: "Calling regions BED file that has been bgzipped and tabix indexed" }
   manta_config: { type: 'File?', doc: "Custom config.ini file for Manta. Used to override defaults set in the global config file" }
-  exome: { type: 'boolean', doc: "Set to true if this sample is exome. Set to false if this sample is genome." }
   tgen_insertsize_metrics: { type: 'File?', doc: "File containing samtools stats insert size summary information." }
   annotation_bed: { type: 'File?', doc: "BED file containing annotations for called variants" }
 
@@ -76,7 +75,6 @@ inputs:
   canonical_cds_bed_snpeff: { type: 'File?', doc: "BED file contatining Canine canonical CDS intervals for SnpEff." }
   canonical_cds_bed_vep: { type: 'File?', doc: "BED file contatining Canine canonical CDS intervals for VEP." }
   msisensor_reference: { type: 'File?', doc: "MSIsensor Pro reference file for detecting homopolymers and microsatellites" }
-  exome_capture_kit_bed: { type: 'File?', doc: "BED file contatining the capture kit intervals used to generate this sample." }
 
   # Sequenza
   primary_calling_contigs: { type: 'File?', doc: "YAML file continaing primary calling contigs." }
@@ -85,14 +83,20 @@ inputs:
   # GATK CNV
   centromere_regions: { type: 'File?', doc: "BED file containing the regions of the centromeres (e.g. CanFam3.1.centromere.nochr.bed)." }
   mappability_track: { type: 'File?', secondaryFiles: [{ pattern: '.tbi', required: false }, { pattern: '.idx', required: false }],  doc: "BED file containing the mappability track (e.g. k100.umap.no_header.bed)." }
-  annotation_gtf: { type: 'File?', doc: "GTF file to use for segment annotation (e.g. Canis_familiaris.CanFam3.1.98.gtf)" } 
+  annotation_gtf: { type: 'File?', doc: "GTF file to use for segment annotation (e.g. Canis_familiaris.CanFam3.1.98.gtf)" }
+  sample_type:
+    type:
+      - type: enum
+        name: config_sex
+        symbols: ["Exome","Genome"]
+    doc: "Is the sample exome or genome"
   patient_sex:
     type:
       - 'null'
       - type: enum
         name: config_sex
         symbols: ["Female","Male"]
-    doc: "Sex of the sample"
+    doc: "Sex of the patient"
   deepvariant_vcf: { type: 'File?', secondaryFiles: [{ pattern: ".tbi", required: true }], doc: "VCF.GZ and index containing the PASS variants called by Deepvariant" }
   tgen_bam_stats_metrics_tumor: { type: 'File?', doc: "The bamstats file generated from the aligned tumor reads" }
   tgen_bam_stats_metrics_normal: { type: 'File?', doc: "The bamstats file generated from the aligned normal reads" }
@@ -338,7 +342,9 @@ steps:
       tumor_sample_name: tumor_sample_name
       call_regions: manta_call_regions
       config: manta_config
-      exome: exome
+      exome:
+        source: sample_type
+        valueFrom: $(self == "Exome")
       insert_stats: tgen_insertsize_metrics
       annotation_bed: annotation_bed
       output_basename: output_basename
@@ -359,7 +365,9 @@ steps:
       indel_candidates:
         source: canine_manta_module/manta_small_indels
         valueFrom: $([self])
-      exome: exome
+      exome:
+        source: sample_type
+        valueFrom: $(self == "Exome")
       targets_file: capture_kit_extended_bed_tumor
       normal_sample_name: normal_sample_name
       tumor_sample_name: tumor_sample_name
@@ -471,8 +479,10 @@ steps:
       canonical_cds_bed_snpeff: canonical_cds_bed_snpeff
       canonical_cds_bed_vep: canonical_cds_bed_vep
       msisensor_reference: msisensor_reference
-      exome: exome
-      exome_capture_kit_bed: exome_capture_kit_bed
+      exome:
+        source: sample_type
+        valueFrom: $(self == "Exome")
+      exome_capture_kit_bed: capture_kit_extended_bed_tumor
       vcfmerger_ram: vcfmerger_ram
       vcfmerger_cpu: vcfmerger_cpu
       prep_vcf_ram: prep_vcf_ram
@@ -520,29 +530,26 @@ steps:
     run: ../subworkflows/canine_gatk_cnv_module.cwl
     when: $(inputs.disable_workflow != true)
     in:
-      disable_workflow: disable_gatk_cnv 
-      indexed_reference_fasta: indexed_reference_fasta 
-      centromere_regions: centromere_regions 
-      mappability_track: mappability_track 
-      annotation_gtf: annotation_gtf 
+      disable_workflow: disable_gatk_cnv
+      indexed_reference_fasta: indexed_reference_fasta
+      centromere_regions: centromere_regions
+      mappability_track: mappability_track
+      annotation_gtf: annotation_gtf
       input_tumor_reads: input_tumor_reads
       input_normal_reads: input_normal_reads
-      normal_sample_name: normal_sample_name 
-      tumor_sample_name: tumor_sample_name 
+      normal_sample_name: normal_sample_name
+      tumor_sample_name: tumor_sample_name
       output_basename: output_basename
-      sample_type:
-        source: exome
-        valueFrom: |
-          $(self ? "Exome" : "Genome")
+      sample_type: sample_type
       config_sex: patient_sex
-      deepvariant_vcf: deepvariant_vcf 
+      deepvariant_vcf: deepvariant_vcf
       bam_stats_tumor: tgen_bam_stats_metrics_tumor
       bam_stats_normal: tgen_bam_stats_metrics_normal
       sex_check_normal: tgen_sex_check_metrics_normal
       normal_target_intervals: capture_kit_target_intervals_normal
-      tumor_target_intervals: capture_kit_target_intervals_tumor 
-      gatk_cnv_primary_contigs_male: gatk_cnv_primary_contigs_male 
-      gatk_cnv_primary_contigs_female: gatk_cnv_primary_contigs_female 
+      tumor_target_intervals: capture_kit_target_intervals_tumor
+      gatk_cnv_primary_contigs_male: gatk_cnv_primary_contigs_male
+      gatk_cnv_primary_contigs_female: gatk_cnv_primary_contigs_female
     out: [ gatk_normal_allelic_counts, gatk_tumor_allelic_counts, gatk_standardized_cr, gatk_denoised_cr, gatk_hets_normal, gatk_hets, gatk_model_begin_seg, gatk_model_begin_cr, gatk_model_begin_af, gatk_model_final_seg, gatk_model_final_cr, gatk_model_final_af, gatk_cr_seg, gatk_cr_igv_seg, gatk_af_igv_seg, gatk_called_seg, gatk_called_igv_seg, denoised_cr_gender_corrected, model_final_seg_gender_corrected, cna_plots, dlrs, recentered_cr_seg, recentered_cr_seg_vcf, thred_hrd_scores, thred_hrd_flt_segments, thred_hrd_ori_segments, thred_excluded90_hrd_excluded_segments, thred_hrd_captured_genome_territory, thred_original_segments_karyoplot_1, thred_original_segments_karyoplot_2, thred_segments_filtered_karyoplot_1, thred_segments_filtered_karyoplot_2, thred_segments_excluded_karyoplot_1, thred_segments_excluded_karyoplot_2 ]
 
 $namespaces:
