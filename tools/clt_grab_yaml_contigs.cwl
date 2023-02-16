@@ -2,7 +2,7 @@ cwlVersion: v1.2
 class: CommandLineTool 
 id: clt_grab_yaml_contigs
 doc: |
-  Grabs contig information from a YAML file. This is brutally awful line parsing.
+  Grabs contig information from a YAML file.
 requirements:
   - class: InlineJavascriptRequirement
 baseCommand: [echo]
