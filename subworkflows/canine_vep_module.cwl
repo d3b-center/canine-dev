@@ -39,7 +39,7 @@ steps:
       vep_cache: vep_cache
       reference_fasta: reference_fasta
       all_or_con:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "all"
       cpu: vep_cpu
       ram: vep_ram

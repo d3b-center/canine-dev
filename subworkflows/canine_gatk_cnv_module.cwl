@@ -16,7 +16,7 @@ inputs:
   indexed_reference_fasta: { type: 'File', secondaryFiles: [{ pattern: ".fai", required: true }, { pattern: "^.dict", required: true }], doc: "Reference fasta with FAI and DICT indicies" }
   centromere_regions: { type: 'File', doc: "BED file containing the regions of the centromeres (e.g. CanFam3.1.centromere.nochr.bed)." }
   mappability_track: { type: 'File?', secondaryFiles: [{ pattern: '.tbi', required: false }, { pattern: '.idx', required: false }],  doc: "BED file containing the mappability track (e.g. k100.umap.no_header.bed)." }
-  annotation_gtf: { type: 'File', doc: "GTF file to use for segment annotation (e.g. Canis_familiaris.CanFam3.1.98.gtf)" } 
+  annotation_gtf: { type: 'File', doc: "GTF file to use for segment annotation (e.g. Canis_familiaris.CanFam3.1.98.gtf)" }
 
   input_tumor_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the tumor sample" }
   input_normal_reads: { type: 'File', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false },{ pattern: ".crai", required: false },{ pattern: "^.crai", required: false }], doc: "BAM/SAM/CRAM file containing reads from the normal sample" }
@@ -46,7 +46,7 @@ inputs:
   tumor_target_intervals: { type: 'File?', doc: "For exome samples, provide the targets file used to align the tumor sample reads." }
   gatk_cnv_primary_contigs_male: { type: 'File?', doc: "For genome samples, provide a file containing the male primary contigs (e.g. Canis_familiaris.CanFam3.1.primary.contigs.male.interval_list)" }
   gatk_cnv_primary_contigs_female: { type: 'File?', doc: "For genome samples, provide a file containing the female primary contigs (e.g. Canis_familiaris.CanFam3.1.primary.contigs.female.interval_list)" }
-  
+
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
 
 outputs:
@@ -93,7 +93,7 @@ steps:
       infile: sex_check_normal
       grep_regex: normal_sample_name
       cut_field:
-        source: disable_workflow # Hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(20)
     out: [output]
 
@@ -109,7 +109,7 @@ steps:
     when: $(inputs.enable_tool == "Exome")
     in:
       enable_tool:
-        source: sample_type 
+        source: sample_type
         valueFrom: $(self)
       input_intervals:
         source: [normal_target_intervals, tumor_target_intervals]
@@ -147,7 +147,7 @@ steps:
     when: $(inputs.enable_tool == "Exome")
     in:
       enable_tool:
-        source: sample_type 
+        source: sample_type
         valueFrom: $(self)
       interval_list:
         source: [grep_drop_y_chrom/output, gatk_intervallisttools/intervals]
@@ -159,7 +159,7 @@ steps:
   expr_gatk_cnv_variables:
     run: ../tools/expr_gatk_cnv_variables.cwl
     in:
-      exome: 
+      exome:
         source: sample_type
         valueFrom: |
           $(self == "Exome")
@@ -251,7 +251,7 @@ steps:
     in:
       do_explicit_gc_correction:
         valueFrom: $(1 == 1)
-      mappability_track: mappability_track 
+      mappability_track: mappability_track
       input_interval_list: gatk_preprocessintervals/output
       reference: indexed_reference_fasta
       output_prefix:
@@ -414,20 +414,20 @@ steps:
   awk_gender_correction:
     run: ../tools/awk_gender_correction.cwl
     in:
-      input_denoised_cr: gatk_denoisereadcounts/denoised_copy_ratios 
-      input_model_final: gatk_modelsegments/modeled_segments 
+      input_denoised_cr: gatk_denoisereadcounts/denoised_copy_ratios
+      input_model_final: gatk_modelsegments/modeled_segments
       input_centromere: centromere_regions
-      output_basename: output_basename 
+      output_basename: output_basename
       male:
         source: expr_sex_guess/output
         valueFrom: $(self == "Male")
     out: [ modelfinal_corr, denoisedcr_corr ]
-      
+
   seg_extend:
     run: ../tools/seg_extend.cwl
     in:
       input_centromere_bed: centromere_regions
-      input_seg: awk_gender_correction/modelfinal_corr  
+      input_seg: awk_gender_correction/modelfinal_corr
     out: [output]
 
   plotCNVplus:
@@ -435,7 +435,7 @@ steps:
     in:
       sample_name: tumor_sample_name
       output_basename: output_basename
-      denoised_tsv: awk_gender_correction/denoisedcr_corr 
+      denoised_tsv: awk_gender_correction/denoisedcr_corr
       allelic_tsv: gatk_modelsegments/het_allelic_counts
       modeled_seg: seg_extend/output
       hetDPfilter:
@@ -476,7 +476,7 @@ steps:
   sed_centromere:
     run: ../tools/sed.cwl
     in:
-      infile: centromere_regions 
+      infile: centromere_regions
       outfile:
         valueFrom: "genomic_regions.bed"
       expression:
@@ -487,7 +487,7 @@ steps:
   thred:
     run: ../tools/thred.cwl
     in:
-      seg: plotCNVplus/recentered_seg 
+      seg: plotCNVplus/recentered_seg
       genomic_regions: sed_centromere/output
       outfile: output_basename
       th_log2r:

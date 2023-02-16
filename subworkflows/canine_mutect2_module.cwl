@@ -66,7 +66,7 @@ steps:
       tumor_sample_name: tumor_sample_name
       input_interval_list: calling_intervals_yaml_to_beds/outputs
       independent_mates:
-        source: disable_workflow # Hiding the killswitch here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(1 == 1)
       max_memory: mutect2_max_memory
       cpu: mutect2_cpu

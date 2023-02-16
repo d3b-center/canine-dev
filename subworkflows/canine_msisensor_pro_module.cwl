@@ -32,7 +32,7 @@ steps:
     in:
       input_reads: input_normal_bam
       include_header:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(1 == 1)
       output_bam:
         valueFrom: $(1 == 1)

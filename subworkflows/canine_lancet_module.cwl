@@ -52,7 +52,7 @@ steps:
         source: output_basename
         valueFrom: $(self).$(inputs.bed.nameroot).lancet-uns.vcf
       max_vaf_normal:
-        source: disable_workflow # hiding killswitch here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: $(0.05)
       max_alt_count_normal:
         valueFrom: $(50)
@@ -64,7 +64,7 @@ steps:
     run: ../tools/bcftools_reheader_sort_index.cwl
     scatter: [input_file]
     in:
-      input_file: lancet/vcf 
+      input_file: lancet/vcf
       output_filename:
         valueFrom: $(inputs.input_file.nameroot).sorted.vcf
       output_type:

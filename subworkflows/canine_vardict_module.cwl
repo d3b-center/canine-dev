@@ -43,8 +43,8 @@ steps:
     run: ../tools/bedtools_makewindows.cwl
     scatter: [bed]
     in:
-      bed: calling_intervals_yaml_to_beds/outputs 
-      window_size: 
+      bed: calling_intervals_yaml_to_beds/outputs
+      window_size:
         valueFrom: $(20000)
       step_size:
         valueFrom: $(19850)
@@ -64,7 +64,7 @@ steps:
       sample_name: tumor_sample_name
       indexed_reference_fasta: indexed_reference_fasta
       hexical_read_filter:
-        source: disable_workflow # hiding this here because I hate cavatica
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "0x500"
       read_mean_mapq_min:
         valueFrom: $(5)
@@ -84,7 +84,7 @@ steps:
         valueFrom: $(2)
       region_end_column:
         valueFrom: $(3)
-      regions_file: bedtools_makewindows/output 
+      regions_file: bedtools_makewindows/output
       sample_names:
         source: normal_sample_name
         valueFrom: $([inputs.sample_name, self])
