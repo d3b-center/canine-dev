@@ -15,6 +15,12 @@ baseCommand: []
 
 arguments:
   - position: 1
+    shellQuote: false
+    valueFrom: >
+      tar xf $(inputs.vep_cache.path)
+  - position: 11
+    prefix: "&&"
+    shellQuote: false
     valueFrom: >
       vep --fork $(inputs.cpu)
       --input_file $(inputs.input_vcf.path)
@@ -26,7 +32,7 @@ arguments:
       --force_overwrite
       --no_stats
       --cache
-      --dir_cache $(inputs.vep_cache.path)
+      --dir_cache .
       --cache_version 98
       --offline
       --fasta $(inputs.reference_fasta.path)
@@ -44,7 +50,7 @@ arguments:
 inputs:
   input_vcf: { type: 'File', doc: "Input VCF file to be annotated" }
   output_filename: { type: 'string', doc: "Name for output annotated VCF file" }
-  vep_cache: { type: 'Directory', loadListing: deep_listing, doc: "Directory containing VEP cache information" }
+  vep_cache: { type: 'File', doc: "TAR file containing VEP cache information" }
   reference_fasta: { type: 'File', doc: "Reference genome fasta file" }
   all_or_con: { type: 'string', doc: "VEP all or con?" }
   cpu:
@@ -64,4 +70,4 @@ outputs:
   warnings:
     type: 'File'
     outputBinding:
-      glob: "*vcf_warnings.txt"
+      glob: "*_warnings.txt"

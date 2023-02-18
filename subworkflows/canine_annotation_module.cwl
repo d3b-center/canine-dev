@@ -19,7 +19,6 @@ inputs:
   snpeff_tar: { type: 'File?', doc: "TAR containing SnpEff config file and cache information" }
   snpeff_cachename: { type: 'string?', doc: "Name of snpeff cache directory contained in snpeff_tar" }
   vep_tar: { type: 'File?', doc: "TAR containing VEP cache information" }
-  vep_cachename: { type: 'string?', doc: "Name of vep cache directory contained in vep_tar" }
   reference_fasta: { type: 'File?', doc: "Reference genome fasta file with associated FAI index" }
 
   # Killswitches
@@ -96,16 +95,6 @@ steps:
       snpeff_cpu: snpeff_cpu
     out: [snpeff_all_vcf, snpeff_canon_vcf]
 
-  untar_vep:
-    run: ../tools/untar.cwl
-    when: $(inputs.tarfile != null)
-    in:
-      tarfile: vep_tar
-      outdir:
-        valueFrom: "vep"
-      output_name: vep_cachename
-    out: [output]
-
   vep_annotate:
     run: ../subworkflows/canine_vep_module.cwl
     when: $(inputs.disable_workflow != true)
@@ -113,7 +102,7 @@ steps:
       input_vcf:
         source: [tumor_only_variant_filter/filtered_vcf, bcftools_annotate/annotated_vcf, input_vcf]
         pickValue: first_non_null
-      vep_cache: untar_vep/output
+      vep_cache: vep_tar
       reference_fasta: reference_fasta
       output_basename: output_basename
       disable_workflow: disable_vep
