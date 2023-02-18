@@ -43,7 +43,6 @@ inputs:
   snpeff_tar: { type: 'File?', doc: "TAR containing SnpEff config file and cache information" }
   snpeff_cachename: { type: 'string?', doc: "Name of snpeff cache directory contained in snpeff_tar" }
   vep_tar: { type: 'File?', doc: "TAR containing VEP cache information" }
-  vep_cachename: { type: 'string?', doc: "Name of vep cache directory contained in vep_tar" }
 
   # Collect Somatic Metrics
   input_normal_bam: { type: 'File?', secondaryFiles: [ { pattern: '.bai', required: false }, { pattern: '^.bai', required: false } ], doc: "BAM containing reads from normal sample." }
@@ -226,7 +225,6 @@ steps:
       snpeff_tar: snpeff_tar
       snpeff_cachename: snpeff_cachename
       vep_tar: vep_tar
-      vep_cachename: vep_cachename
       reference_fasta: indexed_reference_fasta
       disable_bcftools: disable_bcftools
       disable_tumor_only_var_filt: disable_tumor_only_var_filt

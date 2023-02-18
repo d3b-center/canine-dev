@@ -29,6 +29,10 @@ arguments:
     shellQuote: false
     valueFrom: |
       invcfs
+  - position: 9
+    shellQuote: false
+    valueFrom: |
+      1>&2
   - position: 10
     prefix: "&&"
     shellQuote: false

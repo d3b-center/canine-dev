@@ -69,7 +69,6 @@ inputs:
   snpeff_tar: { type: 'File?', doc: "TAR containing SnpEff config file and cache information" }
   snpeff_cachename: { type: 'string?', default: "data", doc: "Name of snpeff cache directory contained in snpeff_tar" }
   vep_tar: { type: 'File?', doc: "TAR containing VEP cache information" }
-  vep_cachename: { type: 'string?', default: "canis_familiaris", doc: "Name of vep cache directory contained in vep_tar" }
   tumor_library_name: { type: 'string?', doc: "Library name as denoted in the tumor BAM read group header." }
   ns_effects: { type: 'string[]?', default: [ "'splice_acceptor_variant'", "'splice_donor_variant'", "'start_lost'", "'exon_loss_variant'", "'frameshift_variant'", "'stop_gained'", "'stop_lost'", "'start_lost'", "'rare_amino_acid_variant'", "'missense_variant'", "'inframe_insertion'", "'disruptive_inframe_insertion'", "'inframe_deletion'", "'disruptive_inframe_deletion'" ], doc: "List of NS effects" }
   canonical_cds_bed_snpeff: { type: 'File?', doc: "BED file contatining Canine canonical CDS intervals for SnpEff." }
@@ -471,7 +470,6 @@ steps:
       snpeff_tar: snpeff_tar
       snpeff_cachename: snpeff_cachename
       vep_tar: vep_tar
-      vep_cachename: vep_cachename
       tumor_library_name: tumor_library_name
       total_callers:
         valueFrom: $(inputs.input_vcfs.length)

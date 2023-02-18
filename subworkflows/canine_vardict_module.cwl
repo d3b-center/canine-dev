@@ -63,21 +63,49 @@ steps:
         source: [input_tumor_reads, input_normal_reads]
       sample_name: tumor_sample_name
       indexed_reference_fasta: indexed_reference_fasta
+      std:
+        valueFrom: $(3)
+      bias_min_reads:
+        valueFrom: $(2)
       hexical_read_filter:
         source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "0x500"
+      allele_frequency_max:
+        valueFrom: $(0.01)
+      indel_size:
+        valueFrom: $(50)
+      local_realignment:
+        valueFrom: $(1)
+      read_match_min:
+        valueFrom: $(0)
+      read_mismatch_max:
+        valueFrom: $(8)
       read_mean_mapq_min:
+        valueFrom: $(5)
+      qratio:
+        valueFrom: $(1.5)
+      read_position_filter:
         valueFrom: $(5)
       read_mapq_min:
         valueFrom: $(1)
       base_phred_min:
         valueFrom: $(20)
+      variant_reads_min:
+        valueFrom: $(2)
       dedup:
         valueFrom: $(1 == 1)
       nosv:
         valueFrom: $(1 == 1)
       unique_first:
         valueFrom: $(1 == 1)
+      mutation_frequency_min:
+        valueFrom: $(0.05)
+      read_strictness:
+        valueFrom: "LENIENT"
+      indel_extension:
+        valueFrom: $(2)
+      segment_extension:
+        valueFrom: $(0)
       chrom_column:
         valueFrom: $(1)
       region_start_column:
@@ -88,8 +116,30 @@ steps:
       sample_names:
         source: normal_sample_name
         valueFrom: $([inputs.sample_name, self])
+      candidate_proximity_max:
+        valueFrom: $(0)
+      nonmonomer_max:
+        valueFrom: $(12)
+      read_mean_mismatch_max:
+        valueFrom: $(5.25)
+      p_value_max:
+        valueFrom: $(0.05)
+      mean_pos_min:
+        valueFrom: $(5)
+      mean_bq_min:
+        valueFrom: $(22.5)
       mapq_min:
         valueFrom: $(1)
+      total_depth_min:
+        valueFrom: $(5)
+      var_depth_min:
+        valueFrom: $(3)
+      allele_freq_min:
+        valueFrom: $(0.02)
+      genotype_frequency:
+        valueFrom: $(0.2)
+      signal_noise_ratio:
+        valueFrom: $(1.5)
       output_filename:
         source: output_basename
         valueFrom: $(self).vardict.vcf.gz
