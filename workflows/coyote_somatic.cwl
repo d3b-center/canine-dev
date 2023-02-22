@@ -21,7 +21,7 @@ inputs:
   disable_mutect2: { type: 'boolean?', doc: "Set to true to disable Mutect2." }
   disable_octopus: { type: 'boolean?', doc: "Set to true to disable Octopus." }
   disable_sequenza: { type: 'boolean?', doc: "Set to true to disable Sequenza." }
-  disable_sigprofiler: { type: 'boolean?', doc: "Set to true to disable Sigprofiler metrics collection." }
+  disable_sigprofiler: { type: 'boolean?', default: true, doc: "Set to true to disable Sigprofiler metrics collection." }
   disable_snpeff: { type: 'boolean?', doc: "Set to true to disable SnpEff annotation." }
   disable_strelka2: { type: 'boolean?', doc: "Set to true to disable Strelka2." }
   disable_tucon: { type: 'boolean?', doc: "Set to true to disable Tucon metics collection." }
