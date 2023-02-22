@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/tgen_phoenix_vep:20210113-skylake'
+    dockerPull: 'ensemblorg/ensembl-vep:release_98.3'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
