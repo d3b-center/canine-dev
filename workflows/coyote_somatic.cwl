@@ -21,7 +21,6 @@ inputs:
   disable_mutect2: { type: 'boolean?', doc: "Set to true to disable Mutect2." }
   disable_octopus: { type: 'boolean?', doc: "Set to true to disable Octopus." }
   disable_sequenza: { type: 'boolean?', doc: "Set to true to disable Sequenza." }
-  disable_sigprofiler: { type: 'boolean?', default: true, doc: "Set to true to disable Sigprofiler metrics collection." }
   disable_snpeff: { type: 'boolean?', doc: "Set to true to disable SnpEff annotation." }
   disable_strelka2: { type: 'boolean?', doc: "Set to true to disable Strelka2." }
   disable_tucon: { type: 'boolean?', doc: "Set to true to disable Tucon metics collection." }
@@ -128,8 +127,6 @@ inputs:
   tmb_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Coyote Tumor Mutation Burden script." }
   msisensor_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to msisensor." }
   msisensor_cpu: { type: 'int?', doc: "Number of CPUs to allocate to msisensor." }
-  sigprofiler_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Sigprofiler." }
-  sigprofiler_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Sigprofiler." }
   octopus_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Octopus." }
   octopus_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Octopus." }
   vardict_ram: { type: 'int?', doc: "GB of RAM to allocate to Vardict." }
@@ -201,13 +198,6 @@ outputs:
   mutation_burdern_txt_vep: { type: 'File?', outputSource: canine_vcfmerger2_module/mutation_burdern_txt_vep }
   tucon_snpeff: { type: 'File?', outputSource: canine_vcfmerger2_module/tucon_snpeff }
   tucon_vep: { type: 'File?', outputSource: canine_vcfmerger2_module/tucon_vep }
-  sigprofiler_dbs_activities: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_dbs_activities }
-  sigprofiler_dbs_signatures: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_dbs_signatures }
-  sigprofiler_id_activities: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_id_activities }
-  sigprofiler_id_signatures: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_id_signatures }
-  sigprofiler_sbs_activities: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_sbs_activities }
-  sigprofiler_sbs_signatures: { type: 'Directory?', outputSource: canine_vcfmerger2_module/sigprofiler_sbs_signatures }
-  sigprofiler_extraneous_results: { type: 'File?', outputSource: canine_vcfmerger2_module/sigprofiler_extraneous_results }
   sequenza_seqz: { type: 'File?', outputSource: canine_sequenza_module/seqz }
   sequenza_small_seqz: { type: 'File?', outputSource: canine_sequenza_module/small_seqz }
   sequenza_cn_bars: { type: 'File', outputSource: canine_sequenza_module/cn_bars }
@@ -444,7 +434,6 @@ steps:
       disable_mutation_burden: disable_mutation_burden
       disable_tucon: disable_tucon
       disable_msisensor: disable_msisensor
-      disable_sigprofiler: disable_sigprofiler
       input_vcfs:
         source: [canine_mutect2_module/mutect2_pass_vcf, canine_lancet_module/lancet_pass_vcf, canine_octopus_module/octopus_pass_vcf, canine_strelka2_module/strelka2_pass_vcf, canine_vardict_module/vardict_pass_vcf]
         pickValue: all_non_null
@@ -497,9 +486,7 @@ steps:
       tmb_cpu: tmb_cpu
       msisensor_ram: msisensor_ram
       msisensor_cpu: msisensor_cpu
-      sigprofiler_ram: sigprofiler_ram
-      sigprofiler_cpu: sigprofiler_cpu
-    out: [vcfmerger_vcf, vcfmerger_vcf_stats, vcfmerger_venns, bcftools_vcf, tumor_only_vcf, snpeff_all_vcf, snpeff_canon_vcf, vep_all_vcf, vep_all_warnings, vep_con_vcf, vep_con_warnings, msisensor_metrics, mutation_burdern_json_snpeff, mutation_burdern_txt_snpeff, mutation_burdern_json_vep, mutation_burdern_txt_vep, tucon_snpeff, tucon_vep, sigprofiler_dbs_activities, sigprofiler_dbs_signatures, sigprofiler_id_activities, sigprofiler_id_signatures, sigprofiler_sbs_activities, sigprofiler_sbs_signatures, sigprofiler_extraneous_results]
+    out: [vcfmerger_vcf, vcfmerger_vcf_stats, vcfmerger_venns, bcftools_vcf, tumor_only_vcf, snpeff_all_vcf, snpeff_canon_vcf, vep_all_vcf, vep_all_warnings, vep_con_vcf, vep_con_warnings, msisensor_metrics, mutation_burdern_json_snpeff, mutation_burdern_txt_snpeff, mutation_burdern_json_vep, mutation_burdern_txt_vep, tucon_snpeff, tucon_vep]
 
   canine_sequenza_module:
     run: ../subworkflows/canine_sequenza_module.cwl

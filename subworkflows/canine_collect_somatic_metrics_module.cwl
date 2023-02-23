@@ -36,7 +36,6 @@ inputs:
   disable_mutation_burden: { type: 'boolean?', doc: "Set to true to disable Mutation Burden metrics collection." }
   disable_tucon: { type: 'boolean?', doc: "Set to true to disable Tucon metics collection." }
   disable_msisensor: { type: 'boolean?', doc: "Set to true to disable Msisensor metrics collection." }
-  disable_sigprofiler: { type: 'boolean?', doc: "Set to true to disable Sigprofiler metrics collection." }
 
   # Resource Control
   bcftools_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to BCFtools." }
@@ -49,8 +48,6 @@ inputs:
   samtools_cpu: { type: 'int?', doc: "Number of CPUs to allocate to SAMtools." }
   msisensor_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to msisensor." }
   msisensor_cpu: { type: 'int?', doc: "Number of CPUs to allocate to msisensor." }
-  sigprofiler_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Sigprofiler." }
-  sigprofiler_cpu: { type: 'int?', doc: "Number of CPUs to allocate to Sigprofiler." }
 
 outputs:
   mutation_burdern_json_snpeff: { type: 'File?', outputSource: canine_mutation_burden_module_snpeff/tmb_metrics_json }
@@ -60,13 +57,6 @@ outputs:
   tucon_snpeff: { type: 'File?', outputSource: canine_tucon_module_snpeff/tucon_tsv }
   tucon_vep: { type: 'File?', outputSource: canine_tucon_module_vep/tucon_tsv }
   msisensor_metrics: { type: 'File?', outputSource: canine_msisensor_pro_module/msisensor_metrics_txt }
-  sigprofiler_dbs_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/dbs_activities }
-  sigprofiler_dbs_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/dbs_signatures }
-  sigprofiler_id_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/id_activities }
-  sigprofiler_id_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/id_signatures }
-  sigprofiler_sbs_activities: { type: 'Directory?', outputSource: canine_sigprofiler_module/sbs_activities }
-  sigprofiler_sbs_signatures: { type: 'Directory?', outputSource: canine_sigprofiler_module/sbs_signatures }
-  sigprofiler_extraneous_results: { type: 'File?', outputSource: canine_sigprofiler_module/extraneous_results }
 
 steps:
   canine_mutation_burden_module_snpeff:
@@ -166,20 +156,6 @@ steps:
       msisensor_ram: msisensor_ram
       msisensor_cpu: msisensor_cpu
     out: [msisensor_metrics_txt]
-
-  canine_sigprofiler_module:
-    run: ../subworkflows/canine_sigprofiler_module.cwl
-    when: $(inputs.disable_workflow != true)
-    in:
-      input_vcf: input_merged_vcf
-      output_basename: output_basename
-      disable_workflow: disable_sigprofiler
-      total_callers: total_callers
-      bcftools_ram: bcftools_ram
-      bcftools_cpu: bcftools_cpu
-      sigprofiler_ram: sigprofiler_ram
-      sigprofiler_cpu: sigprofiler_cpu
-    out: [dbs_activities, dbs_signatures, id_activities, id_signatures, sbs_activities, sbs_signatures, extraneous_results]
 
 $namespaces:
   sbg: https://sevenbridges.com
