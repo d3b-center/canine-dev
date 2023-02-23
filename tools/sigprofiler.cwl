@@ -9,7 +9,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/sigprofiler:1.1'
+    dockerPull: 'dmiller15/sigprofiler:1.1.0'
   - class: LoadListingRequirement
     loadListing: deep_listing
   - class: InitialWorkDirRequirement
@@ -48,7 +48,7 @@ inputs:
 
   cpu:
     type: 'int?'
-    default: 4
+    default: 10
     doc: "Number of CPUs to allocate to this task."
     inputBinding:
       position: 2
