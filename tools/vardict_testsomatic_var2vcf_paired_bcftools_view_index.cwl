@@ -10,7 +10,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/vardictjava:1.7.0'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/vardictjava:1.7.0'
 baseCommand: []
 arguments:
   - position: 0

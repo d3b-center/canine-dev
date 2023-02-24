@@ -17,7 +17,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/lancet:1.1.0'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/lancet:1.1.x'
 baseCommand: [lancet]
 inputs:
   # Required Arguments

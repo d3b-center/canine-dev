@@ -15,7 +15,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/octopus:0.6.3'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/octopus:0.6.3-beta'
   - class: InitialWorkDirRequirement
     listing: [$(inputs.premade_cache)]
 baseCommand: [octopus]

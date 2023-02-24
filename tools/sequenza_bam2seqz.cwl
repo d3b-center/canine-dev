@@ -9,7 +9,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'dmiller15/sequenza:3.0.0'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/sequenza:3.0.0'
 baseCommand: [sequenza-utils, bam2seqz]
 arguments:
   - position: 99
