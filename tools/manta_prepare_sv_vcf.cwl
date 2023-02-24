@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'dmiller15/python-util:3.9'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/python:3.9-canine-util'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)

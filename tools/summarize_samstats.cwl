@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: 'dmiller15/r-util:3.6.1'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/tidyverse:3.6.1-canine-util'
   - class: ResourceRequirement
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)

@@ -10,7 +10,7 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'ghcr.io/tgen/jetstream_containers/tgen_phoenix_snpeff:20210113-skylake'
+    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/snpeff:4.3t'
 baseCommand: []
 arguments:
   - position: 0
