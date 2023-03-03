@@ -56,7 +56,6 @@ inputs:
 
   # Octopus
   primary_contig_calling_intervals: { type: 'File?', doc: "YAML file contianing the intervals in which to perform variant calling." }
-  octopus_cache: { type: 'File?', doc: "Tarball of cache made by Octopus. Octopus will make this in the first run and it can be saved and reused to speed up future runs." }
 
   # VCFMerger2
   tool_precidence: { type: 'string[]?', doc: "The order in which the VCFs will be ranked on precedence. Every tool from this list must be run. If a caller is disabled, it must be removed from the list!" }
@@ -417,7 +416,6 @@ steps:
       normal_sample_name: normal_sample_name
       output_basename: output_basename
       targets_file: capture_kit_extended_bed_tumor
-      cache_tar: octopus_cache
       octopus_ram: octopus_ram
       octopus_cpu: octopus_cpu
     out: [octopus_all_vcf, octopus_pass_vcf, octopus_all_vcf_stats, octopus_pass_vcf_stats]

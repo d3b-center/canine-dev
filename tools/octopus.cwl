@@ -15,12 +15,14 @@ requirements:
     ramMin: $(inputs.ram*1000)
     coresMin: $(inputs.cpu)
   - class: DockerRequirement
-    dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/octopus:0.6.3-beta'
-  - class: InitialWorkDirRequirement
-    listing: [$(inputs.premade_cache)]
-baseCommand: [octopus]
+    dockerPull: 'pgc-images.sbgenomics.com/danmiller/octopus:0.6.3-beta'
+baseCommand: []
+arguments:
+  - position: 0
+    shellQuote: false
+    valueFrom: >
+      perl /opt/seq_cache_populate.pl -root .cache/hts-ref $(inputs.reference.path) 1>&2 && octopus
 inputs:
-  premade_cache: { type: 'Directory?', doc: "Premade cache of genome" }
   reference: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], inputBinding: { position: 2, prefix: "--reference"}, doc: "FASTA format reference genome file to be analysed. Target regions will be extracted from the reference index if not provded explicitly" }
   reads: { type: 'File[]?', secondaryFiles: [{ pattern: '.bai', required: false }, { pattern: '^.bai', required: false }, { pattern: '.crai', required: false }, { pattern: '^.crai', required: false }], inputBinding: { position: 2, prefix: "--reads"}, doc: "Space-separated list of BAM/CRAM files to be analysed. May be specified multiple times" }
   reads_file: { type: 'File?', inputBinding: { position: 2, prefix: "--reads-file"}, doc: "Files containing lists of BAM/CRAM files, one per line, to be analysed" }
@@ -435,7 +437,3 @@ outputs:
     type: 'File?'
     outputBinding:
       glob: $(inputs.output_data_profile_filename)
-  cache:
-    type: 'Directory?'
-    outputBinding:
-      glob: ".cache"

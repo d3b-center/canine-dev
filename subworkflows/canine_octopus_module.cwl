@@ -19,7 +19,6 @@ inputs:
   normal_sample_name: { type: 'string', doc: "BAM sample name of normal" }
   output_basename: { type: 'string', doc: "String to use as basename for outputs." }
   targets_file: { type: 'File?', doc: "For exome variant calling, this file contains the targets regions used in library preparation." }
-  cache_tar: { type: 'File?', doc: "Tarball of cache made by Octopus. Octopus will make this in the first run and it can be saved and reused." }
 
   # Resource Control
   octopus_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to Octopus." }
@@ -32,16 +31,6 @@ outputs:
   octopus_pass_vcf_stats: { type: 'File', outputSource: bcftools_stats_pass/stats }
 
 steps:
-  untar:
-    run: ../tools/untar.cwl
-    when: $(inputs.tarfile != null)
-    in:
-      tarfile: cache_tar
-      output_name:
-        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
-        valueFrom: ".cache"
-    out: [output]
-
   calling_intervals_yaml_to_beds:
     run: ../tools/calling_intervals_yaml_to_beds.cwl
     in:
@@ -55,12 +44,12 @@ steps:
     run: ../tools/octopus.cwl
     scatter: [regions_file]
     in:
-      premade_cache: untar/output
       reference: indexed_reference_fasta
       reads: input_reads
       normal_sample: normal_sample_name
       regions_file: calling_intervals_yaml_to_beds/outputs
       caller:
+        source: disable_workflow # Sinking this someplace it will do nothing to circumvent graph not connected cavatica error
         valueFrom: "cancer"
       max_reference_cache_footprint:
         valueFrom: "4GB"
