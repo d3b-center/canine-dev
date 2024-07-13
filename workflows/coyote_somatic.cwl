@@ -59,7 +59,7 @@ inputs:
 
   # VCFMerger2
   tool_precidence: { type: 'string[]?', doc: "The order in which the VCFs will be ranked on precedence. Every tool from this list must be run. If a caller is disabled, it must be removed from the list!" }
-  star_bam_final: { type: 'File?', doc: "STAR BAM final from a matched RNA sample." }
+  star_bam_final: { type: 'File?', secondaryFiles: [{ pattern: ".bai", required: false },{ pattern: "^.bai", required: false }], doc: "STAR BAM final from a matched RNA sample." }
   rna_samplename: { type: 'string?', doc: "Name of RNA sample associated with tumor pair" }
   input_gca_annotations_vcf: { type: 'File?', secondaryFiles: [ { pattern: '.tbi', required: true } ], doc: "VCF containing EVA GCA annotations: GCA_000002285.2_current_ids_renamed.vcf.gz" }
   snpeff_config: { type: 'File?', doc: "SnpEff config file" }

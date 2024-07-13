@@ -19,7 +19,7 @@ inputs:
 
   # Resource Control
   samtools_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to SAMtools." }
-  samtools_cpu: { type: 'int?', doc: "Number of CPUs to allocate to SAMtools." }
+  samtools_cpu: { type: 'int?', default: 8, doc: "Number of CPUs to allocate to SAMtools." }
   msisensor_ram: { type: 'int?', doc: "Maximum GB of RAM to allocate to msisensor." }
   msisensor_cpu: { type: 'int?', doc: "Number of CPUs to allocate to msisensor." }
 

@@ -21,7 +21,7 @@ arguments:
 inputs:
   # Required Inputs
   input_file: { type: 'File', inputBinding: { position: 2, prefix: "-i" }, doc: "bed/gff/vcf file to process" }
-  output_filename: { type: 'string', inputBinding: { position: 9, prefix: ">"}, doc: "output file name" }
+  output_filename: { type: 'string', inputBinding: { position: 9, shellQuote: false, prefix: ">"}, doc: "output file name" }
   genome: { type: 'File', inputBinding: { position: 2, prefix: "-g"}, doc: "Genome file" }
 
   # Slop Arguments

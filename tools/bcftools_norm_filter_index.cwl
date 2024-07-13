@@ -35,7 +35,7 @@ arguments:
 inputs:
   # Required inputs
   input_vcf: { type: 'File', secondaryFiles: [{pattern: '.tbi', required: false}, {pattern: '.csi', required: false}], inputBinding: { position: 9 }, doc: "VCF(.GZ) to norm, filter, and optionally index." }
-  output_filename: { type: 'string', inputBinding: { position: 12, prefix: "--output-file"}, doc: "output file name [stdout]" }
+  output_filename: { type: 'string', inputBinding: { position: 12, prefix: "--output"}, doc: "output file name [stdout]" }
 
   # Norm Arguments
   check_ref: { type: 'string?', inputBinding: { position: 2, prefix: "--check-ref"}, doc: "check REF alleles and exit (e), warn (w), exclude (x), or set (s) bad sites [e]" }

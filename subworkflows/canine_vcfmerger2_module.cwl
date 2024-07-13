@@ -32,7 +32,7 @@ inputs:
   output_basename: { type: 'string', doc: "String to use as base for output filenames." }
 
   # Matched RNA
-  star_bam_final: { type: 'File?', doc: "STAR BAM final" }
+  star_bam_final: { type: 'File?', secondaryFiles: [{pattern: ".bai", required: false}, {pattern: "^.bai", required: false}], doc: "STAR BAM final" }
   rna_samplename: { type: 'string?', doc: "Name of RNA sample associated with tumor pair" }
 
   # Annotation
@@ -160,9 +160,9 @@ steps:
     in:
       reference_dict:
         valueFrom: |
-          $(inputs.refgenome.secondaryFiles.filter(function(e) { return e.nameext == '.dict' })[0])
+          $(inputs.reference_fasta.secondaryFiles.filter(function(e) { return e.nameext == '.dict' })[0])
       reference_fasta: indexed_reference_fasta
-      input_vcf: vcfmerger2/vcf
+      input_vcf: vcfmerger2/vcfgz
       star_bam_final: star_bam_final
       output_filename:
         source: output_basename
@@ -177,7 +177,7 @@ steps:
   canine_add_rna_header_to_vcf_module:
     run: ../subworkflows/canine_add_rna_header_to_vcf_module.cwl
     in:
-      input_vcf: vcfmerger2/vcf
+      input_vcf: vcfmerger2/vcfgz
       output_filename:
         source: output_basename
         valueFrom: $(self).merged.vcf.gz
