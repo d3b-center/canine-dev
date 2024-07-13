@@ -13,7 +13,7 @@ requirements:
     dockerPull: 'ubuntu:20.04'
   - class: InitialWorkDirRequirement
     listing:
-    - $(inputs.output_header)
+    - $(inputs.input_header)
     - entryname: temp_rna_vcf.sh
       writable: false
       entry: |

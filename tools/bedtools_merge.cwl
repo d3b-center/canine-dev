@@ -21,7 +21,7 @@ arguments:
 inputs:
   # Required Inputs
   input_file: { type: 'File', inputBinding: { position: 2, prefix: "-i" }, doc: "bed/gff/vcf file to process" }
-  output_filename: { type: 'string', inputBinding: { position: 9, prefix: ">"}, doc: "output file name" }
+  output_filename: { type: 'string', inputBinding: { position: 9, shellQuote: false, prefix: ">"}, doc: "output file name" }
 
   # Merge Arguments
   force_strandedness: { type: 'boolean?', inputBinding: { position: 2, prefix: "-s" }, doc: "Force strandedness. That is, only merge features that are on the same strand. By default, merging is done without respect to strand." }

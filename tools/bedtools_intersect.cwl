@@ -17,7 +17,7 @@ inputs:
   # Required Inputs
   input_a: { type: 'File', inputBinding: { position: 2, prefix: "-a" }, doc: "bed/gff/vcf/bam file to intersect with input_b" }
   input_b: { type: 'File', inputBinding: { position: 2, prefix: "-b" }, doc: "bed/gff/vcf/bam file to intersect with input_a" }
-  output_filename: { type: 'string', inputBinding: { position: 8, prefix: ">" }, doc: "Name for output file" }
+  output_filename: { type: 'string', inputBinding: { position: 8, shellQuote: false, prefix: ">" }, doc: "Name for output file" }
 
   # Intersect Arguments
   wa: { type: 'boolean?', inputBinding: { position: 2, prefix: "-wa"}, doc: "Write the original entry in A for each overlap." }

@@ -21,7 +21,7 @@ arguments:
 inputs:
   # Required Inputs
   input_vcfs: { type: 'File[]', inputBinding: { position: 9 }, doc: "One or more VCF files to query." }
-  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output-file"}, doc: "output file name" }
+  output_filename: { type: 'string', inputBinding: { position: 2, prefix: "--output"}, doc: "output file name" }
 
   # Merge Arguments
   force_samples: { type: 'boolean?', inputBinding: { position: 2, prefix: "--force-samples"}, doc: "resolve duplicate sample names" }

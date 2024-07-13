@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: freebayes
 doc: |-
@@ -47,7 +47,7 @@ inputs:
 
   # Input Variables
 
-  input_bams: { type: 'File[]', secondaryFiles: [^.bai], doc: "BAM files to be analyzed" }
+  input_bams: { type: 'File[]', secondaryFiles: [{pattern: ".bai", required: false}, {pattern: "^.bai", required: false}], doc: "BAM files to be analyzed" }
   reference_fasta: { type: 'File', inputBinding: { prefix: "--fasta-reference" }, secondaryFiles: [.fai], doc: "Reference fasta and fai index" }
   targets_file: { type: 'File?', inputBinding: { prefix: "--targets" }, doc: "BED file containing targets for analysis" }
   region_strings: { type: 'string[]?', inputBinding: { prefix: "--region", itemSeparator: ".." }, doc: "List containing BED-formatted strings (<chrom>:<start_position>-<end_position>;0-base coordinates, end_position not included) detailing target locations for analysis. Either '-' or '..' maybe used as a separator" }
@@ -61,7 +61,7 @@ inputs:
   output_gvcf: { type: 'boolean?', default: false, inputBinding: { prefix: "--gvcf" }, doc: "Write gVCF output, which indicates coverage in uncalled regions." }
   gvcf_chunk: { type: 'long?', inputBinding: { prefix: "--gvcf-chunk" }, doc: "When writing gVCF output emit a record for every NUM bases." }
   gvcf_dont_use_chunk: { type: 'boolean?', inputBinding: { prefix: "--gvcf-dont-use-chunk" }, doc: "When writing the gVCF output emit a record for all bases if set to true , will also route an int to --gvcf-chunk similar to --output-mode EMIT_ALL_SITES from GATK" }
-  variant_input_file: { type: 'File?', inputBinding: { prefix: "--variant_input" }, doc: "Use variants reported in VCF file as input to the algorithm. Variants in this file will included in the output even if there is not enough support in the data to pass input filters." }
+  variant_input_file: { type: 'File?', inputBinding: { prefix: "--variant-input" }, doc: "Use variants reported in VCF file as input to the algorithm. Variants in this file will included in the output even if there is not enough support in the data to pass input filters." }
   only_use_input_alleles: { type: 'boolean?', default: false, inputBinding: { prefix: "--only-use-input-alleles" }, doc: "Only provide variant calls and genotype likelihoods for sites and alleles which are provided in the VCF input, and provide output in the VCF for all input alleles, not just those which have support in the data." }
   haplotype_basis_alleles_file: { type: 'File?', inputBinding: { prefix: "--haplotype-basis-alleles" }, doc: "When specified, only variant alleles provided in this input VCF will be used for the construction of complex or haplotype alleles." }
   report_all_haplotype_alleles: { type: 'boolean?', default: false, inputBinding: { prefix: "--report-all-haplotype-alleles" }, doc: "At sites where genotypes are made over haplotype alleles, provide information about all alleles in output, not only those which are called." }
@@ -155,4 +155,5 @@ inputs:
   cpu: { type: 'int?', default: 4, doc: "Minimum reserved number of CPU cores for the task. default: 4" }
 
 outputs:
-  output: { type: 'File', outputBinding: { glob: "*.freebayes.vcf" } }
+  output: { type: 'File', outputBinding: { glob: $(inputs.output_filename) } }
+  bam_list: { type: 'File', outputBinding: { glob: "bams.txt" } }

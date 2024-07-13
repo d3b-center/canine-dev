@@ -12,8 +12,8 @@ requirements:
 inputs:
   reference_dict: { type: 'File', doc: "DICT file for reference fasta" }
   reference_fasta: { type: 'File', secondaryFiles: [{ pattern: '.fai', required: true }], doc: "Reference fasta and fai index" }
-  input_vcf: { type: 'File', doc: "VCF file to which RNA headers." }
-  star_bam_final: { type: 'File', doc: "STAR BAM final" }
+  input_vcf: { type: 'File', secondaryFiles: [{ pattern: '.tbi', required: true }], doc: "Indexed VCF.GZ file to which RNA headers." }
+  star_bam_final: { type: 'File', secondaryFiles: [{pattern: ".bai", required: false}, {pattern: "^.bai", required: false}], doc: "STAR BAM final" }
   output_filename: { type: 'string', doc: "Name for final output VCF." }
   rna_samplename: { type: 'string', doc: "Name of RNA sample associated with tumor pair" }
 
@@ -40,7 +40,7 @@ steps:
         source: input_vcf 
         valueFrom: $([self])
       format:
-        valueFrom: "%CHROM\t%POS0\t%END\n"
+        valueFrom: "%CHROM\\t%POS0\\t%END\\n"
       output_filename:
         valueFrom: "temp_variant_pos.bed"
       cpu: bcftools_cpu
@@ -163,7 +163,7 @@ steps:
       output_filename:
         valueFrom: "temp_RNA_Counts.txt"
       format:
-        valueFrom: "%CHROM\t%POS\t%REF\t%ALT\t[ %AD{0}]\t[ %AD{1}]\n"
+        valueFrom: "%CHROM\\t%POS\\t%REF\\t%ALT\\t[ %AD{0}]\\t[ %AD{1}]\\n"
     out: [output]
   
   awk_temp_rna_vcf:

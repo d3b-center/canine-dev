@@ -10,7 +10,7 @@ requirements:
 - class: InlineJavascriptRequirement
 
 inputs:
-  input_vcf: { type: 'File', doc: "VCF file to which RNA headers." }
+  input_vcf: { type: 'File', secondaryFiles: [{ pattern: '.tbi', required: true }], doc: "Indexed VCF.GZ file to which RNA headers." }
   output_filename: { type: 'string', doc: "Name for reheadered VCF output file." }
 
   # Resource Control
